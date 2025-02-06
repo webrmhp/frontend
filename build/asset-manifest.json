@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/frontend/static/css/main.01b9c4ba.css",
+    "main.js": "/frontend/static/js/main.4eb50593.js",
+    "static/media/videodm.mp4": "/frontend/static/media/videodm.1452bfd9c13f7d0df2b5.mp4",
+    "static/media/cover.png": "/frontend/static/media/cover.941dd4f603129da1ea4a.png",
+    "static/media/certificate.jpg": "/frontend/static/media/certificate.43db5802525fc7c91297.jpg",
+    "static/media/guest2.jpg": "/frontend/static/media/guest2.f245ffc41a5c711d2cb3.jpg",
+    "static/media/Laptop-winner.jpg": "/frontend/static/media/Laptop-winner.76bdf6fd2b459d8b33c8.jpg",
+    "static/media/guest3.jpg": "/frontend/static/media/guest3.fe08353d16fdf4fea51b.jpg",
+    "static/media/1.jpg": "/frontend/static/media/1.13e912438080e8820bc2.jpg",
+    "static/media/guest1.jpg": "/frontend/static/media/guest1.13e912438080e8820bc2.jpg",
+    "static/media/Logo.png": "/frontend/static/media/Logo.0f45bd5ded801fa8131f.png",
+    "static/media/Profile.png": "/frontend/static/media/Profile.8d4a2788210a54d16750.png",
+    "static/media/netflix.jpg": "/frontend/static/media/netflix.6c43f4f2140127a11e81.jpg",
+    "index.html": "/frontend/index.html",
+    "static/media/left_arrow.svg": "/frontend/static/media/left_arrow.b9b9e05e7e2eed9a5c9b39c07b26e084.svg",
+    "static/media/right_arrow.svg": "/frontend/static/media/right_arrow.427ed38d24261489000772125a453810.svg",
+    "main.01b9c4ba.css.map": "/frontend/static/css/main.01b9c4ba.css.map",
+    "main.4eb50593.js.map": "/frontend/static/js/main.4eb50593.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.01b9c4ba.css",
+    "static/js/main.4eb50593.js"
+  ]
+}
