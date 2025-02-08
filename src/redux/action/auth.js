@@ -16,7 +16,7 @@ const GET_REDY_QUIZ = 'GET_REDY_QUIZ';
 const GET_REDY_QUIZ_RESULT = 'GET_REDY_QUIZ_RESULT';
 
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
 
 export const completeProfile = (data) => async (dispatch) => {
   const email = localStorage.getItem('registerMail');

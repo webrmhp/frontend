@@ -12,7 +12,7 @@ const GET_ALL_COURSE = 'GET_ALL_COURSE';
 const GET_COURSE_DETAIL = 'GET_COURSE_DETAIL';
 const GET_MY_ADD_TO_CART = 'GET_MY_ADD_TO_CART';
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
 
 export const addRequest = (data) => async (dispatch) => {
   console.log(data, 'data');
@@ -98,7 +98,7 @@ export const getMyActivityHistory = (userId, obj) => async (dispatch) => {
 
     let config = {
       method: 'get',
-      url: `http://localhost:3000/request/activity-point-history?${params}`,
+      url: `https://backend-bay-six-18.vercel.app/request/activity-point-history?${params}`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
