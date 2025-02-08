@@ -12,7 +12,20 @@ const GET_ALL_COURSE = 'GET_ALL_COURSE';
 const GET_COURSE_DETAIL = 'GET_COURSE_DETAIL';
 const GET_MY_ADD_TO_CART = 'GET_MY_ADD_TO_CART';
 
-const API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
+const API_BASE_URL = 'http://localhost:3000';
+
+
+const GET_LEAD_SUCCESS = 'GET_MY_LEAD_SUCCESS';
+const GET_REQUEST_VEHICLE_STATE = 'GET_REQUEST_VEHICLE_STATE';
+
+const GET_POLICY_BY_STATUS = 'GET_POLICY_BY_STATUS';
+
+const GET_POLICY_BY_STAGE_AND_STATUS = 'GET_POLICY_BY_STAGE_AND_STATUS';
+
+const GET_ALL_REQUEST_LIST = 'GET_ALL_REQUEST_LIST';
+const GET_ALL_REQUEST_BYID = 'GET_ALL_REQUEST_BYID';
+const GET_COMPANY_LIST = 'GET_COMPANY_LIST';
+const REACT_APP_API_BASE_URL = 'http://localhost:3000';
 
 export const addRequest = (data) => async (dispatch) => {
   console.log(data, 'data');
@@ -285,4 +298,536 @@ export const enrollCourseNow = (data) => async (dispatch) => {
 
 
 
+
+
+
+
+
+
+// redux/action/request.js
+
+// Action to delete a lead
+export const deleteLead = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.delete(
+      `${REACT_APP_API_BASE_URL}/request/delete/?id=${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response) {
+      toast.success(
+        response?.data?.message || 'Request deleted updated successfully'
+      );
+    }
+    return response;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
+    return error;
+  }
+};
+
+export const updateLead = (data, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.patch(
+      `${REACT_APP_API_BASE_URL}/request/update/?id=${id}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response) {
+      toast.success(
+        response?.data?.message || 'Your Request has been updated successfully'
+      );
+      localStorage.removeItem('vehicle3Data');
+      localStorage.removeItem('formData');
+      localStorage.removeItem('vehicle2Data');
+      localStorage.removeItem('vehicleFormData');      
+      localStorage.removeItem('vehicleData');
+      localStorage.removeItem('vehicleFormFiles');
+      
+    }
+    return response;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
+    return error;
+  }
+};
+export const saveVehicleData = (data) => ({
+  type: 'SAVE_VEHICLE_DATA',
+  payload: data,
+});
+
+
+
+
+
+
+
+export const getMyLead = (userId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    const params = new URLSearchParams({
+      userId,
+    }).toString();
+
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/request/get-mine?${params}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    // Dispatch action if data is present
+    if (response.data) {
+      dispatch({
+        type: GET_LEAD_SUCCESS,
+        payload: response.data?.data,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message);
+    return error;
+  }
+};
+
+export const getMyLeadByCategory = (category) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    const params = new URLSearchParams({
+      userId,
+      category: category,
+    }).toString();
+
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/request/get-list-by-category?${params}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    // Dispatch action if data is present
+    if (response.data) {
+      dispatch({
+        type: GET_LEAD_SUCCESS,
+        payload: response.data?.data,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message);
+    return error;
+  }
+};
+
+export const getMyLeadByVehicleType = (year) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+
+    // Prepare the query parameters
+    const params = new URLSearchParams({ year }).toString();
+
+    // Axios configuration
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/request/get-request-by-vehicleType?${params}`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      maxBodyLength: Infinity, // Match the cURL option
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    // Dispatch action on successful response
+    if (response.data) {
+      dispatch({
+        type: GET_REQUEST_VEHICLE_STATE,
+        payload: response.data?.data, // Ensure response format matches expectations
+      });
+    }
+
+    return response.data; // Return response for further use
+  } catch (error) {
+    // Handle and log errors
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const getMyPolicyByStatus = (years) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+
+    // Axios configuration
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/request/get-status-by-yaer?years=${[
+        years,
+      ]}`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      maxBodyLength: Infinity, // Match the cURL option
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    // Dispatch action on successful response
+    if (response.data) {
+      dispatch({
+        type: GET_POLICY_BY_STATUS,
+        payload: response.data?.data, // Ensure response format matches expectations
+      });
+    }
+
+    return response.data; // Return response for further use
+  } catch (error) {
+    // Handle and log errors
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const getMyPolicyByStageStatus = () => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/request/get-stagewise-total-request`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      maxBodyLength: Infinity, // Match the cURL option
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    // Dispatch action on successful response
+    if (response.data) {
+      dispatch({
+        type: GET_POLICY_BY_STAGE_AND_STATUS,
+        payload: response.data?.data, // Ensure response format matches expectations
+      });
+    }
+
+    return response.data; // Return response for further use
+  } catch (error) {
+    // Handle and log errors
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const getAllRequestList = () => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/request/get-list`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      maxBodyLength: Infinity, // Match the cURL option
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    // Dispatch action on successful response
+    if (response.data) {
+      dispatch({
+        type: GET_ALL_REQUEST_LIST,
+        payload: response.data?.data, // Ensure response format matches expectations
+      });
+    }
+
+    return response.data; // Return response for further use
+  } catch (error) {
+    // Handle and log errors
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const getCompanyList = () => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/company/list`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      maxBodyLength: Infinity, // Match the cURL option
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    // Dispatch action on successful response
+    if (response.data) {
+      dispatch({
+        type: GET_COMPANY_LIST,
+        payload: response.data?.data, // Ensure response format matches expectations
+      });
+    }
+
+    return response.data; // Return response for further use
+  } catch (error) {
+    // Handle and log errors
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const addQuotation = (id, data) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'patch',
+      url: `${REACT_APP_API_BASE_URL}/request/add-quotation/?id=${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: data,
+      maxBodyLength: Infinity, // Match the cURL option
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    // Dispatch action on successful response
+    if (response.data) {
+      toast.success(response.data?.message || 'Quotation added successfully'); // Show error message
+    }
+
+    return response.data; // Return response for further use
+  } catch (error) {
+    // Handle and log errors
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const policyUploaded = (id, data) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    let config = {
+      method: 'patch',
+      url: `${REACT_APP_API_BASE_URL}/request/upload-policy/?id=${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: data,
+      maxBodyLength: Infinity, // Match the cURL option
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    // Dispatch action on successful response
+    if (response.data) {
+      toast.success(response.data?.message || 'Policy Uploaded successfully'); // Show error message
+    }
+    dispatch({
+      type: GET_ALL_REQUEST_BYID,
+      payload: response.data?.data, // Ensure response format matches expectations
+    });
+    return response.data; // Return response for further use
+  } catch (error) {
+    // Handle and log errors
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const getRequestById = (id) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+
+    // Axios configuration with the query parameter
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/course/get-by-id?id=${id}`, // Append 'id' as a query parameter
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      maxBodyLength: Infinity, // Match the cURL option
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    // Dispatch action on successful response
+    if (response.data) {
+      dispatch({
+        type: GET_ALL_REQUEST_BYID,
+        payload: response.data?.data, // Ensure response format matches expectations
+      });
+    }
+
+    return response.data; // Return response for further use
+  } catch (error) {
+    // Handle and log errors
+    console.error(error);
+    return error;
+  }
+};
+
+export const addComment = (data) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration with the query parameter
+    let config = {
+      method: 'post',
+      url: `${REACT_APP_API_BASE_URL}/comment/add`, // Append 'id' as a query parameter
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: data,
+      maxBodyLength: Infinity, // Match the cURL option
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    // Dispatch action on successful response
+
+    console.log(response, 'response');
+    if (response?.data) {
+      toast.success(response?.data?.message || 'Comment added successfully!'); // Show error message
+    }
+
+    return response.data; // Return response for further use
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const varifyActivityPoint = (id) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+
+    // Axios configuration with the query parameter
+    let config = {
+      method: 'patch',
+      url: `${REACT_APP_API_BASE_URL}/request/varified-payemnt/?requestId=${id}`, // Append 'id' as a query parameter
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: {},
+      maxBodyLength: Infinity, // Match the cURL option
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    // Dispatch action on successful response
+
+    if (response?.data) {
+      toast.success(response?.data?.message || 'Activity Points are varified'); // Show error message
+    }
+
+    return response.data; // Return response for further use
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const searchRequestList = (body) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'post',
+      url: `${REACT_APP_API_BASE_URL}/request/serach`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: body, // Use `data` for the request payload
+      maxBodyLength: Infinity,
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    // Dispatch action on successful response
+    if (response.data) {
+      dispatch({
+        type: GET_ALL_REQUEST_LIST,
+        payload: response.data?.data, // Ensure response format matches expectations
+      });
+    }
+
+    return response.data; // Return response for further use
+  } catch (error) {
+    // Handle and log errors
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
 

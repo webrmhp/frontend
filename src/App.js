@@ -47,6 +47,7 @@ import {
   CircleLoader,
   ClimbingBoxLoader,
 } from 'react-spinners';
+import AdminDashboard from './pages/dashboard/AdminDashboard';
 
 // Public Route Component
 const PublicRoute = ({ isAuthenticated, children }) => {
@@ -127,6 +128,14 @@ function App() {
         <Route
           path={routes.support}
           element={<SupportPage />}
+        />
+         <Route
+          path={routes.adminDashboard}
+          element={
+            <PrivateRoute>
+              <AdminDashboard />
+            </PrivateRoute>
+          }
         />
         <Route
           path={routes.dashboard}

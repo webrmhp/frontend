@@ -25,5 +25,6 @@ export const routes = {
   PrivacyPolicy: "/PrivacyPolicy",
   LaptopScheme: "/LaptopScheme",
   SolarScheme: "/SolarScheme",
+  adminDashboard:"/admin-dashboard"
 };
 

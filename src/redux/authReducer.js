@@ -14,7 +14,22 @@ const GET_POINTS_HISTORY_SUCCESS = 'GET_POINST_HISTORY_SUCCESS';
 
 const GET_ALL_COURSE = 'GET_ALL_COURSE';
 const GET_COURSE_DETAIL = 'GET_COURSE_DETAIL';
-const GET_MY_ADD_TO_CART = 'GET_MY_ADD_TO_CART'
+const GET_MY_ADD_TO_CART = 'GET_MY_ADD_TO_CART';
+
+const GET_EMPLOYEE_DATA = 'GET_EMPLOYEE_DATA';
+
+const GET_LEAD_SUCCESS = 'GET_MY_LEAD_SUCCESS';
+const GET_REQUEST_VEHICLE_STATE = 'GET_REQUEST_VEHICLE_STATE';
+const GET_POLICY_BY_STATUS = 'GET_POLICY_BY_STATUS';
+const GET_POLICY_BY_STAGE_AND_STATUS = 'GET_POLICY_BY_STAGE_AND_STATUS';
+const GET_USER_LIST = 'GET_USER_LIST';
+const GET_COMPANY_LIST = 'GET_COMPANY_LIST';
+const GET_ALL_REQUEST_BYID = 'GET_ALL_REQUEST_BYID';
+const GET_COURSE_DATA = 'GET_COURSE_DATA';
+const GET_ALL_REQUEST_LIST = 'GET_ALL_REQUEST_LIST';
+const GET_ADMIN_NOTIFICATION = 'GET_ADMIN_NOTIFICATION';
+const GET_USER_NOTIFICATION = 'GET_USER_NOTIFICATION';
+const GET_ADMIN_UNREAD_NOTIFICATION = 'GET_ADMIN_UNREAD_NOTIFICATION';
 // Initial state
 const initialState = {
   course: [],
@@ -28,12 +43,73 @@ const initialState = {
   loading: false,
   error: '',
   linkSent: false,
-  addToCartCourse : []
+  addToCartCourse: [],
+
+  pointsHistory: [],
+  userslist: [],
+  requestById: {},
+  allRequestList: [],
+  activityPoints: {},
+  requestVehicleStat: [],
+  policy: [],
+  requestByStatus: [],
+  states: {},
+  employee: [],
+  profile: null,
+  loading: false,
+  error: '',
+  linkSent: false,
+  companyList: [],
+  getAdminNotify: [],
+  adminUnReadNotification: [],
+  getUserNotify: [],
+  courseData: [],
 };
 
 // Reducer
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_COURSE_DATA:
+      return { ...state, loading: true, courseData: action.payload };
+    case GET_ADMIN_UNREAD_NOTIFICATION:
+      return {
+        ...state,
+        loading: true,
+        adminUnReadNotification: action.payload,
+      };
+    case GET_USER_NOTIFICATION:
+      return { ...state, loading: true, getUserNotify: action.payload };
+    case GET_ADMIN_NOTIFICATION:
+      return { ...state, loading: true, getAdminNotify: action.payload };
+    case GET_COMPANY_LIST:
+      return { ...state, loading: true, companyList: action.payload };
+    case GET_ALL_REQUEST_BYID:
+      return { ...state, loading: true, requestById: action.payload };
+    case GET_ALL_REQUEST_LIST:
+      return { ...state, loading: true, allRequestList: action.payload };
+    case GET_PROFILE_REQUEST:
+      return { ...state, loading: true, error: '' };
+    case GET_PROFILE_SUCCESS:
+      return { ...state, loading: false, profile: action.payload };
+    case GET_USER_LIST:
+      return { ...state, loading: false, userslist: action.payload };
+
+    case GET_EMPLOYEE_DATA:
+      return { ...state, loading: false, employee: action.payload };
+    case GET_POLICY_BY_STATUS:
+      return { ...state, loading: false, policy: action.payload };
+    case GET_POLICY_BY_STAGE_AND_STATUS:
+      return { ...state, loading: false, requestByStatus: action.payload };
+    case GET_REQUEST_VEHICLE_STATE:
+      return { ...state, loading: false, requestVehicleStat: action.payload };
+    case GET_PROFILE_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+    // New cases for fetching states
+    case GET_STATES_REQUEST:
+      return { ...state, loading: true, error: '' };
+
+    case GET_STATES_SUCCESS:
+      return { ...state, loading: false, states: action.payload };
     case GET_MY_ADD_TO_CART:
       return { ...state, loading: true, addToCartCourse: action.payload };
     case GET_PROFILE_REQUEST:
