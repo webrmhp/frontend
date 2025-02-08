@@ -2,7 +2,7 @@
   "name": "proleadgen",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://webrmhp.github.io/frontend",
+  "homepage": ".",
   "dependencies": {
     "@react-pdf/renderer": "^4.1.6",
     "@reduxjs/toolkit": "^2.4.0",
@@ -34,9 +34,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-  "predeploy": "npm run build",
-  "deploy": "gh-pages -d build"
-},
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "deploy": "vercel --prod"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
