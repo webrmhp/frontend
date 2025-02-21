@@ -12,7 +12,9 @@ const GET_ALL_COURSE = 'GET_ALL_COURSE';
 const GET_COURSE_DETAIL = 'GET_COURSE_DETAIL';
 const GET_MY_ADD_TO_CART = 'GET_MY_ADD_TO_CART';
 
-const API_BASE_URL = 'http://localhost:3000';
+// const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
+
 
 
 const GET_LEAD_SUCCESS = 'GET_MY_LEAD_SUCCESS';
@@ -25,7 +27,10 @@ const GET_POLICY_BY_STAGE_AND_STATUS = 'GET_POLICY_BY_STAGE_AND_STATUS';
 const GET_ALL_REQUEST_LIST = 'GET_ALL_REQUEST_LIST';
 const GET_ALL_REQUEST_BYID = 'GET_ALL_REQUEST_BYID';
 const GET_COMPANY_LIST = 'GET_COMPANY_LIST';
-const REACT_APP_API_BASE_URL = 'http://localhost:3000';
+// const REACT_APP_API_BASE_URL = 'http://localhost:3000';
+const REACT_APP_API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
+
+
 
 export const addRequest = (data) => async (dispatch) => {
   console.log(data, 'data');

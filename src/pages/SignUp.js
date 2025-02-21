@@ -186,56 +186,61 @@ export default function RegistrationForm() {
   };
   return (
     <div className='min-h-screen bg-gradient-to-r from-[#5A70E9] to-[#15B7A7]  items-center justify-center '>
-      <nav className='flex fixed top-0 left-0 w-full bg-gray-800 text-white shadow-lg z-50'>
-        <motion.div
-          className={`py-4 px-2 flex-1 text-center cursor-pointer ${
-            phase === 1
-              ? 'border-b-4 border-[#1B5E20] bg-[#FFA000]'
-              : 'bg-gray-700 hover:bg-gray-600'
-          }`}
-          onClick={() => {
-            setPhase(1);
-            localStorage.setItem('phase', 1);
-          }}
-          initial={{ scale: 1 }}
-          animate={{ scale: phase === 1 ? 1.1 : 1 }}
-          transition={{ type: 'spring', stiffness: 50 }}
-        >
-          ACCOUNT REGISTER
-        </motion.div>
-        <motion.div
-          className={`py-4 px-6 flex-1 text-center cursor-pointer ${
-            phase === 2
-              ? 'border-b-4 border-[#1B5E20] bg-[#FFA000]'
-              : 'bg-gray-700 hover:bg-gray-600'
-          }`}
-          onClick={() => {
-            setPhase(2);
-            localStorage.setItem('phase', 2);
-          }}
-          initial={{ scale: 1 }}
-          animate={{ scale: phase === 2 ? 1.1 : 1 }}
-          transition={{ type: 'spring', stiffness: 50 }}
-        >
-          PROFILE REGISTER
-        </motion.div>
-        <motion.div
-          className={`py-4 px-6 flex-1 text-center cursor-pointer ${
-            phase === 3
-              ? 'border-b-4 border-[#1B5E20] bg-[#FFA000]'
-              : 'bg-gray-700 hover:bg-gray-600'
-          }`}
-          onClick={() => {
-            setPhase(3);
-            localStorage.setItem('phase', 3);
-          }}
-          initial={{ scale: 1 }}
-          animate={{ scale: phase === 3 ? 1.1 : 1 }}
-          transition={{ type: 'spring', stiffness: 50 }}
-        >
-          TEST NOW
-        </motion.div>
-      </nav>
+     <nav className='flex fixed top-0 left-0 w-full bg-gray-800 text-white shadow-lg z-50'>
+  {/* Account Register */}
+  <motion.div
+    className={`py-3 px-2 flex-1 text-center cursor-pointer text-xs sm:text-sm md:text-base ${
+      phase === 1
+        ? 'border-b-4 border-[#1B5E20] bg-[#FFA000]'
+        : 'bg-gray-700 hover:bg-gray-600'
+    }`}
+    onClick={() => {
+      setPhase(1);
+      localStorage.setItem('phase', 1);
+    }}
+    initial={{ scale: 1 }}
+    animate={{ scale: phase === 1 ? 1.1 : 1 }}
+    transition={{ type: 'spring', stiffness: 50 }}
+  >
+    ACCOUNT REGISTER
+  </motion.div>
+
+  {/* Profile Register */}
+  <motion.div
+    className={`py-3 px-2 flex-1 text-center cursor-pointer text-xs sm:text-sm md:text-base ${
+      phase === 2
+        ? 'border-b-4 border-[#1B5E20] bg-[#FFA000]'
+        : 'bg-gray-700 hover:bg-gray-600'
+    }`}
+    onClick={() => {
+      setPhase(2);
+      localStorage.setItem('phase', 2);
+    }}
+    initial={{ scale: 1 }}
+    animate={{ scale: phase === 2 ? 1.1 : 1 }}
+    transition={{ type: 'spring', stiffness: 50 }}
+  >
+    PROFILE REGISTER
+  </motion.div>
+
+  {/* Test Now */}
+  <motion.div
+    className={`py-3 px-2 flex-1 text-center cursor-pointer text-xs sm:text-sm md:text-base ${
+      phase === 3
+        ? 'border-b-4 border-[#1B5E20] bg-[#FFA000]'
+        : 'bg-gray-700 hover:bg-gray-600'
+    }`}
+    onClick={() => {
+      setPhase(3);
+      localStorage.setItem('phase', 3);
+    }}
+    initial={{ scale: 1 }}
+    animate={{ scale: phase === 3 ? 1.1 : 1 }}
+    transition={{ type: 'spring', stiffness: 50 }}
+  >
+    TEST NOW
+  </motion.div>
+</nav>
 
       <div className='mt-5'>
         <motion.div
