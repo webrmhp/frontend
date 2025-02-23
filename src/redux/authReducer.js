@@ -18,7 +18,7 @@ const GET_MY_ADD_TO_CART = 'GET_MY_ADD_TO_CART';
 
 const GET_EMPLOYEE_DATA = 'GET_EMPLOYEE_DATA';
 
-const GET_LEAD_SUCCESS = 'GET_MY_LEAD_SUCCESS';
+const GET_COURSE_VIDEO_LIST = 'GET_COURSE_VIDEO_LIST';
 const GET_REQUEST_VEHICLE_STATE = 'GET_REQUEST_VEHICLE_STATE';
 const GET_POLICY_BY_STATUS = 'GET_POLICY_BY_STATUS';
 const GET_POLICY_BY_STAGE_AND_STATUS = 'GET_POLICY_BY_STAGE_AND_STATUS';
@@ -64,6 +64,7 @@ const initialState = {
   adminUnReadNotification: [],
   getUserNotify: [],
   courseData: [],
+  courseVidosData: [],
 };
 
 // Reducer
@@ -71,6 +72,8 @@ const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_COURSE_DATA:
       return { ...state, loading: true, courseData: action.payload };
+    case GET_COURSE_VIDEO_LIST:
+      return { ...state, loading: false, courseVidosData: action.payload };
     case GET_ADMIN_UNREAD_NOTIFICATION:
       return {
         ...state,

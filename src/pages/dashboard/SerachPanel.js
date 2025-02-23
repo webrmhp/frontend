@@ -11,36 +11,25 @@ import {
   searchRequestList,
   getRequestById,
   getCompanyList,
-  addComment,
-  addQuotation,
-  policyUploaded,
-  varifyActivityPoint,
+  addVideo,
+  getVideosById,
+  deleteVideoById,
 } from '../../redux/action/request';
 
-import {
-  getCourseList,
-  addCourse,
-  deleteCourse,
-  updateCourse,
-} from '../../redux/action/auth';
-import { ToastContainer } from 'react-toastify';
+import { getCourseList } from '../../redux/action/auth';
+import { toast, ToastContainer } from 'react-toastify';
 import { getUserList } from '../../redux/action/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import DownloadIcon from '../../assets/icons/download';
 import { Circles } from 'react-loader-spinner';
 
 const SerachPanel = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const { userslist } = useSelector((state) => state.auth);
+  const { courseVidosData } = useSelector((state) => state.auth);
   const { requestById } = useSelector((state) => state.auth);
-  const { companyList } = useSelector((state) => state.auth);
-  const [policyUpload, setPolicyUpload] = useState(null);
-  const [commentId, setCommentId] = useState(null);
+
   const [quotation, setQuotation] = useState(null);
-  const [comment, setComment] = useState('');
-  const [uploadPolicy, setUploadPolicy] = useState(null);
-  const [policyExpire, setPolicyExpire] = useState(null);
   const [quotationDetail, setQuotationDetail] = useState([
     {
       companyName: '',
@@ -56,69 +45,24 @@ const SerachPanel = () => {
 
   useEffect(() => {
     dispatch(getCourseList());
+    setTimeout(() => {
+      setLoading(false);
+    }, [2000]);
   }, [1000]);
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
+    if (requestById._id) {
+      dispatch(getVideosById(requestById._id));
+    }
   }, [1000]);
   const { employee } = useSelector((state) => state.auth);
-  const addForm = () => {
-    if (quotationDetail.length < 3) {
-      setQuotationDetail([
-        ...quotationDetail,
-        {
-          companyName: '',
-          coverAmount: '',
-          cashlessCharge: '',
-          activityPoints: 0,
-          companyLogo: '',
-          premiumAmount: '',
-        },
-      ]);
-    } else {
-      alert('You can only add up to 3 quotations.');
-    }
-  };
-
-  const uploadRequestPolicy = () => {
-    const policyData = {
-      policyUploaded: true,
-      policyExpire: policyExpire,
-      policyUrl: policyUpload,
-    };
-    dispatch(policyUploaded(uploadPolicy, policyData));
-    setUploadPolicy(null);
-  };
-
- 
-
-  // Handle input change for a specific form
-  const handleInputChange = (index, field, value) => {
-    if (field == 'companyName') {
-      for (let x = 0; x <= companyList.length; x++) {
-        if (companyList[x]?.companyName == value) {
-          const updatedDetails = [...quotationDetail];
-          updatedDetails[index]['companyLogo'] = companyList[x].companyLogo;
-          setQuotationDetail(updatedDetails);
-        }
-      }
-    }
-
-    const updatedDetails = [...quotationDetail];
-    updatedDetails[index][field] = value;
-    setQuotationDetail(updatedDetails);
-  };
-
-  // Submit functionality (you can replace this with your API call or further logic)
   const handleSubmit = () => {
-    const data = { quotationDetail: quotationDetail };
+    formData.courseId = requestById?._id;
+    dispatch(addVideo(formData));
+    setFormData(null);
+
     setTimeout(() => {
-      dispatch(getRequestById(requestById._id));
+      dispatch(getVideosById(requestById._id));
     }, 2000);
-    dispatch(addQuotation(requestById?._id, data));
-    setQuotation(null);
   };
 
   useEffect(() => {
@@ -142,7 +86,6 @@ const SerachPanel = () => {
 
   const removeEmptyStrings = () => {
     const filteredParams = {};
-    console.log(serachPram);
     for (const key in serachPram) {
       if (serachPram[key] !== '') {
         filteredParams[key] = serachPram[key];
@@ -213,56 +156,42 @@ const SerachPanel = () => {
     XLSX.writeFile(wb, `requests_list.xlsx`);
   };
 
-  const addRequestComment = () => {
-    const commentData = {
-      discription: comment,
-      requestId: commentId.requestId,
-      userId: commentId.userId,
-    };
-    dispatch(addComment(commentData));
-    setCommentId(null);
-  };
-  const truncateText = (text, maxLength = 100) => 
-    text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
-  const onChangeUpload = async (e) => {
-    const file = e.target.files[0]; // Get the selected file
+  const handleDelete = (id) => {
+    dispatch(deleteVideoById(id));
 
-    if (file) {
-      try {
-        const Base64 = await convertToBase64(file);
-        setPolicyUpload(Base64);
-        console.log(Base64, 'Base64'); // Logs the Base64 string
-      } catch (error) {
-        console.error('Error converting to Base64:', error);
-      }
-    } else {
-      console.warn('No file selected!');
-    }
-  };
-
-  const varifyActivityPoints = () => {
-    dispatch(varifyActivityPoint(requestById?._id));
     setTimeout(() => {
-      dispatch(getRequestById(requestById?._id));
-    }, [1000]);
+      dispatch(getVideosById(requestById._id));
+    }, 2000);
   };
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        // Remove the 'data:application/pdf;base64,' prefix
-        const base64Data = reader.result.split(',')[1];
-        resolve(base64Data);
-      };
-      reader.onerror = (error) => reject(error);
-      reader.readAsDataURL(file);
-    });
-  };
+
+  const truncateText = (text, maxLength = 100) =>
+    text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 
   const goBack = () => {
     dispatch({
       type: 'GET_ALL_REQUEST_BYID',
       payload: {}, // Ensure response format matches expectations
+    });
+  };
+
+  const [preview, setPreview] = useState(null);
+  const [formData, setFormData] = useState(null);
+  const handleFileChange = (e, type) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file); // Convert file to Base64
+      reader.onloadend = () => {
+        setPreview(reader.result); // Show preview
+        setFormData({ ...formData, thumbnail: reader.result }); // Store Base64
+      };
+    }
+  };
+
+  const handleChangeVideoForm = (e) => {
+    setFormData({
+      ...formData, // Keep the existing form data
+      [e.target.name]: e.target.value, // Update the changed field
     });
   };
   return (
@@ -516,14 +445,18 @@ const SerachPanel = () => {
                       </div>
                       <h2 className='text-lg font-semibold'>{item?.title}</h2>
                     </div>
+                    <span className='relative mb-2 bg-green-500 text-white text-sm px-2 py-1 rounded  '>
+                      {item.courseType}
+                    </span>
                     <p className='text-gray-700'>{item?.prize} Rs</p>
                     <p className='text-blue-500 font-bold'>{item.subject}</p>
-                    <p className='text-gray-500'>
-                      Course Type: {item.courseType}
-                    </p>
+
                     <button
-                      onClick={() => getSpecificRequest(item._id)}
-                      className='mt-4 w-full bg-[#1D90FE] text-white py-1 rounded-lg'
+                      onClick={() => {
+                        getSpecificRequest(item._id);
+                        dispatch(getVideosById(item._id));
+                      }}
+                      className=' w-full bg-[#1D90FE] text-white py-1 rounded-lg relative'
                     >
                       View
                     </button>
@@ -537,11 +470,12 @@ const SerachPanel = () => {
                 <div class='flex items-center justify-between'>
                   <div class='flex items-center space-x-2'>
                     <p class='text-sm font-semibold text-gray-700'>
-                      <strong className='bg-[#3B82F6]  text-[white] p-2 rounded m-1'>{requestById?.title}</strong>
+                      <strong className='bg-[#3B82F6]  text-[white] p-2 rounded m-1'>
+                        {requestById?.title}
+                      </strong>
                       <br />
                     </p>
                   </div>
-                
                 </div>
 
                 <h2 class='text-xl font-bold text-gray-800'>
@@ -549,28 +483,24 @@ const SerachPanel = () => {
                 </h2>
 
                 <div class='grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 text-sm text-gray-700'>
-                  
-                  
                   <p>
                     <span class='font-semibold'>Subject:</span> <br />
-                    <span class='text-blue-500'>
-                      {requestById?.subject}
-                    </span>
+                    <span class='text-blue-500'>{requestById?.subject}</span>
                   </p>
                   <p>
                     <span class='font-semibold'>Discription:</span>
                     <br />
                     <span class='text-blue-500'>
-                    {truncateText(requestById?.discription || "No description available")}
+                      {truncateText(
+                        requestById?.discription || 'No description available'
+                      )}
                     </span>
                   </p>
                   {requestById?.skill ? (
                     <p>
                       <span class='font-semibold'>Skill:</span>
                       <br />
-                      <span class='text-blue-500'>
-                        {requestById?.skill}
-                      </span>
+                      <span class='text-blue-500'>{requestById?.skill}</span>
                     </p>
                   ) : (
                     ''
@@ -578,10 +508,7 @@ const SerachPanel = () => {
 
                   {requestById?.duration ? (
                     <p>
-                      <span class='font-semibold'>
-                      Duration
-                      </span>{' '}
-                      <br />
+                      <span class='font-semibold'>Duration</span> <br />
                       <a
                         href='#'
                         class='text-blue-500 hover:underline'
@@ -591,9 +518,7 @@ const SerachPanel = () => {
                     </p>
                   ) : (
                     <p>
-                      <span class='font-semibold'>
-                      Language
-                      </span>
+                      <span class='font-semibold'>Language</span>
                       <br />
                       <a
                         href='#'
@@ -617,8 +542,6 @@ const SerachPanel = () => {
                   </p>
 
                   <div className='inline-flex items-center gap-20'>
-                   
-
                     {/* Previous Policy Button */}
                     {requestById?.previousPolicyURL ? (
                       <div className='flex flex-col items-center gap-2'>
@@ -652,89 +575,172 @@ const SerachPanel = () => {
 
                 <h2 class='text-xl font-bold text-gray-800'>Video</h2>
 
-
-                {requestById?.policyUploaded ? (
-                  <>
-                    {' '}
-                    <h2 class='text-xl font-bold text-gray-800'>
-                      Uploaded Policy
-                    </h2>{' '}
-                    <h6
-                      className='cursor-pointer flex items-center space-x-2 px-4 py-2 bg-blue-50 rounded-full shadow relative flex items-center justify-center text-center text-blue-500'
-                      onClick={() => {
-                        window.open(`${requestById?.policyUrl}`, '_blank');
-                      }}
-                    >
-                      You have uploaded the Policy file{' '}
-                      <DownloadIcon className='ml-2' />
-                    </h6>
-                  </>
-                ) : (
-                  ''
-                )}
-
-              
-
                 <div className='flex justify-center'>
-                  <button
-                    onClick={() => setQuotation(requestById?._id)}
-                    class='bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600'
-                  >
-                    Add Video
-                  </button>
+                  <div className='max-w-6xl mx-auto p-6'>
+                    <h2 className='text-3xl font-bold mb-6 text-center text-gray-800'>
+                      📚 Course Videos
+                    </h2>
+
+                    {/* ✅ Add Video Button (Always Visible) */}
+                    <div className='flex justify-center mb-4'>
+                      <button
+                        onClick={() => setFormData(requestById?._id)}
+                        className='bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600'
+                      >
+                        ➕ Add Video
+                      </button>
+                    </div>
+
+                    {courseVidosData.length === 0 ? (
+                      <p className='text-center text-gray-500'>
+                        No videos found for this course.
+                      </p>
+                    ) : (
+                      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
+                        {courseVidosData.map((video) => (
+                          <div
+                            key={video._id}
+                            className='bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition duration-300'
+                          >
+                            {/* 🔹 Video Thumbnail */}
+                            <div className='relative w-full h-40 bg-gray-300'>
+                              <img
+                                src={
+                                  video.thumbnail ||
+                                  'https://via.placeholder.com/300'
+                                }
+                                alt='Video Thumbnail'
+                                className='w-full h-full object-cover'
+                              />
+                              <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition duration-300'>
+                                <button className='text-white text-lg font-bold px-4 py-2 bg-blue-600 rounded-md shadow-md'>
+                                  ▶ Play
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* 🔹 Video Content */}
+                            <div className='p-2'>
+                              <h3 className='text-lg font-semibold text-gray-800 truncate'>
+                                {video.title}
+                              </h3>
+                              <p className='text-gray-600 text-sm mt-1 line-clamp-2'>
+                                {video.description ||
+                                  'No description available.'}
+                              </p>
+
+                              {/* 🔹 Video Actions */}
+                              <div className='flex items-center gap-2 mt-2'>
+                                <button
+                                  onClick={() => handleDelete(video._id)}
+                                  className='bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm'
+                                >
+                                  🗑 Delete
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(video?.link);
+                                    toast.success('✅ Video link copied!');
+                                  }}
+                                  className='bg-gray-200 hover:bg-gray-300 px-2 py-1 text-sm rounded text-gray-700'
+                                >
+                                  📋 Copy
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </>
           )}
 
-          {quotation && (
+          {formData && (
             <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto'>
               <div className='bg-white p-6 rounded-lg shadow-lg w-1/3 overflow-y-auto'>
                 <h2 className='text-xl font-bold mb-4'>Add Video</h2>
-                <div
-                    className='border p-4 mb-4 rounded'
-                  >
-                   
-
-                
-                  
-                    <div className='mb-2'>
-                      <input
-                        type='text'
-                        className='w-full p-2 border border-gray-300 rounded'
-                        placeholder='Title'
-                        // value={form.paymentLink}
-                    
-                      />
-                    </div>
-                    <div className='mb-2'>
-                      <input
-                        type='test'
-                        placeholder='discription'
-                        className='w-full p-2 border border-gray-300 rounded'
-                        // value={form.premiumAmount}
-                        
-                        
-                      />
-                    </div>
-                    <div className='mb-2'>
-                      <input
-                        type='text'
-                        placeholder='link'
-                        className='w-full p-2 border border-gray-300 rounded'
-                        // value={form.premiumAmount}
-                        
-                        
-                      />
-                    </div>
-                    
-                    
-
-                   
+                <div className='border p-4 mb-4 rounded'>
+                  <div className='mb-2'>
+                    <input
+                      type='text'
+                      name='title'
+                      className='w-full p-2 border border-gray-300 rounded'
+                      placeholder='Title'
+                      value={formData?.title}
+                      onChange={handleChangeVideoForm}
+                    />
                   </div>
-                <div className='flex justify-between'>
-                 
+                  <div className='mb-2'>
+                    <input
+                      type='text'
+                      name='description'
+                      placeholder='Discription'
+                      className='w-full p-2 border border-gray-300 rounded'
+                      onChange={handleChangeVideoForm}
+                      value={formData?.description}
+                    />
+                  </div>
+                  <div className='mb-2'>
+                    <input
+                      type='text'
+                      name='link'
+                      placeholder='link'
+                      onChange={handleChangeVideoForm}
+                      className='w-full p-2 border border-gray-300 rounded'
+                      value={formData?.link}
+                    />
+                  </div>
 
+                  <div className='cursor-pointer border-2 border-dashed border-gray-300 rounded-lg p-6 text-center'>
+                    <label
+                      htmlFor='courseImage'
+                      className='flex flex-col items-center space-y-2'
+                    >
+                      <input
+                        type='file'
+                        accept='.png, .jpg, .jpeg'
+                        onChange={(e) => handleFileChange(e)}
+                        className='hidden'
+                        id='courseImage'
+                      />
+                      {preview ? (
+                        <img
+                          width={200}
+                          height={200}
+                          src={preview}
+                          alt='Course Thumbnail'
+                        />
+                      ) : (
+                        <>
+                          <p className='text-sm text-gray-500'>
+                            Drag & drop or click to upload video Thumbnail
+                          </p>
+                          <p className='text-xs text-gray-400'>
+                            Only PNG, JPG, and JPEG files are supported.
+                          </p>
+                        </>
+                      )}
+                    </label>
+                  </div>
+                </div>
+                <div className='flex justify-between'>
+                  <motion.button
+                    className='px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all'
+                    onClick={() => {
+                      setFormData(null);
+                      setPreview('');
+                    }}
+                    whileHover={{ scale: 1.05 }} // Scale effect on hover
+                    whileTap={{ scale: 0.95 }} // Slightly shrink when clicked
+                    initial={{ opacity: 0 }} // Start with opacity 0
+                    animate={{ opacity: 1 }} // Fade in animation
+                    transition={{ duration: 0.3 }} // Set duration for animation
+                  >
+                    Cancel
+                  </motion.button>
                   <motion.button
                     className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all'
                     onClick={handleSubmit}
@@ -750,9 +756,6 @@ const SerachPanel = () => {
               </div>
             </div>
           )}
-
-        
-         
         </>
       ) : (
         <div

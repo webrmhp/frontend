@@ -138,7 +138,6 @@ function App() {
             </PrivateRoute>
           }
         />
-        
         <Route
           path={routes.dashboard}
           element={<UserDashboard />}

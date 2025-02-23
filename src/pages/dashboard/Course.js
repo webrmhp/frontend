@@ -233,6 +233,7 @@ const Course = () => {
                   <th className='py-3 px-6 text-left'>Mode</th>
                   <th className='py-3 px-6 text-left'>Added Date</th>
                   <th className='py-3 px-6 text-left'>Thumbinal</th>
+                  <th className='py-3 px-6 text-left'>Video Uploaded</th>
                   <th className='py-3 px-6 '>Action</th>
                 </tr>
               </thead>
@@ -254,7 +255,7 @@ const Course = () => {
                     <td className='py-3 px-6 text-left'>
                       {new Date(obj.addedAt).toLocaleDateString('en-CA')}
                     </td>
-                    <td className=' justify-center items-center'>
+                    <td className=' justify-center items-center text-center'>
                       {obj?.courseImage ? (
                         <button
                           onClick={() => {
@@ -268,6 +269,17 @@ const Course = () => {
                             alt='No course Thumbnail'
                           />
                         </button>
+                      ) : (
+                        ''
+                      )}
+                    </td>
+                    <td className=' justify-center items-center text-center'>
+                      {obj?.videos ? (
+                       
+                         <span>
+                          {obj?.videos?.length}
+                         </span>
+                          
                       ) : (
                         ''
                       )}

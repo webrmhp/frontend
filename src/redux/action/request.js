@@ -12,10 +12,8 @@ const GET_ALL_COURSE = 'GET_ALL_COURSE';
 const GET_COURSE_DETAIL = 'GET_COURSE_DETAIL';
 const GET_MY_ADD_TO_CART = 'GET_MY_ADD_TO_CART';
 
-// const API_BASE_URL = 'http://localhost:3000';
-const API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
-
-
+const API_BASE_URL = 'http://localhost:3000';
+// const API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
 
 const GET_LEAD_SUCCESS = 'GET_MY_LEAD_SUCCESS';
 const GET_REQUEST_VEHICLE_STATE = 'GET_REQUEST_VEHICLE_STATE';
@@ -26,11 +24,10 @@ const GET_POLICY_BY_STAGE_AND_STATUS = 'GET_POLICY_BY_STAGE_AND_STATUS';
 
 const GET_ALL_REQUEST_LIST = 'GET_ALL_REQUEST_LIST';
 const GET_ALL_REQUEST_BYID = 'GET_ALL_REQUEST_BYID';
+const GET_COURSE_VIDEO_LIST = 'GET_COURSE_VIDEO_LIST';
 const GET_COMPANY_LIST = 'GET_COMPANY_LIST';
-// const REACT_APP_API_BASE_URL = 'http://localhost:3000';
-const REACT_APP_API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
-
-
+const REACT_APP_API_BASE_URL = 'http://localhost:3000';
+// const REACT_APP_API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
 
 export const addRequest = (data) => async (dispatch) => {
   console.log(data, 'data');
@@ -140,18 +137,13 @@ export const getMyActivityHistory = (userId, obj) => async (dispatch) => {
   } catch (error) {
     // Handle errors
     console.error(error);
-    toast.error(error.response?.data?.message || error.message);
     return error;
   }
 };
 
-
-
-
-
 export const getCourse = () => async (dispatch) => {
   try {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
     let config = {
       method: 'get',
       url: `${API_BASE_URL}/course/list`,
@@ -182,7 +174,7 @@ export const getCourse = () => async (dispatch) => {
 
 export const getCourseById = (id) => async (dispatch) => {
   try {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
     let config = {
       method: 'get',
       url: `${API_BASE_URL}/course/get-by-id?id=${id}`,
@@ -214,8 +206,8 @@ export const getCourseById = (id) => async (dispatch) => {
 export const getMyAddToCartCourse = (status) => async (dispatch) => {
   try {
     // status may be "Pending" or "Paid"
-    const token = localStorage.getItem('token'); 
-    const userId = localStorage.getItem('userId'); 
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
     let config = {
       method: 'get',
       url: `${API_BASE_URL}/add-to-card/get-all?userId=${userId}&status=${status}`,
@@ -228,7 +220,7 @@ export const getMyAddToCartCourse = (status) => async (dispatch) => {
     // Execute Axios request
     const response = await axios.request(config);
     // Dispatch action if data is present
-    console.log(response.data, "response.data")
+    console.log(response.data, 'response.data');
     if (response.data) {
       dispatch({
         type: GET_MY_ADD_TO_CART,
@@ -245,7 +237,7 @@ export const getMyAddToCartCourse = (status) => async (dispatch) => {
 
 export const removeMyAllCourse = (data) => async (dispatch) => {
   try {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
     let config = {
       method: 'delete',
       url: `${API_BASE_URL}/add-to-card/delete`,
@@ -253,14 +245,15 @@ export const removeMyAllCourse = (data) => async (dispatch) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      data:data
+      data: data,
     };
-
 
     const response = await axios.request(config);
     // getMyAddToCartCourse('Pending')
     if (response.data) {
-      toast.success(response?.data?.message || 'Course are removed from your cart');
+      toast.success(
+        response?.data?.message || 'Course are removed from your cart'
+      );
       // getMyAddToCartCourse('Pending')
     }
 
@@ -271,10 +264,9 @@ export const removeMyAllCourse = (data) => async (dispatch) => {
   }
 };
 
-
 export const enrollCourseNow = (data) => async (dispatch) => {
   try {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
     let config = {
       method: 'post',
       url: `${API_BASE_URL}/add-to-card/add`,
@@ -282,14 +274,13 @@ export const enrollCourseNow = (data) => async (dispatch) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      data :data
+      data: data,
     };
 
     const response = await axios.request(config);
-    console.log(response, "response")
+    console.log(response, 'response');
     if (response.data) {
       toast.success(response?.data?.message);
-
     }
 
     return response.data;
@@ -298,16 +289,6 @@ export const enrollCourseNow = (data) => async (dispatch) => {
     return error;
   }
 };
-
-
-
-
-
-
-
-
-
-
 
 // redux/action/request.js
 
@@ -356,10 +337,9 @@ export const updateLead = (data, id) => async (dispatch) => {
       localStorage.removeItem('vehicle3Data');
       localStorage.removeItem('formData');
       localStorage.removeItem('vehicle2Data');
-      localStorage.removeItem('vehicleFormData');      
+      localStorage.removeItem('vehicleFormData');
       localStorage.removeItem('vehicleData');
       localStorage.removeItem('vehicleFormFiles');
-      
     }
     return response;
   } catch (error) {
@@ -371,12 +351,6 @@ export const saveVehicleData = (data) => ({
   type: 'SAVE_VEHICLE_DATA',
   payload: data,
 });
-
-
-
-
-
-
 
 export const getMyLead = (userId) => async (dispatch) => {
   try {
@@ -445,7 +419,6 @@ export const getMyLeadByCategory = (category) => async (dispatch) => {
   } catch (error) {
     // Handle errors
     console.error(error);
-    toast.error(error.response?.data?.message || error.message);
     return error;
   }
 };
@@ -592,7 +565,6 @@ export const getAllRequestList = () => async (dispatch) => {
   } catch (error) {
     // Handle and log errors
     console.error(error);
-    toast.error(error.response?.data?.message || error.message); // Show error message
     return error;
   }
 };
@@ -627,19 +599,18 @@ export const getCompanyList = () => async (dispatch) => {
   } catch (error) {
     // Handle and log errors
     console.error(error);
-    toast.error(error.response?.data?.message || error.message); // Show error message
     return error;
   }
 };
 
-export const addQuotation = (id, data) => async (dispatch) => {
+export const addVideo = (data) => async (dispatch) => {
   try {
     // Extract the token from localStorage
     const token = localStorage.getItem('token');
     // Axios configuration
     let config = {
-      method: 'patch',
-      url: `${REACT_APP_API_BASE_URL}/request/add-quotation/?id=${id}`,
+      method: 'post',
+      url: `${REACT_APP_API_BASE_URL}/video/add`,
       headers: {
         Authorization: `Bearer ${token}`, // Pass the token as in the cURL
         'Content-Type': 'application/json', // Include content type (optional for GET requests)
@@ -653,7 +624,7 @@ export const addQuotation = (id, data) => async (dispatch) => {
 
     // Dispatch action on successful response
     if (response.data) {
-      toast.success(response.data?.message || 'Quotation added successfully'); // Show error message
+      toast.success(response.data?.message || 'Video added successfully'); // Show error message
     }
 
     return response.data; // Return response for further use
@@ -729,6 +700,68 @@ export const getRequestById = (id) => async (dispatch) => {
     return response.data; // Return response for further use
   } catch (error) {
     // Handle and log errors
+    console.error(error);
+    return error;
+  }
+};
+
+export const deleteVideoById = (id) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    let config = {
+      method: 'delete',
+      url: `${REACT_APP_API_BASE_URL}/video/remove-by-id?id=${id}`, // Append 'id' as a query parameter
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      maxBodyLength: Infinity, // Match the cURL option
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    if (response) {
+      toast.success(response?.data?.message || 'Video deleted successfully'); // Show error message
+    }
+
+    return response.data; // Return response for further use
+  } catch (error) {
+    // Handle and log errors
+    console.error(error);
+    return error;
+  }
+};
+
+export const getVideosById = (id) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+
+    // Axios configuration with the query parameter
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/video/get-by-course-id?courseId=${id}`, // Append 'id' as a query parameter
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      maxBodyLength: Infinity, // Match the cURL option
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    // Dispatch action on successful response
+    if (response.data) {
+      dispatch({
+        type: GET_COURSE_VIDEO_LIST,
+        payload: response.data?.data, // Ensure response format matches expectations
+      });
+    }
+
+    return response.data; // Return response for further use
+  } catch (error) {
     console.error(error);
     return error;
   }
@@ -835,4 +868,3 @@ export const searchRequestList = (body) => async (dispatch) => {
     return error;
   }
 };
-

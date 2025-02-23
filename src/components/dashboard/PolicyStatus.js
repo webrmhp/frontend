@@ -116,7 +116,7 @@ const PolicyStatus = () => {
         <p className='text-2xl font-bold'>{total}</p>
       </div>
       <h2 className='text-2xl font-semibold mb-6 text-center lg:text-left'>
-        Policy Status
+        Course Status
       </h2>
       <div className='h-[250px] lg:h-[250px] w-[300px] lg:w-[400px]'>
         <Line
