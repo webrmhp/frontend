@@ -16,8 +16,8 @@ const GET_REDY_QUIZ = 'GET_REDY_QUIZ';
 const GET_REDY_QUIZ_RESULT = 'GET_REDY_QUIZ_RESULT';
 
 
-const API_BASE_URL = 'http://localhost:3000';
-// const API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
+// const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
 const GET_EMPLOYEE_DATA = 'GET_EMPLOYEE_DATA';
 const GET_USER_LIST = 'GET_USER_LIST';
 const GET_ADMIN_NOTIFICATION = 'GET_ADMIN_NOTIFICATION';
