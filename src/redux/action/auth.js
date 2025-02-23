@@ -24,10 +24,10 @@ const GET_ADMIN_NOTIFICATION = 'GET_ADMIN_NOTIFICATION';
 const GET_USER_NOTIFICATION = 'GET_USER_NOTIFICATION';
 const GET_ADMIN_UNREAD_NOTIFICATION='GET_ADMIN_UNREAD_NOTIFICATION';
 const GET_COURSE_DATA='GET_COURSE_DATA';
-const REACT_APP_API_BASE_URL = 'http://localhost:3000';
-// const REACT_APP_API_BASE_URL =  'https://backend-bay-six-18.vercel.app'
-axios.defaults.baseURL = 'http://localhost:3000';
-// axios.defaults.baseURL = 'https://backend-bay-six-18.vercel.app';
+// const REACT_APP_API_BASE_URL = 'http://localhost:3000';
+const REACT_APP_API_BASE_URL =  'https://backend-bay-six-18.vercel.app'
+// axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.baseURL = 'https://backend-bay-six-18.vercel.app';
 
 export const completeProfile = (data) => async (dispatch) => {
   const email = localStorage.getItem('registerMail');
