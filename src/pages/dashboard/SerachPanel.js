@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import TruckImage from '../../assets/image/Truck.png';
-import BicycleImage from '../../assets/image/Bicycle.png';
-import Commercial from '../../assets/image/Mini.png';
 import { motion } from 'framer-motion';
 import * as XLSX from 'xlsx';
 import DatePicker from 'react-datepicker';
@@ -28,19 +25,6 @@ const SerachPanel = () => {
   const { userslist } = useSelector((state) => state.auth);
   const { courseVidosData } = useSelector((state) => state.auth);
   const { requestById } = useSelector((state) => state.auth);
-
-  const [quotation, setQuotation] = useState(null);
-  const [quotationDetail, setQuotationDetail] = useState([
-    {
-      companyName: '',
-      coverAmount: '',
-      cashlessCharge: '',
-      activityPoints: 0,
-      companyLogo: '',
-      premiumAmount: '',
-      paymentLink: '',
-    },
-  ]);
   const { courseData } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -477,11 +461,9 @@ const SerachPanel = () => {
                     </p>
                   </div>
                 </div>
-
                 <h2 class='text-xl font-bold text-gray-800'>
                   {requestById?.vehicleModel}
                 </h2>
-
                 <div class='grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 text-sm text-gray-700'>
                   <p>
                     <span class='font-semibold'>Subject:</span> <br />
@@ -572,88 +554,95 @@ const SerachPanel = () => {
                     )}
                   </div>
                 </div>
+                {requestById?.courseType == 'Online' ? (
+                  <>
+                    {' '}
+                    <h2 class='text-xl font-bold text-gray-800'>Video</h2>
+                    <div className='flex justify-center'>
+                      <div className='max-w-6xl mx-auto p-6'>
+                        <h2 className='text-3xl font-bold mb-6 text-center text-gray-800'>
+                          📚 Course Videos
+                        </h2>
 
-                <h2 class='text-xl font-bold text-gray-800'>Video</h2>
-
-                <div className='flex justify-center'>
-                  <div className='max-w-6xl mx-auto p-6'>
-                    <h2 className='text-3xl font-bold mb-6 text-center text-gray-800'>
-                      📚 Course Videos
-                    </h2>
-
-                    {/* ✅ Add Video Button (Always Visible) */}
-                    <div className='flex justify-center mb-4'>
-                      <button
-                        onClick={() => setFormData(requestById?._id)}
-                        className='bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600'
-                      >
-                        ➕ Add Video
-                      </button>
-                    </div>
-
-                    {courseVidosData.length === 0 ? (
-                      <p className='text-center text-gray-500'>
-                        No videos found for this course.
-                      </p>
-                    ) : (
-                      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
-                        {courseVidosData.map((video) => (
-                          <div
-                            key={video._id}
-                            className='bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition duration-300'
+                        {/* ✅ Add Video Button (Always Visible) */}
+                        <div className='flex justify-center mb-4'>
+                          <button
+                            onClick={() => setFormData(requestById?._id)}
+                            className='bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600'
                           >
-                            {/* 🔹 Video Thumbnail */}
-                            <div className='relative w-full h-40 bg-gray-300'>
-                              <img
-                                src={
-                                  video.thumbnail ||
-                                  'https://via.placeholder.com/300'
-                                }
-                                alt='Video Thumbnail'
-                                className='w-full h-full object-cover'
-                              />
-                              <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition duration-300'>
-                                <button className='text-white text-lg font-bold px-4 py-2 bg-blue-600 rounded-md shadow-md'>
-                                  ▶ Play
-                                </button>
-                              </div>
-                            </div>
+                            ➕ Add Video
+                          </button>
+                        </div>
 
-                            {/* 🔹 Video Content */}
-                            <div className='p-2'>
-                              <h3 className='text-lg font-semibold text-gray-800 truncate'>
-                                {video.title}
-                              </h3>
-                              <p className='text-gray-600 text-sm mt-1 line-clamp-2'>
-                                {video.description ||
-                                  'No description available.'}
-                              </p>
+                        {courseVidosData.length === 0 ? (
+                          <p className='text-center text-gray-500'>
+                            No videos found for this course.
+                          </p>
+                        ) : (
+                          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
+                            {courseVidosData.map((video) => (
+                              <div
+                                key={video._id}
+                                className='bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition duration-300'
+                              >
+                                {/* 🔹 Video Thumbnail */}
+                                <div className='relative w-full h-40 bg-gray-300'>
+                                  <img
+                                    src={
+                                      video.thumbnail ||
+                                      'https://via.placeholder.com/300'
+                                    }
+                                    alt='Video Thumbnail'
+                                    className='w-full h-full object-cover'
+                                  />
+                                  <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition duration-300'>
+                                    <button className='text-white text-lg font-bold px-4 py-2 bg-blue-600 rounded-md shadow-md'>
+                                      ▶ Play
+                                    </button>
+                                  </div>
+                                </div>
 
-                              {/* 🔹 Video Actions */}
-                              <div className='flex items-center gap-2 mt-2'>
-                                <button
-                                  onClick={() => handleDelete(video._id)}
-                                  className='bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm'
-                                >
-                                  🗑 Delete
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigator.clipboard.writeText(video?.link);
-                                    toast.success('✅ Video link copied!');
-                                  }}
-                                  className='bg-gray-200 hover:bg-gray-300 px-2 py-1 text-sm rounded text-gray-700'
-                                >
-                                  📋 Copy
-                                </button>
+                                {/* 🔹 Video Content */}
+                                <div className='p-2'>
+                                  <h3 className='text-lg font-semibold text-gray-800 truncate'>
+                                    {video.title}
+                                  </h3>
+                                  <p className='text-gray-600 text-sm mt-1 line-clamp-2'>
+                                    {video.description ||
+                                      'No description available.'}
+                                  </p>
+
+                                  {/* 🔹 Video Actions */}
+                                  <div className='flex items-center gap-2 mt-2'>
+                                    <button
+                                      onClick={() => handleDelete(video._id)}
+                                      className='bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm'
+                                    >
+                                      🗑 Delete
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        navigator.clipboard.writeText(
+                                          video?.link
+                                        );
+                                        toast.success('✅ Video link copied!');
+                                      }}
+                                      className='bg-gray-200 hover:bg-gray-300 px-2 py-1 text-sm rounded text-gray-700'
+                                    >
+                                      📋 Copy
+                                    </button>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
+                            ))}
                           </div>
-                        ))}
+                        )}
                       </div>
-                    )}
-                  </div>
-                </div>
+                    </div>
+                  </>
+                ) : (
+                  ''
+                )}
               </div>
             </>
           )}

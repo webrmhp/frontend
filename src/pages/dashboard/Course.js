@@ -10,7 +10,9 @@ import {
   deleteCourse,
   updateCourse,
 } from '../../redux/action/auth';
+import { getAllUserPaidCourse } from '../../redux/action/request';
 import { useDispatch, useSelector } from 'react-redux';
+import { Eye } from 'lucide-react';
 const Course = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -18,6 +20,8 @@ const Course = () => {
   const [courseLogo, setcourseLogo] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { courseData } = useSelector((state) => state.auth);
+  const { paidCourse } = useSelector((state) => state.auth);
+  console.log(paidCourse, 'paidCourse');
   useEffect(() => {
     dispatch(getCourseList());
   }, [1000]);
@@ -28,16 +32,22 @@ const Course = () => {
     return () => clearTimeout(timer);
   }, [1000]);
   const [editcourse, setEditcourse] = useState(null);
+  const [courseId, setCourseId] = useState(null);
   const handleEdit = (course) => {
     setPreview(course?.courseImage);
     setEditcourse(course);
+  };
+
+  const handleView = (id) => {
+    setCourseId(id);
+    dispatch(getAllUserPaidCourse(id));
   };
 
   const handleSaveEdit = () => {
     const data = {
       courseName: editcourse?.title,
       courseImage: editcourse?.courseImage || preview,
-      ...editcourse
+      ...editcourse,
     };
     dispatch(updateCourse(data, editcourse?._id));
     setTimeout(() => dispatch(getCourseList()), 4000);
@@ -152,7 +162,7 @@ const Course = () => {
         const reader = new FileReader();
         reader.readAsDataURL(file); // Convert file to Base64
         reader.onloadend = () => {
-          console.log(reader.result, "reader.result")
+          console.log(reader.result, 'reader.result');
           setPreview(reader.result); // Show preview
           setFormData({ ...formData, courseImage: reader.result }); // Store Base64
         };
@@ -170,17 +180,6 @@ const Course = () => {
   };
 
   const [previewForNew, setPreviewForNew] = useState(null);
-  const handleFileChangeForNew = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file); // Convert file to Base64
-      reader.onloadend = () => {
-        setPreviewForNew(reader.result); // Show preview
-        setFormData({ ...formData, courseImage: reader.result }); // Store Base64
-      };
-    }
-  };
   const handleTagInput = (e) => {
     if (e.key == 'Shift' && e.target.value.trim()) {
       setFormData((prev) => ({
@@ -234,6 +233,7 @@ const Course = () => {
                   <th className='py-3 px-6 text-left'>Added Date</th>
                   <th className='py-3 px-6 text-left'>Thumbinal</th>
                   <th className='py-3 px-6 text-left'>Video Uploaded</th>
+                  <th className='py-3 px-6 text-left'>View Request</th>
                   <th className='py-3 px-6 '>Action</th>
                 </tr>
               </thead>
@@ -274,15 +274,15 @@ const Course = () => {
                       )}
                     </td>
                     <td className=' justify-center items-center text-center'>
-                      {obj?.videos ? (
-                       
-                         <span>
-                          {obj?.videos?.length}
-                         </span>
-                          
-                      ) : (
-                        ''
-                      )}
+                      {obj?.videos ? <span>{obj?.videos?.length}</span> : ''}
+                    </td>
+                    <td className=' justify-center items-center text-center'>
+                      <button
+                        className='text-green-500 hover:text-green-700'
+                        onClick={() => handleView(obj?._id)}
+                      >
+                        <Eye />
+                      </button>
                     </td>
 
                     <td className='py-3 px-6 text-center flex justify-center space-x-4 relative'>
@@ -843,6 +843,88 @@ const Course = () => {
                     </button>
                   </div>
                 </form>
+              </div>
+            </div>
+          )}
+          {courseId && (
+            <div
+              className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50'
+              onClick={() => setEditcourse(null)}
+            >
+              <div
+                onClick={(e) => e.stopPropagation()} // Prevent click from closing modal
+                className='bg-white p-6 rounded-lg shadow-lg w-[600px] max-h-[80vh] overflow-y-auto'
+              >
+                <h2 className='text-xl font-bold mb-4'>
+                  Review Course Request
+                </h2>
+
+                <div className='overflow-x-auto'>
+                  <table className='min-w-full border border-gray-300'>
+                    <thead className='bg-gray-100'>
+                      <tr>
+                        <th className='border p-2'>#</th>
+                        <th className='border p-2'>User</th>
+                        <th className='border p-2'>Email</th>
+                        <th className='border p-2'>Paid Challan</th>
+                        <th className='border p-2'>Uploaded Date</th>
+                        <th className='border p-2'>Verification</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paidCourse?.map((data, index) => (
+                        <tr
+                          key={data._id}
+                          className='text-center border-b'
+                        >
+                          <td className='border p-2'>{index + 1}</td>
+
+                          <td className='border p-2'>
+                            {data.userDetails?.name}
+                          </td>
+                          <td className='border p-2'>
+                            {data.userDetails?.email}
+                          </td>
+
+                          <td className='border p-2'>
+                            <a
+                              href={data.paidChallan}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              className='text-blue-500 underline'
+                            >
+                              View Challan
+                            </a>
+                          </td>
+
+                          <td className='border p-2'>
+                            {new Date(data.uploadedAt).toLocaleString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: '2-digit',
+                              hour12: true,
+                            })}
+                          </td>
+
+                          <td className='border p-2'>
+                            <button>
+                              {' '}
+                              {data.status == 'Pending' ? (
+                                <span className='bg-[red] text-[white] rounded p-1'>
+                                  Verify Now
+                                </span>
+                              ) : (
+                                <span className='bg-[green] text-[white] rounded p-1'>
+                                  Vrified
+                                </span>
+                              )}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}

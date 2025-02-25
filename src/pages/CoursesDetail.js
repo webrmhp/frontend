@@ -27,7 +27,7 @@ export default function CourseDetail() {
     const data = {
       courseId: courseId,
       userId: localStorage.getItem('userId'),
-      status: 'Pending',
+      status: 'AddToCart',
     };
     dispatch(enrollCourseNow(data));
   };

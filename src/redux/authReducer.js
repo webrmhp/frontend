@@ -30,6 +30,7 @@ const GET_ALL_REQUEST_LIST = 'GET_ALL_REQUEST_LIST';
 const GET_ADMIN_NOTIFICATION = 'GET_ADMIN_NOTIFICATION';
 const GET_USER_NOTIFICATION = 'GET_USER_NOTIFICATION';
 const GET_ADMIN_UNREAD_NOTIFICATION = 'GET_ADMIN_UNREAD_NOTIFICATION';
+const GET_MY_PAID_COURSE= 'GET_MY_PAID_COURSE'
 // Initial state
 const initialState = {
   course: [],
@@ -65,11 +66,14 @@ const initialState = {
   getUserNotify: [],
   courseData: [],
   courseVidosData: [],
+  paidCourse:[]
 };
 
 // Reducer
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_MY_PAID_COURSE:
+    return { ...state, loading: true, paidCourse: action.payload };
     case GET_COURSE_DATA:
       return { ...state, loading: true, courseData: action.payload };
     case GET_COURSE_VIDEO_LIST:

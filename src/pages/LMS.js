@@ -3,36 +3,28 @@ import Header from '../components/Header';
 import Footer from '../components/footur';
 import { getProfile } from '../redux/action/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import CourseCart from '../pages/CourseeCart'
-import { ToastContainer, toast } from 'react-toastify';
-
+import CourseCart from '../pages/CourseeCart';
+import { ToastContainer } from 'react-toastify';
+import PaidCourse from './PaidCourse';
+import {
+  getMyAddToCartCourse,
+  getMyPaidCourse,
+} from '../redux/action/request';
 const LMS = () => {
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.auth);
-
   const [selectedSection, setSelectedSection] = useState('dashboard');
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [quizAnswers, setQuizAnswers] = useState({});
   const [quizResults, setQuizResults] = useState(null);
   const [assignmentFile, setAssignmentFile] = useState(null);
+  const { paidCourse } = useSelector((state) => state.auth);
+  const { addToCartCourse } = useSelector((state) => state.auth);
+useEffect(() => {
+    dispatch(getMyAddToCartCourse('AddToCart'));
+    dispatch(getMyPaidCourse());
 
-  const courses = [
-    {
-      id: 1,
-      title: 'React for Beginners',
-      description: 'Learn React from scratch.',
-    },
-    {
-      id: 2,
-      title: 'Advanced JavaScript',
-      description: 'Master JavaScript concepts.',
-    },
-    {
-      id: 3,
-      title: 'Web Design Basics',
-      description: 'Learn the fundamentals of web design.',
-    },
-  ];
+  }, [1000]);
 
   const assignments = [
     { id: 1, title: 'React Project', dueDate: '2025-01-15' },
@@ -122,9 +114,28 @@ const LMS = () => {
             <h2 className='text-2xl font-semibold text-gray-800'>
               Welcome to Your Dashboard
             </h2>
-            <p className='text-gray-600'>
-              Manage your learning activities in one place.
-            </p>
+
+            <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
+              {/* Add to Cart Card */}
+              <div className='p-6 bg-white shadow-lg rounded-lg border border-gray-200'>
+                <h3 className='text-lg font-semibold text-gray-700'>
+                  🛒 Courses in Cart
+                </h3>
+                <p className='text-2xl font-bold text-blue-600'>
+                  {addToCartCourse.length}
+                </p>
+              </div>
+
+              {/* Paid Course Card */}
+              <div className='p-6 bg-white shadow-lg rounded-lg border border-gray-200'>
+                <h3 className='text-lg font-semibold text-gray-700'>
+                  💰 Paid Courses
+                </h3>
+                <p className='text-2xl font-bold text-green-600'>
+                  {paidCourse.length}
+                </p>
+              </div>
+            </div>
           </div>
         );
       case 'courses':
@@ -133,19 +144,7 @@ const LMS = () => {
             <h2 className='text-2xl font-semibold text-gray-800'>
               Your Paid Courses
             </h2>
-            <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
-              {courses.map((course) => (
-                <div
-                  key={course.id}
-                  className='p-6 bg-white shadow-lg rounded-lg hover:shadow-xl transition-all'
-                >
-                  <h3 className='text-xl font-bold text-gray-800'>
-                    {course.title}
-                  </h3>
-                  <p className='text-gray-600 mt-2'>{course.description}</p>
-                </div>
-              ))}
-            </div>
+            <PaidCourse />
           </div>
         );
       case 'assignments':
@@ -189,7 +188,7 @@ const LMS = () => {
             <h2 className='text-2xl font-semibold text-gray-800'>
               Your Add To Cart Course
             </h2>
-           <CourseCart/>
+            <CourseCart />
           </div>
         );
       case 'grades':
@@ -233,7 +232,7 @@ const LMS = () => {
 
   return (
     <div>
-        <ToastContainer />
+      <ToastContainer />
       <Header />
       <div className='container mx-auto p-6'>
         <div className='flex space-x-6'>
@@ -258,14 +257,13 @@ const LMS = () => {
                 Courses
               </button>
 
-             
               <button
                 onClick={() => setSelectedSection('assignments')}
                 className='w-full py-2 text-left text-blue-500 hover:text-blue-700'
               >
                 Assignments
               </button>
-              
+
               <button
                 onClick={() => setSelectedSection('grades')}
                 className='w-full py-2 text-left text-blue-500 hover:text-blue-700'

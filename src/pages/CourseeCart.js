@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getMyAddToCartCourse,
   removeMyAllCourse,
+  uploadChallan,
 } from '../redux/action/request';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-
+import { Upload } from 'lucide-react';
 pdfMake.vfs = pdfFonts?.pdfMake?.vfs;
 
 export default function Cart() {
@@ -20,7 +21,7 @@ export default function Cart() {
   };
 
   useEffect(() => {
-    dispatch(getMyAddToCartCourse('Pending'));
+    dispatch(getMyAddToCartCourse('AddToCart'));
   }, [1000]);
 
   const [selectedCourses, setSelectedCourses] = useState([]);
@@ -53,7 +54,7 @@ export default function Cart() {
     const data = { courseIds: selectedCourses };
     dispatch(removeMyAllCourse(data));
     setTimeout(() => {
-      dispatch(getMyAddToCartCourse('Pending'));
+      dispatch(getMyAddToCartCourse('AddToCart'));
       setSelectedCourses([]);
     }, [2000]);
   };
@@ -112,6 +113,20 @@ export default function Cart() {
     // Generate PDF
     pdfMake.createPdf(docDefinition).download('invoice.pdf');
   };
+
+  const handleFileChange = (file, Id) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file); // Convert file to Base64
+      reader.onload = () => {
+        dispatch(uploadChallan(Id,{ paidChallan: reader.result }));
+      };
+
+      reader.onerror = (error) => {
+        console.error('Error converting file:', error);
+      };
+    }
+  };
   return (
     <>
       <ToastContainer />
@@ -138,6 +153,7 @@ export default function Cart() {
                       <th className='p-3 text-left'>Thumbnail</th>
                       <th className='p-3 text-left'>Course</th>
                       <th className='p-3 text-left'>Duration</th>
+                      <th className='p-3 text-left'>Paid Challan</th>
                       <th className='p-3 text-left'>Fee</th>
                     </tr>
                   </thead>
@@ -181,6 +197,25 @@ export default function Cart() {
                             {' '}
                             {course?.courseDetails?.duration}
                           </td>
+                          <td
+                            className='p-3 text-gray-800 cursor-pointer flex items-center gap-2'
+                            onClick={() =>
+                              document.getElementById('fileInput').click()
+                            }
+                          >
+                            <Upload
+                              size={35}
+                              className='text-gray-500 m-3'
+                            />
+                            <input
+                              id='fileInput'
+                              type='file'
+                              accept='image/png, image/jpeg'
+                              className='hidden'
+                              onChange={(e)=>{handleFileChange(e.target.files[0],course?._id)}}
+                            />
+                           
+                          </td>
 
                           <td className='p-3 text-gray-800'>
                             Rs: {course?.courseDetails?.prize}
@@ -189,7 +224,7 @@ export default function Cart() {
                       ))}
                     </tbody>
                   ) : (
-                    <body className='relative left-[200%] text-center'>
+                    <body className='relative left-[100%] text-center'>
                       <small>No course yet enrolled </small>
                     </body>
                   )}
