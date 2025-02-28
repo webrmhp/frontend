@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 import Ediit from '../../assets/icons/Ediit';
 import Del from '../../assets/icons/Del';
 import { ToastContainer, toast } from 'react-toastify';
@@ -9,6 +10,7 @@ import {
   addCourse,
   deleteCourse,
   updateCourse,
+  getRequestVerified,
 } from '../../redux/action/auth';
 import { getAllUserPaidCourse } from '../../redux/action/request';
 import { useDispatch, useSelector } from 'react-redux';
@@ -233,7 +235,7 @@ const Course = () => {
                   <th className='py-3 px-6 text-left'>Added Date</th>
                   <th className='py-3 px-6 text-left'>Thumbinal</th>
                   <th className='py-3 px-6 text-left'>Video Uploaded</th>
-                  <th className='py-3 px-6 text-left'>View Request</th>
+                  <th className='py-3 px-6 text-left'>Enrollments</th>
                   <th className='py-3 px-6 '>Action</th>
                 </tr>
               </thead>
@@ -561,6 +563,20 @@ const Course = () => {
                     />
                   </div>
 
+                  <div>
+                    <label className='block text-sm font-medium text-gray-700 mb-1'>
+                    Launched Date
+                    </label>
+                    <input
+                      type='date'
+                      name='launchedDate'
+                      placeholder='Enter price'
+                      className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+                      value={formData.launchedDate}
+                      onChange={handleChange}
+                    />
+                  </div>
+
                   {/* Buttons (Full Width, Centered) */}
                   <div className='col-span-2 flex justify-end space-x-2'>
                     <button
@@ -628,7 +644,7 @@ const Course = () => {
                         }
                       >
                         <option value='Online'>Online</option>
-                        <option value='Offline'>Offline</option>
+                        <option value='Physical'>Physical</option>
                       </select>
                     </div>
 
@@ -657,12 +673,31 @@ const Course = () => {
                       </label>
                       <input
                         type='text'
+                        name='duration'
                         className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
                         value={editcourse.duration}
                         onChange={(e) =>
                           setEditcourse({
                             ...editcourse,
                             duration: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+
+                    <div className='mb-4'>
+                      <label className='block text-gray-700 font-medium'>
+                        Launched Date
+                      </label>
+                      <input
+                        type='date'
+                        name='launchedDate'
+                        className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
+                        value={editcourse.launchedDate}
+                        onChange={(e) =>
+                          setEditcourse({
+                            ...editcourse,
+                            launchedDate: e.target.value,
                           })
                         }
                       />
@@ -848,80 +883,111 @@ const Course = () => {
           )}
           {courseId && (
             <div
-              className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50'
+              className='fixed inset-0 flex items-center w-500 justify-center bg-black bg-opacity-50 z-50'
               onClick={() => setEditcourse(null)}
             >
               <div
                 onClick={(e) => e.stopPropagation()} // Prevent click from closing modal
                 className='bg-white p-6 rounded-lg shadow-lg w-[600px] max-h-[80vh] overflow-y-auto'
               >
-                <h2 className='text-xl font-bold mb-4'>
-                  Review Course Request
-                </h2>
+                <div className='flex items-center justify-between mb-4'>
+                  <h2 className='text-xl font-bold'>Review Course Request</h2>
+                  <button onClick={() => setCourseId(null)}>
+                    <X className='w-7 h-7 text-red-500 cursor-pointer hover:text-red-700' />
+                  </button>
+                </div>
 
                 <div className='overflow-x-auto'>
                   <table className='min-w-full border border-gray-300'>
                     <thead className='bg-gray-100'>
                       <tr>
-                        <th className='border p-2'>#</th>
                         <th className='border p-2'>User</th>
-                        <th className='border p-2'>Email</th>
+                        <th className='border p-2'>Phone</th>
                         <th className='border p-2'>Paid Challan</th>
                         <th className='border p-2'>Uploaded Date</th>
                         <th className='border p-2'>Verification</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {paidCourse?.map((data, index) => (
-                        <tr
-                          key={data._id}
-                          className='text-center border-b'
-                        >
-                          <td className='border p-2'>{index + 1}</td>
+                      {paidCourse.length > 0 ? (
+                        paidCourse.map((data, index) => (
+                          <tr
+                            key={data._id}
+                            className='text-center border-b'
+                          >
+                            <td className='border p-2 flex items-center space-x-2'>
+                              <img
+                                src={data.userDetails?.profilePhoto}
+                                alt='Profile'
+                                className='w-10 h-10 rounded-full object-cover'
+                              />
+                              <span className='text-gray-800 font-medium'>
+                                {data.userDetails?.name}
+                              </span>
+                            </td>
 
-                          <td className='border p-2'>
-                            {data.userDetails?.name}
-                          </td>
-                          <td className='border p-2'>
-                            {data.userDetails?.email}
-                          </td>
+                            <td className='border p-2'>
+                              {data.userDetails?.phone}
+                            </td>
 
-                          <td className='border p-2'>
-                            <a
-                              href={data.paidChallan}
-                              target='_blank'
-                              rel='noopener noreferrer'
-                              className='text-blue-500 underline'
-                            >
-                              View Challan
-                            </a>
-                          </td>
+                            <td className='border p-2'>
+                              <a
+                                href={data.paidChallan}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className='text-blue-500 underline'
+                              >
+                                View
+                              </a>
+                            </td>
 
-                          <td className='border p-2'>
-                            {new Date(data.uploadedAt).toLocaleString('en-US', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: '2-digit',
-                              hour12: true,
-                            })}
-                          </td>
-
-                          <td className='border p-2'>
-                            <button>
-                              {' '}
-                              {data.status == 'Pending' ? (
-                                <span className='bg-[red] text-[white] rounded p-1'>
-                                  Verify Now
-                                </span>
-                              ) : (
-                                <span className='bg-[green] text-[white] rounded p-1'>
-                                  Vrified
-                                </span>
+                            <td className='border p-2'>
+                              {new Date(data.uploadedAt).toLocaleString(
+                                'en-US',
+                                {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: '2-digit',
+                                  hour12: true,
+                                }
                               )}
-                            </button>
+                            </td>
+
+                            <td className='border p-2'>
+                              <button>
+                                {data.status == 'Pending' ? (
+                                  <span
+                                    className='bg-red-500 text-white rounded p-1'
+                                    onClick={() => {
+                                      dispatch(getRequestVerified(data?._id));
+                                      setTimeout(() => {
+                                        dispatch(
+                                          getAllUserPaidCourse(courseId)
+                                        );
+                                      }, [2000]);
+                                    }}
+                                  >
+                                    Verify Now
+                                  </span>
+                                ) : (
+                                  <span className='bg-green-500 text-white rounded p-1'>
+                                    Verified
+                                  </span>
+                                )}
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan='5'
+                            className='text-center p-4 text-gray-500'
+                          >
+                            No User Request for this Course
                           </td>
                         </tr>
-                      ))}
+                      )}
                     </tbody>
                   </table>
                 </div>

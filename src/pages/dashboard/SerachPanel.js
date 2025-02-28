@@ -197,7 +197,6 @@ const SerachPanel = () => {
           {Object.keys(requestById).length === 0 ? (
             <div className='p-4 bg-gray-100'>
               <div className='flex justify-between items-center mb-4'>
-                <h1 className='text-xl font-bold'>Serach Course</h1>
                 <span
                   onClick={() => handleExport()}
                   className='px-4 py-2 bg-[#1E90FE] text-white font-semibold rounded-lg  transition-colors duration-300 ease-in-out cursor-pointer'
@@ -208,7 +207,7 @@ const SerachPanel = () => {
               </div>
 
               {/* Filter Section */}
-              <div className='grid grid-cols-5 gap-4 mb-2'>
+              {/* <div className='grid grid-cols-5 gap-4 mb-2'>
                 <div className='relative'>
                   <select
                     className='border p-2 rounded w-full'
@@ -410,7 +409,7 @@ const SerachPanel = () => {
                     Reset
                   </button>
                 </div>
-              </div>
+              </div> */}
 
               {/* Cards Section */}
               <div className='grid grid-cols-3 gap-4'>

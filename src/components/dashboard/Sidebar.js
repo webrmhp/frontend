@@ -63,7 +63,7 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
           onClick={() => handleNavigation('Serach Panel')}
         >
           <i className='fas fa-file-alt'></i>
-          <span>Serach Panel</span>
+          <span>Course Activities</span>
         </li>
       </div>
       <div className='absolute bottom-4 left-6'>

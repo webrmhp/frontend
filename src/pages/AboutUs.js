@@ -5,8 +5,6 @@ import Header from "../components/Header";
 import coverImage from "../assets/image/cover.png";
 import videodm from "../assets/image/videodm.mp4";
 import netflix from "../../src/assets/image/netflix.jpg";
-
-
 const Counter = ({ target, title }) => {
   const [count, setCount] = useState(0);
 

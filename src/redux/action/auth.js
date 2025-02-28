@@ -426,6 +426,29 @@ export const getCourseList= () => async (dispatch) => {
   }
 };
 
+export const getRequestVerified = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    
+    const response = await axios.patch(
+      `${REACT_APP_API_BASE_URL}/add-to-card/verify-request?id=${id}`,
+      {}, // Empty object for PATCH request body
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Correctly passing token in headers
+        },
+      }
+    );
+
+    toast.success(response?.data?.message || 'User enrollment verified successfully');
+
+  } catch (error) {
+    console.error("Error verifying request:", error);
+    return error;
+  }
+};
+
+
 
 export const updateUser = (data, userId) => async (dispatch) => {
   dispatch({ type: GET_PROFILE_REQUEST });

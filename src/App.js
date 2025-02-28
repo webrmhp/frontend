@@ -49,6 +49,7 @@ import {
 } from 'react-spinners';
 import AdminDashboard from './pages/dashboard/AdminDashboard';
 import CertificatePage from './pages/CertificatePage';
+import CourseVideo from './pages/course-video';
 
 // Public Route Component
 const PublicRoute = ({ isAuthenticated, children }) => {
@@ -130,7 +131,7 @@ function App() {
           path={routes.support}
           element={<SupportPage />}
         />
-         <Route
+        <Route
           path={routes.adminDashboard}
           element={
             <PrivateRoute>
@@ -176,6 +177,15 @@ function App() {
           element={
             <PrivateRoute>
               <Event1 />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path='/course-videos'
+          element={
+            <PrivateRoute>
+              <CourseVideo />
             </PrivateRoute>
           }
         />
