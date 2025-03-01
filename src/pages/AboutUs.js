@@ -4,13 +4,13 @@ import Footur from "../components/footur";
 import Header from "../components/Header";
 import coverImage from "../assets/image/cover.png";
 import videodm from "../assets/image/videodm.mp4";
-import netflix from "../../src/assets/image/netflix.jpg";
+
 const Counter = ({ target, title }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const duration = 4000; // 4000 milli seconds
-    const increment = target / (duration / 16); 
+    const duration = 4000; // 4000 milliseconds
+    const increment = target / (duration / 16);
 
     let start = 0;
     const timer = setInterval(() => {
@@ -21,16 +21,16 @@ const Counter = ({ target, title }) => {
       } else {
         setCount(Math.ceil(start));
       }
-    }, 16); 
+    }, 16);
 
-    return () => clearInterval(timer); 
+    return () => clearInterval(timer);
   }, [target]);
 
   return (
     <motion.div
-      className="bg-gray-50 shadow-md rounded-lg p-4 hover:scale-105 transition-transform"
+      className="bg-green-50 shadow-md rounded-lg p-4 hover:scale-105 transition-transform"
     >
-      <h2 className="text-2xl sm:text-3xl font-bold text-blue-600">
+      <h2 className="text-2xl sm:text-3xl font-bold text-green-600">
         {count.toLocaleString()}+
       </h2>
       <p className="text-gray-600 text-sm sm:text-base">{title}</p>
@@ -73,7 +73,7 @@ const AboutUs = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-green-800">
           Why Roshan Mustaqbil Hunarmand Program!
         </h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
@@ -82,24 +82,24 @@ const AboutUs = () => {
             {[
               "Affordable IT Training",
               "Practical, Industry-Relevant Curriculum",
-              "Focus on Employment and Entrepreneurship",
+              "Focus on Entrepreneurship",
               "Inclusive and Equal Opportunities",
               "Contribution to National Development",
               "Personal and Professional Growth",
               "Global Opportunities",
               "Commitment to Innovation",
-              "Preparing Students for International Certifications",
+              "Students for International Certifications",
             ].map((point, idx) => (
               <motion.div
                 key={idx}
-                className="flex items-center mb-4"
+                className="flex items-center"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <div className="flex items-center justify-center bg-blue-600 text-white w-8 h-8 mr-3 rounded-full">
+                <div className="flex items-center justify-center bg-green-600 text-white w-8 h-8 mr-3 rounded-full">
                   <i className="fas fa-check text-sm"></i>
                 </div>
-                <p className="text-gray-700 text-sm sm:text-base">{point}</p>
+                <p className="text-gray-700 mt-3 text-sm sm:text-base">{point}</p>
               </motion.div>
             ))}
           </div>
@@ -122,7 +122,7 @@ const AboutUs = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
       >
-        <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 mb-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-green-800 mb-4">
           Vision and Mission
         </h2>
         <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
@@ -136,7 +136,7 @@ const AboutUs = () => {
 
       {/* Counters Section */}
       <motion.div
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 text-center px-4 sm:px-8 lg:px-24 mt-12"
+        className="grid grid-cols-2 mb-10 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 text-center px-4 sm:px-8 lg:px-24 mt-12"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
@@ -150,32 +150,6 @@ const AboutUs = () => {
         ].map((counter, index) => (
           <Counter key={index} target={counter.value} title={counter.title} />
         ))}
-      </motion.div>
-
-      {/* Appreciation Logos Section */}
-      <motion.div
-        className="mt-12 px-4 sm:px-8 lg:px-24"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
-        <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800">Appreciated By</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
-          {Array(10)
-            .fill(0)
-            .map((_, idx) => (
-              <div
-                key={idx}
-                className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center justify-center"
-              >
-                <img
-                  src={netflix}
-                  alt="Company Logo"
-                  className="w-full h-auto object-contain"
-                />
-              </div>
-            ))}
-        </div>
       </motion.div>
 
       {/* Footer */}

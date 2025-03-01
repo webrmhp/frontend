@@ -146,7 +146,7 @@ const Header = () => {
                 onClick={() => goToCourse('Physical')}
                 className="block w-full py-2 text-sm text-white hover:bg-[#2AA166] hover:rounded-md text-left px-4"
               >
-                Onsite Courses
+                Physical Courses
               </button>
             </div>
           </div>
@@ -303,18 +303,6 @@ const Header = () => {
             >
               Event 2
             </button>
-            <button
-              onClick={() => navigate('/event-3')}
-              className="block w-full py-2 text-sm text-white hover:bg-[#2AA166] hover:rounded-md text-left px-4"
-            >
-              Event 3
-            </button>
-            <button
-              onClick={() => navigate('/event-4')}
-              className="block w-full py-2 text-sm text-white hover:bg-[#2AA166] hover:rounded-md text-left px-4"
-            >
-              Event 4
-            </button>
           </div>
         </div>
 
@@ -385,7 +373,7 @@ const Header = () => {
             onClick={() => goToCourse('Physical')}
             className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
           >
-            Onsite Courses
+            Physical Courses
           </button>
         </div>
       </div>
@@ -534,18 +522,7 @@ const Header = () => {
         >
           Event 2
         </button>
-        <button
-          onClick={() => navigate('/event-3')}
-          className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          Event 3
-        </button>
-        <button
-          onClick={() => navigate('/event-4')}
-          className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          Event 4
-        </button>
+        
       </div>
     </div>
 
@@ -628,7 +605,7 @@ const Header = () => {
           <div className="py-2">
             <Link
               to={routes.profile}
-              className="flex items-center px-4 py-2 text-sm text-white hover:bg-[#166534] hover:rounded-md"
+              className="flex items-center no-underline px-4 py-2 text-sm text-white hover:bg-[#166534] hover:rounded-md"
             >
               <User size={18} className="mr-2" />
               <span>Profile</span>

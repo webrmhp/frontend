@@ -14,14 +14,16 @@ import {
   GraduationCap,
   BadgeIcon,
 } from 'lucide-react';
+
 export default function CourseDetail() {
   const { course } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { id } = useParams();
   const { courseDetail } = useSelector((state) => state.auth);
+
   useEffect(() => {
     dispatch(getCourseById(id));
-  }, [1000]);
+  }, [id]);
 
   const enrollCourse = (courseId) => {
     const data = {
@@ -34,12 +36,16 @@ export default function CourseDetail() {
 
   useEffect(() => {
     dispatch(getCourse());
-  }, [1000]);
+  }, []);
+
   const [randomCourses, setRandomCourses] = useState([]);
 
   useEffect(() => {
-    setRandomCourses(course.sort(() => Math.random() - 0.5).slice(0, 3));
-  }, [course]);
+    if (course.length > 0) {
+      setRandomCourses(course.sort(() => Math.random() - 0.5).slice(0, 3));
+    }
+  }, [course]); 
+
   return (
     <div>
       <ToastContainer />
@@ -50,22 +56,22 @@ export default function CourseDetail() {
             <div className='w-full lg:w-3/4 px-4'>
               <div className='bg-white rounded-lg shadow-md p-6 mb-6'>
                 <div className='mb-6'>
-                  <h5>{courseDetail?.title}</h5>
-                  <div className='flex flex-wrap items-center gap-6 text-sm'>
+                  <h5 className='text-2xl font-bold'>{courseDetail?.title}</h5>
+                  <div className='flex flex-wrap items-center gap-6 text-sm mt-4'>
                     <div className='flex items-center'>
                       <img
-                        src={courseDetail?.courseImage}
+                        src={courseDetail?.instructorImage || 'https://via.placeholder.com/150'}
                         alt='Instructor'
                         className='w-12 h-12 rounded-full mr-3'
                       />
                       <div>
                         <h6 className='font-semibold'>Instructor</h6>
-                        <p className='text-gray-600'>PFTP | Instructor</p>
+                        <p className='text-gray-600'>{courseDetail?.instructor || 'PFTP | Instructor'}</p>
                       </div>
                     </div>
                     <div>
                       <h6 className='font-semibold'>Category</h6>
-                      <p className='text-gray-600'>{courseDetail?.title}</p>
+                      <p className='text-gray-600'>{courseDetail?.category || 'Web Development'}</p>
                     </div>
                     <div>
                       <h6 className='font-semibold'>Rating</h6>
@@ -80,18 +86,18 @@ export default function CourseDetail() {
                           className='w-4 h-4 text-yellow-400 fill-current'
                           strokeWidth={0.5}
                         />
-                        <span className='ml-1'>(4.5)</span>
+                        <span className='ml-1'>({courseDetail?.rating || '4.5'})</span>
                       </div>
                     </div>
                     <div>
                       <h6 className='font-semibold'>Registration Fee</h6>
-                      <p className='text-gray-600'>2900 Rs</p>
+                      <p className='text-gray-600'>{courseDetail?.fee || '2900 Rs'}</p>
                     </div>
                   </div>
                 </div>
                 <div className='mb-6'>
                   <img
-                    src={courseDetail?.courseImage}
+                    src={courseDetail?.courseImage || 'https://via.placeholder.com/800x400'}
                     alt='Course Banner'
                     className='w-full rounded-lg'
                   />
@@ -101,7 +107,7 @@ export default function CourseDetail() {
                     {courseDetail?.title}
                   </h2>
                   <h3 className='text-2xl font-semibold mb-4'>
-                    Welcome to PFTP, where the world connects.
+                    Welcome to {courseDetail?.title}, where the world connects.
                   </h3>
                   <p className='mb-4'>
                     If you are looking forward to {courseDetail?.title} and want
@@ -109,59 +115,62 @@ export default function CourseDetail() {
                     where you should be.
                   </p>
                   <p className='mb-4'>
-                    MERN Stack enables efficient web development by combining 4
-                    JS-based technologies into a comprehensive technology stack.
+                    {courseDetail?.description ||
+                      'This course enables efficient learning by combining modern technologies and practical examples.'}
                   </p>
                   <h4 className='text-xl font-semibold text-teal-600 mb-4'>
-                    What is MERN Stack?
+                    What is {courseDetail?.title}?
                   </h4>
                   <p className='mb-4'>
-                    The MERN Stack consists of MongoDB, Express.js, React.js,
-                    and Node.js, a JavaScript-based technology Stack. Developers
-                    find MERN Stack faster and better than other Stacks. PFTP is
-                    the best choice to guide you through this Stack and will be
-                    effortless.
+                    {courseDetail?.overview ||
+                      'This course provides a comprehensive understanding of the subject, combining theory and practical applications.'}
                   </p>
                   <h4 className='text-xl font-semibold text-teal-600 mb-4'>
                     Learning Outcome:
                   </h4>
                   <p className='font-semibold mb-2'>You will be able to….</p>
                   <ul className='list-disc pl-6 mb-4'>
-                    <li>Understanding the fundamentals of each component</li>
-                    <li>Building full-stack web applications</li>
-                    <li>Working with databases</li>
-                    <li>Implementing user interfaces</li>
-                    <li>Deploying applications</li>
-                    <li>Problem-solving and debugging</li>
+                    {courseDetail?.learningOutcomes?.map((outcome, index) => (
+                      <li key={index}>{outcome}</li>
+                    )) || (
+                      <>
+                        <li>Understanding the fundamentals of each component</li>
+                        <li>Building practical applications</li>
+                        <li>Working with real-world examples</li>
+                      </>
+                    )}
                   </ul>
                   <h4 className='text-xl font-semibold text-teal-600 mb-4'>
-                    Scope of MERN Stack:
+                    Scope of {courseDetail?.title}:
                   </h4>
                   <p className='font-semibold mb-2'>
-                    MERN Stack developers can look forward to a promising future
-                    as….
+                    {courseDetail?.title} developers can look forward to a promising future as….
                   </p>
                   <ul className='list-disc pl-6 mb-4'>
-                    <li>
-                      An increasing number of companies is enthusiastically
-                      adopting the concept of Full-Stack development.
-                    </li>
-                    <li>
-                      It represents a highly rewarding career opportunity with
-                      excellent earning potential.
-                    </li>
-                    <li>There is a huge scope of jobs even for freshers.</li>
+                    {courseDetail?.scope?.map((point, index) => (
+                      <li key={index}>{point}</li>
+                    )) || (
+                      <>
+                        <li>High demand in the job market</li>
+                        <li>Excellent earning potential</li>
+                        <li>Opportunities for freelancing and entrepreneurship</li>
+                      </>
+                    )}
                   </ul>
                   <h4 className='text-xl font-semibold text-teal-600 mb-4'>
-                    Course Content list:
+                    Course Content:
                   </h4>
                   <ol className='list-decimal pl-6 mb-4'>
-                    <li>Introduction to MERN STACK</li>
-                    <li>MongoDB</li>
-                    <li>Express.js</li>
-                    <li>ReactJS</li>
-                    <li>Node.js</li>
-                    <li>Explore Modern JavaScript</li>
+                    {courseDetail?.courseContent?.map((content, index) => (
+                      <li key={index}>{content}</li>
+                    )) || (
+                      <>
+                        <li>Introduction</li>
+                        <li>Core Concepts</li>
+                        <li>Advanced Topics</li>
+                        <li>Practical Projects</li>
+                      </>
+                    )}
                   </ol>
                   <h2 className='text-xl text-center mb-4'>
                     For the whole course content outlines
@@ -179,34 +188,34 @@ export default function CourseDetail() {
                 <h5 className='text-xl font-bold mb-4'>Course Details</h5>
                 <ul className=''>
                   <li className='flex items-center'>
-                    <Clock className=' h-5 mr-2' />
+                    <Clock className='h-5 mr-2' />
                     <span className='font-semibold'>Duration:</span>
-                    <span className='ml-2'>3-Months</span>
+                    <span className='ml-2'>{courseDetail?.duration || '3-Months'}</span>
                   </li>
                   <li className='flex items-center'>
                     <Globe className='w-5 h-5 mr-2' />
                     <span className='font-semibold'>Language:</span>
-                    <span className='ml-2'>English/Urdu</span>
+                    <span className='ml-2'>{courseDetail?.language || 'English/Urdu'}</span>
                   </li>
                   <li className='flex items-center'>
                     <MoveUpIcon className='w-5 h-5 mr-2' />
                     <span className='font-semibold'>Skill Level:</span>
-                    <span className='ml-2'>Beginner</span>
+                    <span className='ml-2'>{courseDetail?.skillLevel || 'Beginner'}</span>
                   </li>
                   <li className='flex items-center'>
                     <GraduationCap className='w-5 h-5 mr-2' />
                     <span className='font-semibold'>Subject:</span>
-                    <span className='ml-2'>Website Development</span>
+                    <span className='ml-2'>{courseDetail?.subject || 'Website Development'}</span>
                   </li>
                   <li className='flex items-center'>
                     <BadgeIcon className='w-5 h-5 mr-2' />
                     <span className='font-semibold'>Certification:</span>
-                    <span className='ml-2'>Yes</span>
+                    <span className='ml-2'>{courseDetail?.certification ? 'Yes' : 'No'}</span>
                   </li>
                 </ul>
 
                 <button
-                  onClick={() => enrollCourse(courseDetail._id)}
+                  onClick={() => enrollCourse(courseDetail?._id)}
                   className='w-full bg-[#166534] text-white font-semibold py-2 px-4 rounded-lg mt-6 transition duration-300'
                 >
                   Enroll Course
@@ -215,29 +224,19 @@ export default function CourseDetail() {
               <div className='bg-white rounded-lg shadow-md p-6 mb-6'>
                 <h5 className='text-xl font-bold mb-4'>Related Course</h5>
                 <div className='space-y-4'>
-                  {randomCourses.map((obj, index) => {
-                    return (
-                      <RelatedCourse
-                        title={obj?.title}
-                        image={obj?.courseImage}
-                      />
-                    );
-                  })}
+                  {randomCourses.map((obj, index) => (
+                    <RelatedCourse
+                      key={index}
+                      title={obj?.title}
+                      image={obj?.courseImage}
+                    />
+                  ))}
                 </div>
               </div>
               <div className='bg-white rounded-lg shadow-md p-6'>
                 <h5 className='text-xl font-bold mb-4'>Course Tag</h5>
                 <div className='flex flex-wrap gap-2'>
-                  {[
-                    'HTML',
-                    'CSS',
-                    'Photoshop',
-                    'jQuery',
-                    'PHP',
-                    'WordPress',
-                    'Bootstrap',
-                    'JavaScript',
-                  ].map((tag) => (
+                  {courseDetail?.tags?.map((tag) => (
                     <a
                       key={tag}
                       href='/'
@@ -245,7 +244,28 @@ export default function CourseDetail() {
                     >
                       {tag}
                     </a>
-                  ))}
+                  )) || (
+                    <>
+                      <a
+                        href='/'
+                        className='bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-300 transition duration-300'
+                      >
+                        HTML
+                      </a>
+                      <a
+                        href='/'
+                        className='bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-300 transition duration-300'
+                      >
+                        CSS
+                      </a>
+                      <a
+                        href='/'
+                        className='bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-300 transition duration-300'
+                      >
+                        JavaScript
+                      </a>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -257,16 +277,17 @@ export default function CourseDetail() {
     </div>
   );
 }
+
 const RelatedCourse = ({ title, image }) => {
   return (
     <div className='flex items-center'>
       <img
-        src={image}
+        src={image || 'https://via.placeholder.com/150'}
         alt={title}
         className='w-20 h-20 object-cover rounded-lg mr-4'
       />
       <div>
-        <h6 className='font-semibold mb-1'>{title}</h6>
+        <h6 className='font-semibold mb-1'>{title || 'Course Title'}</h6>
         <div className='flex'>
           {[1, 2, 3, 4, 5].map((_, index) => (
             <Star
@@ -278,4 +299,4 @@ const RelatedCourse = ({ title, image }) => {
       </div>
     </div>
   );
-};
+}; 

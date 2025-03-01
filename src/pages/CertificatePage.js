@@ -1,49 +1,38 @@
-import React, { useState } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/footur';
-
+import React, { useState } from "react";
+import Header from "../components/Header";
+import Footer from "../components/footur";
 
 const CertificatePage = () => {
-  const [rollNumber, setRollNumber] = useState('');
+  const [rollNumber, setRollNumber] = useState("");
+  const [name, setName] = useState("");
   const [certificateUrl, setCertificateUrl] = useState(null);
   const [error, setError] = useState(null);
 
-  // Mock function to simulate certificate check
-  const checkCertificate = async (rollNumber) => {
-    // Replace this with your actual API call
-    const mockData = {
-      '12345': 'https://example.com/certificate1.pdf',
-      '67890': 'https://example.com/certificate2.pdf',
-    };
+  const certificates = [
+    { name: "Ali", roll: "12345", link: "/certificates/certificate1.pdf" },
+  ];
 
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (mockData[rollNumber]) {
-          resolve(mockData[rollNumber]);
-        } else {
-          reject('No certificate found for this roll number.');
-        }
-      }, 1000); // Simulate API delay
-    });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError(null);
     setCertificateUrl(null);
+    setName("");
 
-    try {
-      const url = await checkCertificate(rollNumber);
-      setCertificateUrl(url);
-    } catch (err) {
-      setError(err);
+    // Find the certificate in the local array
+    const certificate = certificates.find((cert) => cert.roll === rollNumber);
+
+    if (certificate) {
+      setCertificateUrl(certificate.link);
+      setName(certificate.name);
+    } else {
+      setError("No certificate found for this roll number.");
     }
   };
 
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <Header/>
+      <Header />
 
       {/* Main Content */}
       <div className="flex-grow flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -53,7 +42,7 @@ const CertificatePage = () => {
               Check Your Certificate
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              Enter your roll number to view and download your certificate.
+              Enter your roll number to view your certificate.
             </p>
           </div>
 
@@ -69,7 +58,7 @@ const CertificatePage = () => {
                   name="rollNumber"
                   type="text"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
                   placeholder="Enter your roll number"
                   value={rollNumber}
                   onChange={(e) => setRollNumber(e.target.value)}
@@ -78,7 +67,7 @@ const CertificatePage = () => {
             </div>
 
             <div>
-            <button
+              <button
                 type="submit"
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
@@ -87,25 +76,28 @@ const CertificatePage = () => {
             </div>
           </form>
 
-          {/* Display Certificate or Error */}
-          {certificateUrl && (
-            <div className="mt-6 text-center">
-              <iframe
-                src={certificateUrl}
-                className="w-full h-96 border border-gray-300 rounded-lg"
-                title="Certificate"
-              />
-              <a
-                href={certificateUrl}
-                download="certificate.pdf"
-                className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              >
-                Download Certificate
-              </a>
+          {/* User Information Card */}
+          {name && (
+            <div className="mt-6 p-4 bg-white shadow-lg rounded-lg border border-gray-200 text-center">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Certificate Holder:
+              </h3>
+              <p className="text-gray-600 text-lg mt-1">{name}</p>
+
+              
+              {certificateUrl && (
+                <a
+                  href={certificateUrl}
+                  download="certificate.pdf"
+                  className="mt-4 inline-block no-underline bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-200"
+                >
+                  Download Certificate
+                </a>
+              )}
             </div>
           )}
 
-          {/* Error Popup */}
+          {/* Error Message */}
           {error && (
             <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-md text-center">
               <p className="text-sm text-red-600">{error}</p>
@@ -115,7 +107,7 @@ const CertificatePage = () => {
       </div>
 
       {/* Footer */}
-      <Footer/>
+      <Footer />
     </div>
   );
 };

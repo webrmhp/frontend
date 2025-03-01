@@ -9,6 +9,7 @@ import {
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Upload } from 'lucide-react';
+
 pdfMake.vfs = pdfFonts?.pdfMake?.vfs;
 
 export default function Cart() {
@@ -16,36 +17,34 @@ export default function Cart() {
   const dispatch = useDispatch();
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [total, setTotal] = useState(0);
-  const toggleModal = () => {
-    setShowInvoiceModal(!showInvoiceModal);
-  };
+  const [selectedCourses, setSelectedCourses] = useState([]);
 
   useEffect(() => {
     dispatch(getMyAddToCartCourse('AddToCart'));
-  }, [1000]);
+  }, [dispatch]);
 
-  const [selectedCourses, setSelectedCourses] = useState([]);
+  const toggleModal = () => {
+    setShowInvoiceModal(!showInvoiceModal);
+  };
 
   const handleCheckboxChange = (courseId, isChecked) => {
     if (isChecked) {
       setSelectedCourses((prev) => {
         const updatedCourses = [...prev, courseId];
         const course = addToCartCourse.find(
-          (course) => course?.courseDetails._id == courseId
+          (course) => course?.courseDetails._id === courseId
         );
         setTotal(total + course?.courseDetails?.prize);
-        return updatedCourses; // Update selected courses
+        return updatedCourses;
       });
     } else {
-      // Remove the course ID from the selected courses
       setSelectedCourses((prev) => {
         const updatedCourses = prev.filter((id) => id !== courseId);
-
         const course = addToCartCourse.find(
-          (course) => course?.courseDetails._id == courseId
+          (course) => course?.courseDetails._id === courseId
         );
         setTotal(total - course?.courseDetails?.prize);
-        return updatedCourses; // Update selected courses
+        return updatedCourses;
       });
     }
   };
@@ -56,15 +55,11 @@ export default function Cart() {
     setTimeout(() => {
       dispatch(getMyAddToCartCourse('AddToCart'));
       setSelectedCourses([]);
-    }, [2000]);
+    }, 2000);
   };
 
-  useEffect(() => {
-    console.log(addToCartCourse);
-  }, [addToCartCourse]);
-
   const generateInvoice = () => {
-    toggleModal(); // Close the modal after PDF is generated
+    toggleModal();
   };
 
   const download = () => {
@@ -110,192 +105,173 @@ export default function Cart() {
       },
     };
 
-    // Generate PDF
     pdfMake.createPdf(docDefinition).download('invoice.pdf');
   };
 
   const handleFileChange = (file, Id) => {
     if (file) {
       const reader = new FileReader();
-      reader.readAsDataURL(file); // Convert file to Base64
+      reader.readAsDataURL(file);
       reader.onload = () => {
-        dispatch(uploadChallan(Id,{ paidChallan: reader.result }));
+        dispatch(uploadChallan(Id, { paidChallan: reader.result }));
       };
-
       reader.onerror = (error) => {
         console.error('Error converting file:', error);
       };
     }
   };
+
   return (
     <>
       <ToastContainer />
-      <section className='cart-area min-h-screen'>
+      <section className='min-h-screen bg-gradient-to-r from-gray-50 to-gray-100 p-4 sm:p-8'>
         <div className='container mx-auto'>
-          <div className='flex flex-wrap'>
-            {/* Product List */}
+          <h1 className='text-2xl sm:text-3xl font-bold text-gray-800 mb-6'>
+            Your Cart
+          </h1>
+          <div className='flex flex-col lg:flex-row gap-6'>
+            {/* Course List */}
             <div className='w-full lg:w-8/12'>
-              <div className='product-list overflow-x-auto bg-white p-3 rounded-lg shadow-lg'>
-                <table className='table-auto border border-gray-300 w-full'>
-                  <thead>
-                    <tr>
-                      <td
-                        colSpan='4'
-                        className='text-red-600 text-center py-4 font-medium border-b border-gray-300'
-                      >
-                        Finally, you have selected your course. Now click on the
-                        <strong> GENERATE INVOICE </strong> button to get your
-                        fee slip.
-                      </td>
-                    </tr>
-                    <tr className='bg-gray-200'>
-                      <th className='p-3 text-left'>Action</th>
-                      <th className='p-3 text-left'>Thumbnail</th>
-                      <th className='p-3 text-left'>Course</th>
-                      <th className='p-3 text-left'>Duration</th>
-                      <th className='p-3 text-left'>Paid Challan</th>
-                      <th className='p-3 text-left'>Fee</th>
-                    </tr>
-                  </thead>
-                  {addToCartCourse.length > 0 ? (
-                    <tbody>
-                      {addToCartCourse.map((course) => (
-                        <tr
-                          key={course.id}
-                          className='border-b border-gray-300'
-                        >
-                          <td className='p-3 text-center'>
-                            <input
-                              type='checkbox'
-                              className='form-checkbox h-5 w-5 text-blue-600'
-                              onChange={(e) =>
-                                handleCheckboxChange(
-                                  course?.courseDetails?._id,
-                                  e.target.checked
-                                )
-                              }
-                            />
-                          </td>
-                          <td className='p-3'>
-                            <a href='#!'>
+              <div className='bg-white rounded-xl shadow-lg p-4 sm:p-6'>
+                {addToCartCourse.length > 0 ? (
+                  <div className='overflow-x-auto'>
+                    <table className='w-full'>
+                      <thead>
+                        <tr className='bg-gray-100'>
+                          <th className='p-2 sm:p-3 text-left'>Select</th>
+                          <th className='p-2 sm:p-3 text-left'>Thumbnail</th>
+                          <th className='p-2 sm:p-3 text-left'>Course</th>
+                          <th className='p-2 sm:p-3 text-left hidden sm:table-cell'>
+                            Duration
+                          </th>
+                          <th className='p-2 sm:p-3 text-left'>Upload</th>
+                          <th className='p-2 sm:p-3 text-left'>Fee</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {addToCartCourse.map((course) => (
+                          <tr
+                            key={course.id}
+                            className='border-b border-gray-200 hover:bg-gray-50 transition-all'
+                          >
+                            <td className='p-2 sm:p-3'>
+                              <input
+                                type='checkbox'
+                                className='form-checkbox h-4 w-4 sm:h-5 sm:w-5 text-blue-600 rounded'
+                                onChange={(e) =>
+                                  handleCheckboxChange(
+                                    course?.courseDetails?._id,
+                                    e.target.checked
+                                  )
+                                }
+                              />
+                            </td>
+                            <td className='p-2 sm:p-3'>
                               <img
                                 src={course?.courseDetails.courseImage}
                                 alt={course?.courseDetails?.title}
-                                className='w-16 h-16 object-cover rounded'
+                                className='w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg'
                               />
-                            </a>
-                          </td>
-                          <td className='p-3'>
-                            <a
-                              href='#!'
-                              className='text-blue-500 hover:underline hover:text-blue-700 no-underline'
-                            >
-                              {course?.courseDetails?.title}
-                            </a>
-                          </td>
-                          <td className='p-3 text-gray-800'>
-                            {' '}
-                            {course?.courseDetails?.duration}
-                          </td>
-                          <td
-                            className='p-3 text-gray-800 cursor-pointer flex items-center gap-2'
-                            onClick={() =>
-                              document.getElementById('fileInput').click()
-                            }
-                          >
-                            <Upload
-                              size={35}
-                              className='text-gray-500 m-3'
-                            />
-                            <input
-                              id='fileInput'
-                              type='file'
-                              accept='image/png, image/jpeg'
-                              className='hidden'
-                              onChange={(e)=>{handleFileChange(e.target.files[0],course?._id)}}
-                            />
-                           
-                          </td>
-
-                          <td className='p-3 text-gray-800'>
-                            Rs: {course?.courseDetails?.prize}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  ) : (
-                    <body className='relative left-[100%] text-center'>
-                      <small>No course yet enrolled </small>
-                    </body>
-                  )}
-                </table>
-
-                {/* Actions */}
-                <div className='actions flex justify-between mt-4'>
-                  <form
-                    action='#!'
-                    className='flex items-center gap-2'
-                    onSubmit={(e) => e.preventDefault()}
-                  ></form>
-                  <a
-                    onClick={() => {
-                      if (selectedCourses.length > 0) removeCourseFromCart();
-                    }}
-                    className={`px-4 py-2 rounded transition-colors no-underline ${
+                            </td>
+                            <td className='p-2 sm:p-3'>
+                              <p className='text-sm sm:text-base text-gray-800 font-medium'>
+                                {course?.courseDetails?.title}
+                              </p>
+                            </td>
+                            <td className='p-2 sm:p-3 text-gray-600 hidden sm:table-cell'>
+                              {course?.courseDetails?.duration}
+                            </td>
+                            <td className='p-2 sm:p-3'>
+                              <label className='cursor-pointer flex items-center gap-1 sm:gap-2'>
+                                <Upload
+                                  size={16}
+                                  className='text-gray-500 hover:text-blue-600'
+                                />
+                                <input
+                                  type='file'
+                                  accept='image/png, image/jpeg'
+                                  className='hidden'
+                                  onChange={(e) =>
+                                    handleFileChange(e.target.files[0], course?._id)
+                                  }
+                                />
+                              </label>
+                            </td>
+                            <td className='p-2 sm:p-3 text-gray-800 font-semibold'>
+                              Rs: {course?.courseDetails?.prize}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className='text-center py-6'>
+                    <p className='text-gray-600'>No courses in your cart yet.</p>
+                  </div>
+                )}
+                {/* Remove Selected Button */}
+                <div className='mt-4 sm:mt-6'>
+                  <button
+                    onClick={removeCourseFromCart}
+                    disabled={selectedCourses.length === 0}
+                    className={`w-full px-4 py-2 sm:px-6 sm:py-2 rounded-lg transition-all text-sm sm:text-base ${
                       selectedCourses.length === 0
-                        ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                        : 'bg-gray-700 text-white hover:bg-gray-800 cursor-pointer'
+                        ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                        : 'bg-red-600 text-white hover:bg-red-700'
                     }`}
-                    style={{
-                      pointerEvents:
-                        selectedCourses.length === 0 ? 'none' : 'auto',
-                    }}
                   >
-                    Remove From Cart
-                  </a>
+                    Remove Selected
+                  </button>
                 </div>
               </div>
             </div>
 
             {/* Cart Summary */}
-            <div className='w-full lg:w-4/12 px-4 mt-8 lg:mt-0'>
-              <div className='cart-summary bg-white p-6 rounded-lg shadow-lg'>
-                <div className='cs-title text-center mb-4'>
-                  <h5 className='text-2xl font-bold text-gray-700'>
-                    Cart Summary
-                  </h5>
+            <div className='w-full lg:w-4/12'>
+              <div className='bg-white rounded-xl shadow-lg p-4 sm:p-6'>
+                <h2 className='text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6'>
+                  Cart Summary
+                </h2>
+                <div className='space-y-3 sm:space-y-4'>
+                  <div className='flex justify-between'>
+                    <span className='text-sm sm:text-base text-gray-600'>
+                      Subtotal
+                    </span>
+                    <span className='text-sm sm:text-base text-gray-800 font-semibold'>
+                      Rs {total}
+                    </span>
+                  </div>
+                  <div className='flex justify-between'>
+                    <span className='text-sm sm:text-base text-gray-600'>
+                      Discount (0%)
+                    </span>
+                    <span className='text-sm sm:text-base text-gray-800 font-semibold'>
+                      Rs 0
+                    </span>
+                  </div>
+                  <div className='border-t border-gray-200 pt-3 sm:pt-4'>
+                    <div className='flex justify-between'>
+                      <span className='text-sm sm:text-base text-gray-800 font-bold'>
+                        Total
+                      </span>
+                      <span className='text-sm sm:text-base text-gray-800 font-bold'>
+                        Rs {total}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className='cs-content'>
-                  <ul className='list-none mb-4'>
-                    <li className='flex justify-between py-2 text-gray-600'>
-                      <span>Sub Total</span>
-                      <span>{total}</span>
-                    </li>
-                    <li className='flex justify-between py-2 text-gray-600'>
-                      <span>Discount (0%)</span>
-                      <span>0</span>
-                    </li>
-                  </ul>
-                  <p className='cart-total flex justify-between text-lg font-bold border-t border-gray-300 pt-4 text-gray-700'>
-                    <span>Grand Total</span>
-                    <span>{total}</span>
-                  </p>
-                  <button
-                    className={`px-4 py-2 rounded transition-colors no-underline ${
-                      selectedCourses.length === 0
-                        ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                        : 'bg-gray-700 text-white hover:bg-gray-800 cursor-pointer'
-                    }`}
-                    style={{
-                      pointerEvents:
-                        selectedCourses.length === 0 ? 'none' : 'auto',
-                    }}
-                    onClick={generateInvoice}
-                  >
-                    <i className='las la-file-invoice text-xl'></i> Generate
-                    Invoice
-                  </button>
-                </div>
+                <button
+                  onClick={generateInvoice}
+                  disabled={selectedCourses.length === 0}
+                  className={`w-full mt-4 sm:mt-6 px-4 py-2 sm:px-6 sm:py-2 rounded-lg transition-all text-sm sm:text-base ${
+                    selectedCourses.length === 0
+                      ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                  }`}
+                >
+                  Generate Invoice
+                </button>
               </div>
             </div>
           </div>
@@ -304,26 +280,27 @@ export default function Cart() {
         {/* Invoice Modal */}
         {showInvoiceModal && (
           <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
-            <div className='bg-white p-6 rounded-lg shadow-lg w-full max-w-md'>
-              <h3 className='text-xl font-bold mb-4 text-gray-800'>Invoice</h3>
-              <p className='text-gray-600 mb-4'>
+            <div className='bg-white rounded-xl shadow-lg p-4 sm:p-6 w-full max-w-md mx-4'>
+              <h3 className='text-xl sm:text-2xl font-bold text-gray-800 mb-4'>
+                Invoice
+              </h3>
+              <p className='text-sm sm:text-base text-gray-600 mb-6'>
                 Your invoice has been successfully generated! Download or print
                 your fee slip below.
               </p>
-              <div className='flex justify-end gap-4'>
+              <div className='flex justify-end gap-3 sm:gap-4'>
                 <button
-                  className='px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400'
                   onClick={toggleModal}
+                  className='px-4 py-2 sm:px-6 sm:py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 text-sm sm:text-base'
                 >
                   Close
                 </button>
-                <a
-                  onClick={() => download()}
-                  className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
-                  download
+                <button
+                  onClick={download}
+                  className='px-4 py-2 sm:px-6 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base'
                 >
                   Download
-                </a>
+                </button>
               </div>
             </div>
           </div>
