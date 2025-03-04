@@ -114,6 +114,7 @@ const Course = () => {
     }
   };
 
+
   const handleSubmit = (e) => {
     console.log(formData, 'formData');
     e.preventDefault();
@@ -162,20 +163,20 @@ const Course = () => {
     if (type == 'New') {
       if (file) {
         const reader = new FileReader();
-        reader.readAsDataURL(file); // Convert file to Base64
+        reader.readAsDataURL(file); 
         reader.onloadend = () => {
           console.log(reader.result, 'reader.result');
-          setPreview(reader.result); // Show preview
-          setFormData({ ...formData, courseImage: reader.result }); // Store Base64
+          setPreview(reader.result);
+          setFormData({ ...formData, courseImage: reader.result }); 
         };
       }
     } else {
       if (file) {
         const reader = new FileReader();
-        reader.readAsDataURL(file); // Convert file to Base64
+        reader.readAsDataURL(file);
         reader.onloadend = () => {
-          setPreview(reader.result); // Show preview
-          setEditcourse({ ...editcourse, courseImage: reader.result }); // Store Base64
+          setPreview(reader.result); 
+          setEditcourse({ ...editcourse, courseImage: reader.result }); 
         };
       }
     }
@@ -183,17 +184,45 @@ const Course = () => {
 
   const [previewForNew, setPreviewForNew] = useState(null);
   const handleTagInput = (e) => {
-    if (e.key == 'Shift' && e.target.value.trim()) {
-      setFormData((prev) => ({
-        ...prev,
-        courseTag: [...prev.courseTag, e.target.value],
-      }));
-      e.target.value = ''; // Clear input after adding tag
+    if (e.key === ' ') {
+      e.preventDefault();
+      const newTag = e.target.value.trim(); 
+      if (newTag) {
+        setEditcourse((prev) => ({
+          ...prev,
+          courseTag: [...prev.courseTag, newTag],
+        }));
+        e.target.value = '';
+      }
+    }
+  };
+  const [formData2, setFormData2] = useState({
+    courseTag: [],
+  });
+
+  const handleTagInput_2 = (e) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      const newTag = e.target.value.trim();
+      if (newTag && !formData2.courseTag.includes(newTag)) {
+        setFormData2((prev) => ({
+          ...prev,
+          courseTag: [...prev.courseTag, newTag],
+        }));
+        e.target.value = '';
+      }
     }
   };
 
+  const removeTag_2 = (tagToRemove) => {
+    setFormData2((prev) => ({
+      ...prev,
+      courseTag: prev.courseTag.filter((tag) => tag !== tagToRemove),
+    }));
+  };
+
   const removeTag = (tagToRemove) => {
-    setFormData((prev) => ({
+    setEditcourse((prev) => ({
       ...prev,
       courseTag: prev.courseTag.filter((tag) => tag !== tagToRemove),
     }));
@@ -214,13 +243,13 @@ const Course = () => {
             <div className='ml-auto flex items-center space-x-4'>
               <span
                 onClick={() => handleExport()}
-                className='px-4 py-2 bg-[#1E90FE] text-white font-semibold rounded-lg hover:bg-white hover:text-black transition-colors duration-300 ease-in-out cursor-pointer'
+                className='px-4 py-2 bg-[#1E90FE] text-white font-semibold rounded-lg hover:bg-blue-600 hover:text-black transition-colors duration-300 ease-in-out cursor-pointer'
               >
                 Export Excel
               </span>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className='px-4 py-2 bg-[#1E90FE] text-white font-semibold rounded-lg hover:bg-white hover:text-black transition-colors duration-300 ease-in-out cursor-pointer'
+                className='px-4 py-2 bg-[#1E90FE] text-white font-semibold rounded-lg hover:bg-blue-600 hover:text-black transition-colors duration-300 ease-in-out cursor-pointer'
               >
                 Add course
               </button>
@@ -243,9 +272,8 @@ const Course = () => {
                 {courseData?.map((obj, index) => (
                   <tr
                     key={index}
-                    className={`border-b border-gray-200 ${
-                      index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
-                    }`}
+                    className={`border-b border-gray-200 ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+                      }`}
                   >
                     <td className='py-3 px-6 text-left'>{obj.title}</td>
                     <td className='py-3 px-6 text-left'>
@@ -433,33 +461,38 @@ const Course = () => {
 
                   {/* Course Tags (Full Width) */}
                   <div className='col-span-2'>
-                    <label className='block text-sm font-medium text-gray-700 mb-1'>
+                    {/* Second Set of Tags */}
+                    <label className='block text-sm font-medium text-gray-700 mb-1 mt-4'>
                       Course Tags
                     </label>
                     <div className='flex flex-wrap gap-2 border p-2 rounded-lg'>
-                      {formData?.courseTag?.map((tag, index) => (
+                      {/* Display existing tags for the second set */}
+                      {formData2?.courseTag?.map((tag, index) => (
                         <div
                           key={index}
-                          className='flex items-center bg-blue-500 text-white px-2 py-1 rounded-lg space-x-2'
+                          className='flex items-center bg-green-500 text-white px-2 py-1 rounded-lg space-x-2'
                         >
                           <span>{tag}</span>
                           <button
                             type='button'
-                            onClick={() => removeTag(tag)}
+                            onClick={() => removeTag_2(tag)} // Remove tag from the second set
                             className='text-white text-sm'
                           >
                             ❌
                           </button>
                         </div>
                       ))}
+
+                      {/* Input for adding new tags to the second set */}
                       <input
                         type='text'
-                        placeholder='Type and press Enter'
-                        onKeyDown={handleTagInput}
+                        placeholder='Type and press Space or Enter to add a tag'
+                        onKeyDown={handleTagInput_2}
                         className='flex-grow p-2 outline-none'
                       />
                     </div>
                   </div>
+
 
                   {/* Duration */}
                   <div>
@@ -565,7 +598,7 @@ const Course = () => {
 
                   <div>
                     <label className='block text-sm font-medium text-gray-700 mb-1'>
-                    Launched Date
+                      Launched Date
                     </label>
                     <input
                       type='date'
@@ -707,6 +740,7 @@ const Course = () => {
                         Course Tags
                       </label>
                       <div className='flex flex-wrap gap-2 border p-2 rounded-lg'>
+                        {/* Display existing tags */}
                         {editcourse?.courseTag?.map((tag, index) => (
                           <div
                             key={index}
@@ -722,9 +756,11 @@ const Course = () => {
                             </button>
                           </div>
                         ))}
+
+                        {/* Input for adding new tags */}
                         <input
                           type='text'
-                          placeholder='Type and press Enter'
+                          placeholder='Type and press Space to add a tag'
                           onKeyDown={handleTagInput}
                           className='flex-grow p-2 outline-none'
                         />

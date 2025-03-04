@@ -13,6 +13,7 @@ import {
   deleteUser,
 } from '../../redux/action/auth';
 import { useDispatch, useSelector } from 'react-redux';
+
 const User = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,15 +22,18 @@ const User = () => {
   const [QRCode, setQRCode] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { userslist } = useSelector((state) => state.auth);
+
   useEffect(() => {
     dispatch(getUserList());
   }, [1000]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2000);
     return () => clearTimeout(timer);
   }, [1000]);
+
   useEffect(() => {
     let count = 1;
     for (let x = 0; x < userslist?.length; x++) {
@@ -39,6 +43,7 @@ const User = () => {
     }
     setFormData({ employeeCode: `A00${count}` });
   }, [userslist]);
+
   const [editUser, setEditUser] = useState(null);
   const handleEdit = (user) => {
     setEditUser(user);
@@ -55,6 +60,7 @@ const User = () => {
     setTimeout(() => dispatch(getUserList()), 2000);
     setEditUser(null);
   };
+
   const handleExport = () => {
     const exportData = userslist?.map((data) => ({
       _id: data._id,
@@ -66,16 +72,9 @@ const User = () => {
       registerDate: data?.registerDate,
     }));
 
-    // Create a new workbook
     const wb = XLSX.utils.book_new();
-
-    // Convert the modified JSON data into a worksheet
     const ws = XLSX.utils.json_to_sheet(exportData);
-
-    // Append the worksheet to the workbook
     XLSX.utils.book_append_sheet(wb, ws, 'Requests Data');
-
-    // Generate and download the Excel file
     XLSX.writeFile(wb, `users_list.xlsx`);
   };
 
@@ -85,6 +84,7 @@ const User = () => {
     password: '',
     employeeCode: '',
   });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -92,6 +92,7 @@ const User = () => {
       [name]: value,
     }));
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (
@@ -117,6 +118,7 @@ const User = () => {
     localStorage.removeItem('token');
     navigate(routes.signin);
   };
+
   const [isToolTipOpen, setIsToolTipOpen] = useState(null);
   const openToolTip = (userId) => setIsToolTipOpen(userId);
   const closeToolTip = () => setIsToolTipOpen(null);
@@ -156,10 +158,8 @@ const User = () => {
                 <tr>
                   <th className='py-3 px-6 text-left'>Names</th>
                   <th className='py-3 px-6 text-left'>Emails</th>
-                  {/* <th className='py-3 px-6 text-left'>Phone</th> */}
                   <th className='py-3 px-6 text-left'>Type</th>
                   <th className='py-3 px-6 text-left'>Registration</th>
-                  <th className='py-3  text-center'>QR Code</th>
                   <th className='py-3 px-6 text-center'>Actions</th>
                 </tr>
               </thead>
@@ -174,7 +174,6 @@ const User = () => {
                   >
                     <td className='py-3 px-6 text-left'>{user.name}</td>
                     <td className='py-3 px-6 text-left'>{user.email}</td>
-                    {/* <td className='py-3 px-6 text-left'>{user.phone}</td> */}
                     <td className='py-3 px-6 text-left '>
                       <span
                         className={
@@ -199,59 +198,42 @@ const User = () => {
                         day: 'numeric',
                       })}
                     </td>
-                    <td className=' justify-center items-center'>
-                      {user?.QRCode ? (
+                    <td className='py-3 px-6 text-center'>
+                      <div className='flex justify-center space-x-4 relative'>
                         <button
-                          onClick={() => {
-                            setQRCode(user?.QRCode);
-                            setIsOpen(true);
-                          }}
+                          className='text-green-500 hover:text-green-700'
+                          onClick={() => handleEdit(user, index)}
                         >
-                          <img
-                            className='w-10 h-10 cursor-pointer'
-                            src={user.QRCode}
-                            alt='No QR Code uploaded yet'
-                          />
+                          <Ediit />
                         </button>
-                      ) : (
-                        ''
-                      )}
-                    </td>
-
-                    <td className='py-3 px-6 text-center flex justify-center space-x-4 relative'>
-                      <button
-                        className='text-green-500 hover:text-green-700'
-                        onClick={() => handleEdit(user, index)}
-                      >
-                        <Ediit />
-                      </button>
-                      <button
-                        className='text-red-500 hover:text-red-700'
-                        onClick={() => openToolTip(user._id)}
-                      >
-                        <Del />
-                      </button>
-                      {isToolTipOpen === user._id && (
-                        <div className='absolute top-10 left-[-40px] mt-2 bg-white p-4 rounded shadow-lg border z-[9999]'>
-                          <p className='text-gray-700'>
-                            Do you really want to delete this user?
-                          </p>
-                          <div className='flex justify-between mt-4'>
-                            <button
-                              className='px-3 py-1 bg-gray-300 rounded hover:bg-gray-400'
-                              onClick={closeToolTip}
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              className='px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600'
-                              onClick={() => confirmDelete(user._id)}
-                            >
-                              OK
-                            </button>
+                        <button
+                          className='text-red-500 hover:text-red-700'
+                          onClick={() => openToolTip(user._id)}
+                        >
+                          <Del />
+                        </button>
+                        {isToolTipOpen === user._id && (
+                          <div className='absolute top-10 left-[-40px] mt-2 bg-white p-4 rounded shadow-lg border z-[9999]'>
+                            <p className='text-gray-700'>
+                              Do you really want to delete this user?
+                            </p>
+                            <div className='flex justify-between mt-4'>
+                              <button
+                                className='px-3 py-1 bg-gray-300 rounded hover:bg-gray-400'
+                                onClick={closeToolTip}
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                className='px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600'
+                                onClick={() => confirmDelete(user._id)}
+                              >
+                                OK
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -279,7 +261,7 @@ const User = () => {
               </div>
             </div>
           )}
-          {/* Edit Modal */}
+
           {editUser && (
             <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
               <div className='bg-white p-6 rounded-lg shadow-lg w-1/3'>
@@ -328,10 +310,7 @@ const User = () => {
                       setEditUser({ ...editUser, userType: e.target.value })
                     }
                   >
-                    <option
-                      value=''
-                      disabled
-                    >
+                    <option value='' disabled>
                       Select a user type
                     </option>
                     <option value='Admin'>Admin</option>
@@ -360,10 +339,10 @@ const User = () => {
           {isModalOpen && (
             <div
               className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50'
-              onClick={() => setIsModalOpen(false)} // Close modal on outside click
+              onClick={() => setIsModalOpen(false)}
             >
               <div
-                onClick={(e) => e.stopPropagation()} // Prevent click from propagating
+                onClick={(e) => e.stopPropagation()}
                 className='bg-white rounded-lg shadow-lg p-6 w-96'
               >
                 <h2 className='text-xl font-bold mb-4'>Add Employees</h2>
