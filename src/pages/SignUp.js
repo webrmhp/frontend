@@ -20,12 +20,13 @@ export default function RegistrationForm() {
   const [phase, setPhase] = useState(Number(localStorage.getItem('phase')) || 1);
   const [fileSelected, setFileSelected] = useState();
   const [userAnswers, setUserAnswers] = useState([]);
-  const handleSelectAnswer = (answer, selectedOptionIndex) => {
+  const handleSelectAnswer = (selectedOptionIndex, questionId) => {
     setUserAnswers((prevAnswers) => [
-      ...prevAnswers, // Spread the previous answers
-      { answer: answer, id: selectedOptionIndex }, // Add the new answer object
+      ...prevAnswers.filter((ans) => ans.id !== questionId), // Prevent duplicate answers
+      { id: questionId, answer: selectedOptionIndex }
     ]);
   };
+  
   const renderQuestions = () =>
     quiz.map((q, index) => (
       <motion.div
@@ -101,7 +102,16 @@ export default function RegistrationForm() {
 
   useEffect(() => {
     dispatch(getReadyQuiz());
-  }, [1000]);
+  }, []);
+
+  if (quiz?.length && userAnswers.length === quiz.length) {
+    dispatch(getReadyMarks(userAnswers));
+  } else {
+
+  }
+  
+  
+
   const handleSubmitProfile = (e) => {
     e.preventDefault();
 
@@ -445,7 +455,7 @@ export default function RegistrationForm() {
 
 
           {phase == 3 && Object.keys(quizResult).length <= 0  ? (
-            <div className='mb-5 text-center'>
+            <div className=' pt-3 text-center'>
               <h2 className='text-2xl font-bold mb-4'>Quiz</h2>
               <motion.div
                 initial='hidden'
@@ -470,7 +480,7 @@ export default function RegistrationForm() {
               </motion.div>
             </div>
           ) : (
-            <div className=''>
+            <div className='pt-5'>
               {Object.keys(quizResult).length > 0 ? (
                 <div className=' p-6 bg-green-200 rounded-lg shadow-md  max-w-sm mx-auto pt-[100px]'>
                   <h2 className='text-2xl font-bold text-center mb-4'>
