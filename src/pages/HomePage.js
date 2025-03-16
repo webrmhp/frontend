@@ -21,7 +21,7 @@ const HomePage = () => {
   console.log(authenticate);
 
   return (
-    <div className='font-sans leading-normal text-gray-800 bg-gray-100'>
+    <div className='font-sans leading-normal text-gray-800 '>
       <Header_Top />
       <Header />
       <div className='relative w-full h-screen'>

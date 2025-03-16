@@ -1,87 +1,85 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Facebook, Linkedin, Twitter, Instagram, Youtube, MapPin, Mail, Phone } from 'lucide-react';
-import flogo from '../assets/image/flogo.png'
+import React from "react";
+import { Link } from "react-router-dom";
+import { FaFacebookF, FaTwitter, FaInstagram, FaPinterestP, FaLinkedinIn , FaHatCowboy  } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#166534] text-white py-12">
-     
-
-      {/* Main Footer Content */}
-      <div className="container mx-auto px-4">
+    <footer className="bg-[#0F3D24] text-[#F1F5F9] py-12">
+      <div className="container mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Company Info */}
-          <div>
-            <img
-              src={flogo}
-              alt="PFTP Logo"
-              width={200}
-              height={50}
-              className="mb-4"
-            />
-            <p className="mb-6 text-left">
-              Professional Freelancing Training Program (PFTP) is an initiative that is highly appreciated by the Government of Pakistan to train the youth in different skill sets.
+
+          {/* Left Section - Logo and Social Media */}
+          <div className=" flex flex-col items-start">
+            <div className="flex items-center gap-2">
+            <div className="hr-icon text-[15px] font-medium  uppercase"> {/* Changed to gray for better contrast */}
+                  <i className="fas fa-user-graduate fa-2x"></i>
+                </div>
+              <h2 className="text-2xl  font-bold">RMHP</h2>
+            </div>
+            <p className="mt-4 text-[#A8B5A2] text-start">
+            Empowering Minds, Transforming Futures – Your Journey to Knowledge Starts Here!
             </p>
-            <div className="space-y-2">
-              <div className="flex gap-2">
-                <MapPin className="w-8 h-8 text-[#FFA500]" />
-                <p className='text-left'>General Head Office 484 Airline Society Mian Boulevard, Lahore, Punjab</p>
-              </div>
-              <div className="flex items-center gap-2 ">
-                <Mail className="w-5 h-5 mt-1 text-[#FFA500]" />
-                <a className='text-white' href="mailto:support@pftpedu.org">support@pftpedu.org</a>
-              </div>
-              <div className="flex items-center gap-2 ">
-                <Phone className="w-5 h-5 text-[#FFA500]" />
-                <p className='mt-3'>0318-4321118 | 0333-4996687</p>
-              </div>
+            <div className="flex gap-3 mt-6">
+              {[
+                { icon: FaFacebookF, link: "#" },
+                { icon: FaTwitter, link: "#" },
+                { icon: FaInstagram, link: "#" },
+                { icon: FaLinkedinIn, link: "#" },
+              ].map(({ icon: Icon, link }, index) => (
+                <Link
+                  key={index}
+                  to={link}
+                  className="p-2 bg-[#124B30] rounded-md transition-all duration-300 hover:bg-amber-500 hover:text-[#0F3D24]"
+                >
+                  <Icon className="w-5 h-5 " />
+                </Link>
+              ))}
             </div>
           </div>
 
-          {/* Useful Links */}
-          <div className=' flex flex-col items-center'>
-            <h3 className="text-xl font-bold mb-6">USEFUL LINKS</h3>
-            <div className="flex  gap-10 ">
-              <div className="space-y-4 text-left">
-                <Link to="#" className="block text-[#f5f4f3] hover:text-[#FF8C00] no-underline">Complete Guide</Link>
-                <Link to="#" className="block text-[#f5f4f3] hover:text-[#FF8C00] no-underline">How to Apply</Link>
-                <Link to="#" className="block text-[#f5f4f3] hover:text-[#3a76f8] no-underline">How to Pay</Link>
-                <Link to="#" className="block text-[#f5f4f3] hover:text-[#FF8C00] no-underline">Terms & Condition</Link>
-                <Link to="#" className="block text-[#f5f4f3] hover:text-[#FF8C00] no-underline">SOPS</Link>
-              </div>
-              <div className="space-y-4 text-left">
-                <Link to="#" className="block text-[#f5f4f3] hover:text-[#FF8C00] no-underline">Scholarships</Link>
-                <Link to="#" className="block text-[#f5f4f3] hover:text-[#FF8C00] no-underline">Internships</Link>
-                <Link to="#" className="block text-[#f5f4f3] hover:text-[#FF8C00] no-underline">Contact Us</Link>
-                <Link to="#" className="block text-[#f5f4f3] hover:text-[#FF8C00] no-underline">FAQs</Link>
-              </div>
+          {/* Middle Section - Latest Courses */}
+          <div className="text-left">
+            <h3 className="text-xl font-bold mb-4 ">Latest Courses</h3>
+            <div className="grid grid-cols-2 gap-2 text-[#A8B5A2]">
+              {[
+                "Computer Engineering",
+                "Website Development",
+                "Civil Engineering",
+                "Civil Engineering",
+                "Social Science",
+                "Business Studies",
+                "Important of English",
+                "General Science",
+              ].map((course, index) => (
+                <p key={index} className="cursor-pointer transition-colors duration-300 hover:text-amber-500">
+                  {course}
+                </p>
+              ))}
             </div>
           </div>
 
-         
+          {/* Right Section - Newsletter */}
+          <div>
+            <h3 className="text-xl font-bold mb-4 text-start ">Newsletter</h3>
+            <p className="text-[#A8B5A2] mb-4 text-start">
+              Subscribe to our newsletter to get more updates and join our course information.
+            </p>
+            <div className="flex">
+              <input
+                type="email"
+                placeholder="Enter Your Email"
+                className="p-3 w-full rounded-l-md bg-[#124B30] text-[#F1F5F9] outline-none placeholder-[#A8B5A2] "
+              />
+              <button className="p-3 bg-amber-500 text-[#0F3D24] rounded-r-md transition-all duration-300 hover:bg-amber-600 hover:text-[#F1F5F9]">
+                →
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t-2 mt-6 border-white  pt-4 px-4 flex items-center flex-col md:flex-row justify-between ">
-          <p>Copyright © 2024 | Developed by PFTP</p>
-          <div className="flex gap-4  ">
-            <Link to="#" className="hover:text-[#FFA500] no-underline icon-triangle">
-              <Facebook className="w-5 h-5" />
-            </Link>
-            <Link to="#" className="hover:text-[#FFA500] no-underline icon-triangle">
-              <Linkedin className="w-5 h-5" />
-            </Link>
-            <Link to="#" className="hover:text-[#FFA500] no-underline icon-triangle">
-              <Twitter className="w-5 h-5" />
-            </Link>
-            <Link to="#" className="hover:text-[#FFA500] no-underline icon-triangle">
-              <Instagram className="w-5 h-5" />
-            </Link>
-            <Link to="#" className="hover:text-[#FFA500] no-underline icon-triangle">
-              <Youtube className="w-5 h-5" />
-            </Link>
-          </div>
+        <div className="border-t border-[#124B30] mt-6 pt-4 text-center text-[#A8B5A2]">
+          © RMHP - Education WordPress Theme. All Rights Reserved.
         </div>
       </div>
     </footer>

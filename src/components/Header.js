@@ -10,9 +10,8 @@ const Header = () => {
   const navigate = useNavigate();
   const { profile } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // For profile dropdown
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false); // For mobile menu toggle
   const [openDropdown, setOpenDropdown] = useState(null); // Track which dropdown is open
 
@@ -21,8 +20,8 @@ const Header = () => {
     setIsAuthenticated(!!token);
   }, []);
 
-  const toggleDropdown = () => {
-    setIsOpen((prev) => !prev);
+  const toggleProfileDropdown = () => {
+    setIsDropdownOpen((prev) => !prev); // Toggle profile dropdown on click
   };
 
   const logout = () => {
@@ -32,10 +31,6 @@ const Header = () => {
 
   const goToUserDashboard = () => {
     navigate(routes.dashboard);
-  };
-
-  const goToCourses = () => {
-    // navigate(routes.);
   };
 
   const gotoHomePage = () => {
@@ -87,7 +82,6 @@ const Header = () => {
 
   return (
     <header
-      onMouseLeave={() => setIsOpen(false)}
       style={{
         position: 'sticky',
         top: 0,
@@ -132,9 +126,8 @@ const Header = () => {
               </span>
             </button>
             <div
-              className={`${
-                openDropdown === 'courses' ? 'block' : 'hidden'
-              } absolute mt-2 w-40 bg-[#166534] border-1 border-teal-500 rounded-lg shadow-lg z-50`}
+              className={`${openDropdown === 'courses' ? 'block' : 'hidden'
+                } absolute mt-2 w-40 bg-[#166534] border-1 border-teal-500 rounded-lg shadow-lg z-50`}
             >
               <button
                 onClick={() => goToCourse('Online')}
@@ -164,9 +157,8 @@ const Header = () => {
             </span>
           </button>
           <div
-            className={`${
-              openDropdown === 'opportunities' ? 'block' : 'hidden'
-            } absolute mt-2 w-32 bg-[#166534] border-1 border-teal-500 rounded-lg shadow-lg z-50`}
+            className={`${openDropdown === 'opportunities' ? 'block' : 'hidden'
+              } absolute mt-2 w-32 bg-[#166534] border-1 border-teal-500 rounded-lg shadow-lg z-50`}
           >
             <button
               onClick={() => gotoOppertunity('Intership')}
@@ -201,9 +193,8 @@ const Header = () => {
             </span>
           </button>
           <div
-            className={`${
-              openDropdown === 'infoDesk' ? 'block' : 'hidden'
-            } absolute mt-2 w-56 bg-[#166534] border-1 border-teal-500 rounded-lg shadow-lg z-50`}
+            className={`${openDropdown === 'infoDesk' ? 'block' : 'hidden'
+              } absolute mt-2 w-56 bg-[#166534] border-1 border-teal-500 rounded-lg shadow-lg z-50`}
           >
             <Link
               to="/created"
@@ -256,9 +247,8 @@ const Header = () => {
             </span>
           </button>
           <div
-            className={`${
-              openDropdown === 'joinHands' ? 'block' : 'hidden'
-            } absolute mt-2 w-40 bg-[#166534] border-1 border-teal-500 rounded-lg shadow-lg z-50`}
+            className={`${openDropdown === 'joinHands' ? 'block' : 'hidden'
+              } absolute mt-2 w-40 bg-[#166534] border-1 border-teal-500 rounded-lg shadow-lg z-50`}
           >
             <Link
               to="/SolarScheme"
@@ -287,9 +277,8 @@ const Header = () => {
             </span>
           </button>
           <div
-            className={`${
-              openDropdown === 'ourEvents' ? 'block' : 'hidden'
-            } absolute mt-2 w-32 bg-[#166534] border-2 border-teal-500 rounded-lg shadow-lg z-50`}
+            className={`${openDropdown === 'ourEvents' ? 'block' : 'hidden'
+              } absolute mt-2 w-32 bg-[#166534] border-2 border-teal-500 rounded-lg shadow-lg z-50`}
           >
             <button
               onClick={() => navigate('/event-1')}
@@ -327,224 +316,222 @@ const Header = () => {
 
       {/* Mobile Sidebar */}
       <div
-  className={`fixed inset-y-0 left-0 w-64 bg-white mt-14 transform ${
-    isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-  } transition-transform duration-300 ease-in-out lg:hidden z-50 shadow-lg`}
->
-  <div className="flex flex-col p-4 space-y-4">
-    {/* Home */}
-    <button
-      onClick={gotoHomePage}
-      className="text-gray-800 transition-colors duration-300 hover:text-amber-500 focus:outline-none text-left"
-    >
-      Home
-    </button>
-
-    {/* About Us */}
-    <button
-      onClick={gotoAboutUs}
-      className="text-gray-800 transition-colors duration-300 hover:text-amber-500 focus:outline-none text-left"
-    >
-      About Us
-    </button>
-
-    {/* Courses Dropdown */}
-    {isAuthenticated && (
-      <div className="relative">
-        <button
-          onClick={() => handleDropdownToggle('courses')}
-          className="flex items-center text-gray-800 transition-colors duration-300 hover:text-amber-500 focus:outline-none text-left w-full"
-        >
-          Courses
-          <span className="ml-1">
-            {openDropdown === 'courses' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-          </span>
-        </button>
-        <div
-          className={`${openDropdown === 'courses' ? 'block' : 'hidden'} mt-2 pl-4 space-y-2`}
-        >
+        className={`fixed inset-y-0 left-0 w-64 bg-white mt-14 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          } transition-transform duration-300 ease-in-out lg:hidden z-50 shadow-lg`}
+      >
+        <div className="flex flex-col p-4 space-y-4">
+          {/* Home */}
           <button
-            onClick={() => goToCourse('Online')}
-            className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+            onClick={gotoHomePage}
+            className="text-gray-800 transition-colors duration-300 hover:text-green-500 focus:outline-none text-left"
           >
-            Online Courses
+            Home
           </button>
+
+          {/* About Us */}
           <button
-            onClick={() => goToCourse('Physical')}
-            className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+            onClick={gotoAboutUs}
+            className="text-gray-800 transition-colors duration-300 hover:text-green-500 focus:outline-none text-left"
           >
-            Physical Courses
+            About Us
+          </button>
+
+          {/* Courses Dropdown */}
+          {isAuthenticated && (
+            <div className="relative">
+              <button
+                onClick={() => handleDropdownToggle('courses')}
+                className="flex items-center text-gray-800 transition-colors duration-300 hover:text-green-500 focus:outline-none text-left w-full"
+              >
+                Courses
+                <span className="ml-1">
+                  {openDropdown === 'courses' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </span>
+              </button>
+              <div
+                className={`${openDropdown === 'courses' ? 'block' : 'hidden'} border-l-2 border-green-600 mt-2 pl-2 ml-4 space-y-2`}
+              >
+                <button
+                  onClick={() => goToCourse('Online')}
+                  className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+                >
+                  Online Courses
+                </button>
+                <button
+                  onClick={() => goToCourse('Physical')}
+                  className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+                >
+                  Physical Courses
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Opportunities Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => handleDropdownToggle('opportunities')}
+              className="flex items-center text-gray-800 transition-colors duration-300 hover:text-green-500focus:outline-none text-left w-full"
+            >
+              Opportunities
+              <span className="ml-1">
+                {openDropdown === 'opportunities' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </span>
+            </button>
+            <div
+              className={`${openDropdown === 'opportunities' ? 'block' : 'hidden'} border-l-2 border-green-600 mt-2 pl-2 ml-4 space-y-2`}
+            >
+              <button
+                onClick={() => gotoOppertunity('Intership')}
+                className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                Internship
+              </button>
+              <button
+                onClick={() => gotoOppertunity('Scholarship')}
+                className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                Scholarship
+              </button>
+              <button
+                onClick={() => gotoCertificatePage('CertificatePage')}
+                className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                Certificates
+              </button>
+            </div>
+          </div>
+
+          {/* Info Desk Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => handleDropdownToggle('infoDesk')}
+              className="flex items-center text-gray-800 transition-colors duration-300 hover:text-green-500 focus:outline-none text-left w-full"
+            >
+              Info Desk
+              <span className="ml-1">
+                {openDropdown === 'infoDesk' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </span>
+            </button>
+            <div
+              className={`${openDropdown === 'infoDesk' ? 'block' : 'hidden'} border-l-2 border-green-600 mt-2 pl-2 ml-4 space-y-2`}
+            >
+              <Link
+                to="/created"
+                className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                Create Account?
+              </Link>
+              <Link
+                to="/register-course"
+                className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                How to register course?
+              </Link>
+              <Link
+                to="/setup-lms"
+                className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                How to setup student LMS?
+              </Link>
+              <Link
+                to="/SOPsPage"
+                className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                SOPS
+              </Link>
+              <Link
+                to="/TermsAndConditions"
+                className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                Terms & Conditions
+              </Link>
+              <Link
+                to="/PrivacyPolicy"
+                className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                Privacy Policy
+              </Link>
+            </div>
+          </div>
+
+          {/* Join Hands Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => handleDropdownToggle('joinHands')}
+              className="flex items-center text-gray-800 transition-colors duration-300 hover:text-green-500 focus:outline-none text-left w-full"
+            >
+              Join Hands
+              <span className="ml-1">
+                {openDropdown === 'joinHands' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </span>
+            </button>
+            <div
+              className={`${openDropdown === 'joinHands' ? 'block' : 'hidden'} border-l-2 border-green-600 mt-2 pl-2 ml-4 space-y-2`}
+            >
+              <Link
+                to="/SolarScheme"
+                className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                Solar Scheme
+              </Link>
+              <Link
+                to="/LaptopScheme"
+                className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                Laptop Scheme
+              </Link>
+            </div>
+          </div>
+
+          {/* Our Events Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => handleDropdownToggle('ourEvents')}
+              className="flex items-center text-gray-800 transition-colors duration-300 hover:text-green-500 focus:outline-none text-left w-full"
+            >
+              OUR EVENTS
+              <span className="ml-1">
+                {openDropdown === 'ourEvents' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </span>
+            </button>
+            <div
+              className={`${openDropdown === 'ourEvents' ? 'block' : 'hidden'} border-l-2 border-green-600 mt-2 pl-2 ml-4 space-y-2`}
+            >
+              <button
+                onClick={() => navigate('/event-1')}
+                className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                Event 1
+              </button>
+              <button
+                onClick={() => navigate('/event-2')}
+                className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
+              >
+                Event 2
+              </button>
+            </div>
+          </div>
+
+          {/* LMS Link */}
+          {isAuthenticated && (
+            <Link
+              to={routes.lms}
+              className="text-gray-800 font-bold hover:text-amber-500 no-underline text-left"
+            >
+              LMS
+            </Link>
+          )}
+
+          {/* FAQ's */}
+          <button
+            onClick={gotoFaqPages}
+            className="text-gray-800 transition-colors duration-300 hover:text-amber-500 focus:outline-none text-left"
+          >
+            FAQ's
           </button>
         </div>
       </div>
-    )}
-
-    {/* Opportunities Dropdown */}
-    <div className="relative">
-      <button
-        onClick={() => handleDropdownToggle('opportunities')}
-        className="flex items-center text-gray-800 transition-colors duration-300 hover:text-amber-500 focus:outline-none text-left w-full"
-      >
-        Opportunities
-        <span className="ml-1">
-          {openDropdown === 'opportunities' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-        </span>
-      </button>
-      <div
-        className={`${openDropdown === 'opportunities' ? 'block' : 'hidden'} mt-2 pl-4 space-y-2`}
-      >
-        <button
-          onClick={() => gotoOppertunity('Intership')}
-          className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          Internship
-        </button>
-        <button
-          onClick={() => gotoOppertunity('Scholarship')}
-          className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          Scholarship
-        </button>
-        <button
-              onClick={() => gotoCertificatePage('CertificatePage')}
-              className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-            >
-              Certificates
-            </button>
-      </div>
-    </div>
-
-    {/* Info Desk Dropdown */}
-    <div className="relative">
-      <button
-        onClick={() => handleDropdownToggle('infoDesk')}
-        className="flex items-center text-gray-800 transition-colors duration-300 hover:text-amber-500 focus:outline-none text-left w-full"
-      >
-        Info Desk
-        <span className="ml-1">
-          {openDropdown === 'infoDesk' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-        </span>
-      </button>
-      <div
-        className={`${openDropdown === 'infoDesk' ? 'block' : 'hidden'} mt-2 pl-4 space-y-2`}
-      >
-        <Link
-          to="/created"
-          className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          Create Account?
-        </Link>
-        <Link
-          to="/register-course"
-          className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          How to register course?
-        </Link>
-        <Link
-          to="/setup-lms"
-          className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          How to setup student LMS?
-        </Link>
-        <Link
-          to="/SOPsPage"
-          className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          SOPS
-        </Link>
-        <Link
-          to="/TermsAndConditions"
-          className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          Terms & Conditions
-        </Link>
-        <Link
-          to="/PrivacyPolicy"
-          className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          Privacy Policy
-        </Link>
-      </div>
-    </div>
-
-    {/* Join Hands Dropdown */}
-    <div className="relative">
-      <button
-        onClick={() => handleDropdownToggle('joinHands')}
-        className="flex items-center text-gray-800 transition-colors duration-300 hover:text-amber-500 focus:outline-none text-left w-full"
-      >
-        Join Hands
-        <span className="ml-1">
-          {openDropdown === 'joinHands' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-        </span>
-      </button>
-      <div
-        className={`${openDropdown === 'joinHands' ? 'block' : 'hidden'} mt-2 pl-4 space-y-2`}
-      >
-        <Link
-          to="/SolarScheme"
-          className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          Solar Scheme
-        </Link>
-        <Link
-          to="/LaptopScheme"
-          className="block py-2 px-2 no-underline text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          Laptop Scheme
-        </Link>
-      </div>
-    </div>
-
-    {/* Our Events Dropdown */}
-    <div className="relative">
-      <button
-        onClick={() => handleDropdownToggle('ourEvents')}
-        className="flex items-center text-gray-800 transition-colors duration-300 hover:text-amber-500 focus:outline-none text-left w-full"
-      >
-        OUR EVENTS
-        <span className="ml-1">
-          {openDropdown === 'ourEvents' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-        </span>
-      </button>
-      <div
-        className={`${openDropdown === 'ourEvents' ? 'block' : 'hidden'} mt-2 pl-4 space-y-2`}
-      >
-        <button
-          onClick={() => navigate('/event-1')}
-          className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          Event 1
-        </button>
-        <button
-          onClick={() => navigate('/event-2')}
-          className="block w-full py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 hover:rounded-md text-left"
-        >
-          Event 2
-        </button>
-        
-      </div>
-    </div>
-
-    {/* LMS Link */}
-    {isAuthenticated && (
-      <Link
-        to={routes.lms}
-        className="text-gray-800 font-bold hover:text-amber-500 no-underline text-left"
-      >
-        LMS
-      </Link>
-    )}
-
-    {/* FAQ's */}
-    <button
-      onClick={gotoFaqPages}
-      className="text-gray-800 transition-colors duration-300 hover:text-amber-500 focus:outline-none text-left"
-    >
-      FAQ's
-    </button>
-  </div>
-</div>
 
       {/* Profile and Authentication */}
       <div className="flex items-center space-x-4">
@@ -559,9 +546,8 @@ const Header = () => {
           <>
             {profile?.profilePhoto ? (
               <span
-                onMouseEnter={() => setIsOpen(true)}
-                onClick={toggleDropdown}
-                className="relative"
+                onClick={toggleProfileDropdown} // Toggle dropdown on click
+                className="relative cursor-pointer"
               >
                 <img
                   src={profile.profilePhoto}
@@ -571,9 +557,8 @@ const Header = () => {
               </span>
             ) : (
               <button
-                onMouseEnter={() => setIsOpen(true)}
-                onClick={toggleDropdown}
-                className="bg-blue-200 text-gray-800 rounded-full p-2 hover:bg-blue-300 focus:outline-none"
+                onClick={toggleProfileDropdown} // Toggle dropdown on click
+                className="bg-blue-200 text-gray-800 rounded-full p-2 hover:bg-blue-300 focus:outline-none cursor-pointer"
               >
                 <ProfileIcon />
               </button>
@@ -581,26 +566,26 @@ const Header = () => {
           </>
         ) : (
           <>
-  {/* Signup and Login Links */}
-  <Link
-    to={routes.signup}
-    className="text-sm text-white hover:text-amber-300 lg:hidden"
-  >
-    Signup
-  </Link>
-  <Link
-    to={routes.signin}
-    className="text-sm text-white hover:text-amber-300 lg:hidden"
-  >
-    Login
-  </Link>
-</>
+            {/* Signup and Login Links */}
+            <Link
+              to={routes.signup}
+              className="text-sm text-white hover:text-amber-300 lg:hidden"
+            >
+              Signup
+            </Link>
+            <Link
+              to={routes.signin}
+              className="text-sm text-white hover:text-amber-300 lg:hidden"
+            >
+              Login
+            </Link>
+          </>
         )}
       </div>
 
       {/* Profile Dropdown */}
-      {isOpen && (
-        <div className="absolute right-5 top-16  w-36 bg-[#2AA166] border-1 border-teal-500 rounded-lg shadow-lg z-50">
+      {isDropdownOpen && (
+        <div className="absolute right-5 top-[63px] w-36 bg-[#2AA166] border-1 border-teal-500 rounded-lg shadow-lg z-50">
           <div className="absolute top-[-9px] right-4 w-4 h-4 bg-[#2AA166] border-t-2 border-l-2 border-teal-500 transform rotate-45"></div>
           <div className="py-2">
             <Link

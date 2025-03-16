@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion"; // Import Framer Motion
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import Footur from "../components/footur";
 import Header from "../components/Header";
-import coverImage from "../assets/image/cover.png";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import { Autoplay } from "swiper/modules";
+import coverImage1 from "../assets/image/cover.jpg"; 
+import coverImage2 from "../assets/image/cover2.webp";
+import coverImage3 from "../assets/image/cover3.jpg";
 import videodm from "../assets/image/videodm.mp4";
+import { Link } from "react-router-dom";
+
 
 const Counter = ({ target, title }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const duration = 4000; // 4000 milliseconds
+    const duration = 5000; 
     const increment = target / (duration / 16);
 
     let start = 0;
@@ -39,35 +47,91 @@ const Counter = ({ target, title }) => {
 };
 
 const AboutUs = () => {
+  const navigate = useNavigate();
+
+  // Function to scroll to the next section
+  const scrollToNextSection = () => {
+    const nextSection = document.getElementById("why-choose-us");
+    nextSection.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Header */}
       <Header />
-
-      {/* Cover Section */}
       <motion.div
         className="relative w-full"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
-        {/* Background Image */}
-        <img
-          src={coverImage}
-          alt="Cover"
-          className="w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] object-cover"
-        />
+        {/* Swiper Slider */}
+        <Swiper
+          modules={[Autoplay]}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          loop={true}
+          className="w-full h-[350px] sm:h-[350px] md:h-[400px] lg:h-[550px]"
+        >
+          {/* Slide 1 */}
+          <SwiperSlide>
+            <div className="relative w-full h-full">
+              <img
+                src={coverImage1}
+                alt="Cover 1"
+                className="w-full h-full object-cover opacity-100"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+            </div>
+          </SwiperSlide>
+          {/* Slide 2 */}
+          <SwiperSlide>
+            <div className="relative w-full h-full">
+              <img
+                src={coverImage2}
+                alt="Cover 2"
+                className="w-full h-full object-cover opacity-100"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+            </div>
+          </SwiperSlide>
+          {/* Slide 3 */}
+          <SwiperSlide>
+            <div className="relative w-full h-full">
+              <img
+                src={coverImage3}
+                alt="Cover 3"
+                className="w-full h-full object-cover opacity-100"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+            </div>
+          </SwiperSlide>
+        </Swiper>
 
-        {/* Overlay Description */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white px-4 sm:px-8 w-full max-w-4xl">
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl font-sans leading-relaxed">
-            The Roshan Mustaqbil Hunarmand Program is vital for Pakistan as it bridges the digital skills gap, empowers youth with employable IT skills, and fosters entrepreneurship. By creating a tech-savvy workforce, it boosts economic growth, reduces unemployment, and strengthens Pakistan's global IT presence. The program also aligns with Vision 2025, promotes women’s empowerment, and helps retain talent within the country, ensuring a brighter and more prosperous future for Pakistan.
+        <div className="absolute z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center px-4 sm:px-8 w-full max-w-4xl">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-green-600 mb-4">
+            Roshan Mustaqbil Hunarmand Program
+          </h1>
+          <p className="text-sm sm:text-base md:text-lg text-cyan-200 font-sans leading-relaxed mb-8">
+            The Roshan Mustaqbil Hunarmand Program is vital for Pakistan as it bridges the digital skills gap, empowers youth with employable IT skills, and fosters entrepreneurship.
           </p>
+          
+          <div className="flex justify-center gap-4">
+            <Link to="/course">
+            <button 
+              className="bg-green-500 text-white px-8 py-3 rounded-lg text-sm sm:text-base font-semibold hover:bg-green-700 transition-colors shadow-lg"
+            >
+              Our Courses
+            </button></Link>
+            <button
+              onClick={scrollToNextSection}
+              className="bg-green-600 text-white px-8 py-3 rounded-lg text-sm sm:text-base font-semibold hover:bg-green-700 transition-colors shadow-lg"
+            >
+              Learn More
+            </button>
+          </div>
         </div>
       </motion.div>
-
-      {/* "Why choose LeadGenPro!" Section */}
       <motion.div
+        id="why-choose-us"
         className="text-center font-sans mt-12 mb-8 px-4 sm:px-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -114,8 +178,6 @@ const AboutUs = () => {
           </div>
         </div>
       </motion.div>
-
-      {/* Vision and Mission Section */}
       <motion.div
         className="text-center font-sans mt-12 mb-20 px-4 sm:px-8"
         initial={{ opacity: 0 }}
@@ -151,8 +213,6 @@ const AboutUs = () => {
           <Counter key={index} target={counter.value} title={counter.title} />
         ))}
       </motion.div>
-
-      {/* Footer */}
       <div className="mt-auto">
         <Footur />
       </div>
