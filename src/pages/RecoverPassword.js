@@ -16,6 +16,7 @@ const RecoverPassword = () => {
       toast.error('Please enter your email address.');
       return;
     }
+    localStorage.setItem('userEmail', email)
     dispatch(firebaseResetPasswordEmail(email));
   };
 

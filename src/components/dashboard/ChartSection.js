@@ -1,10 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { useDispatch, useSelector } from 'react-redux';
-import { getMyLeadByVehicleType } from '../../redux/action/request';
-import * as XLSX from 'xlsx';
-import DownloadIcon from '../../assets/icons/download';
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,7 +10,7 @@ import {
   Legend,
 } from 'chart.js';
 
-// Register Chart.js components
+// Register required components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -25,90 +20,50 @@ ChartJS.register(
   Legend
 );
 
-const ChartSection = () => {
-  const { requestVehicleStat } = useSelector((state) => state.auth);
-  const handleExport = () => {
-    // Create a new workbook
-    const wb = XLSX.utils.book_new();
+const months = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+];
 
-    // Convert the JSON data into a worksheet
-    const ws = XLSX.utils.json_to_sheet(requestVehicleStat);
+const dummyData = {
+  '2023': {
+    online: [30, 45, 20, 60, 55, 40, 35, 50, 45, 60, 70, 80],
+    physical: [20, 35, 15, 40, 45, 30, 25, 40, 35, 50, 60, 70],
+  },
+  '2024': {
+    online: [40, 50, 35, 70, 65, 50, 45, 60, 55, 65, 75, 85],
+    physical: [25, 30, 20, 50, 40, 35, 30, 45, 40, 55, 65, 75],
+  },
+  '2025': {
+    online: [35, 55, 25, 65, 60, 45, 40, 55, 50, 60, 70, 90],
+    physical: [20, 25, 10, 45, 35, 25, 20, 35, 30, 40, 50, 65],
+  },
+};
 
-    // Append the worksheet to the workbook
-    XLSX.utils.book_append_sheet(wb, ws, 'Requests Data');
+const years = ['2023', '2024', '2025'];
 
-    // Generate and download the Excel file
-    XLSX.writeFile(wb, `vehicle_requests_${selectedYear}.xlsx`);
-  };
+const ChartWithYearDropdown = () => {
   const [selectedYear, setSelectedYear] = useState('2025');
-  const years = [
-    '2023',
-    '2024',
-    '2025',
-    '2026',
-    '2027',
-    '2028',
-    '2029',
-    '2030'
-  ];
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getMyLeadByVehicleType('2025'));
-  }, [1000]);
-
   const handleYearChange = (e) => {
     setSelectedYear(e.target.value);
-    setMonth([]);
-    setCarData([]);
-    setBikeData([]);
-    dispatch(getMyLeadByVehicleType(e.target.value));
   };
 
-  const [month, setMonth] = useState([]);
-  const [carData, setCarData] = useState([]);
-  const [bikeData, setBikeData] = useState([]);
-  const [vehicleData, setVehicleData] = useState([]);
-
-  useEffect(() => {
-    if(month?.length == 0){
-      for (let x = 0; x < requestVehicleStat?.length; x++) {
-        setMonth((prevMonths) => [...prevMonths, requestVehicleStat[x].month]);
-        setCarData((prevCar) => [
-          ...prevCar,
-          requestVehicleStat[x].totalCarRequest,
-        ]);
-        setBikeData((prevBike) => [
-          ...prevBike,
-          requestVehicleStat[x].totalBikeRequest,
-        ]);
-        setVehicleData((prevVehicle) => [
-          ...prevVehicle,
-          requestVehicleStat[x].totalCommercialVehicleRequest,
-        ]);
-  
-        console.log(requestVehicleStat[x]);
-      }
-    }
-   
-  }, [requestVehicleStat]);
-  // Chart data
   const data = {
-    labels: month,
+    labels: months,
     datasets: [
       {
-        label: 'Online',
-        data: bikeData,
+        label: 'Online Registration',
+        data: dummyData[selectedYear].online,
         backgroundColor: '#6359E9',
       },
       {
-        label: 'Physical',
-        data: carData,
+        label: 'Physical Registration',
+        data: dummyData[selectedYear].physical,
         backgroundColor: '#64CFF6',
       },
     ],
   };
 
-  // Chart options
   const options = {
     responsive: true,
     plugins: {
@@ -117,48 +72,30 @@ const ChartSection = () => {
       },
       title: {
         display: true,
-        text: 'Course Enrollment (2025)',
+        text: `Course Registration (${selectedYear})`,
       },
     },
   };
 
   return (
-    <div className='bg-white p-2  '>
-      <h2 className='text-sm font-semibold mb-4 flex justify-between items-center'>
-      Online and Physical Course Registeration
-        <div className='flex items-center space-x-2'>
-          <button
-            className=' rounded px-1 py-1'
-            onClick={() => handleExport()}
-          >
-            <DownloadIcon className='w-5 h-5' />
-          </button>
-          <select
-            id='year-select'
-            value={selectedYear}
-            onChange={handleYearChange}
-            className='border border-gray-300 text-sm rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-blue-500'
-          >
-            {years.map((year) => (
-              <option
-                key={year}
-                value={year}
-              >
-                {year}
-              </option>
-            ))}
-          </select>
-        </div>
-      </h2>
-
-      <div className='h-100  w-[200px] lg:w-[400px] '>
-        <Bar
-          data={data}
-          options={options}
-        />
+    <div className="p-4 bg-white rounded-lg shadow max-w-4xl mx-auto">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold">Online & Physical Course Registration</h2>
+        <select
+          className="border px-2 py-1 rounded-md text-sm"
+          value={selectedYear}
+          onChange={handleYearChange}
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
       </div>
+      <Bar data={data} options={options} />
     </div>
   );
 };
 
-export default ChartSection;
+export default ChartWithYearDropdown;

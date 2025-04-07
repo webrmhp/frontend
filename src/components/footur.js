@@ -14,7 +14,7 @@ export default function Footer() {
             <div className="hr-icon text-[15px] font-medium  uppercase"> {/* Changed to gray for better contrast */}
                   <i className="fas fa-user-graduate fa-2x"></i>
                 </div>
-              <h2 className="text-2xl  font-bold">RMHP</h2>
+              <h2 className="text-2xl  font-bold"></h2>
             </div>
             <p className="mt-4 text-[#A8B5A2] text-start">
             Empowering Minds, Transforming Futures – Your Journey to Knowledge Starts Here!
@@ -42,14 +42,12 @@ export default function Footer() {
             <h3 className="text-xl font-bold mb-4 ">Latest Courses</h3>
             <div className="grid grid-cols-2 gap-2 text-[#A8B5A2]">
               {[
-                "Computer Engineering",
+                "AI (Python)",
                 "Website Development",
-                "Civil Engineering",
-                "Civil Engineering",
+                "Video Editing",
+                "Mobile Application",
                 "Social Science",
-                "Business Studies",
-                "Important of English",
-                "General Science",
+                "Business Development",
               ].map((course, index) => (
                 <p key={index} className="cursor-pointer transition-colors duration-300 hover:text-amber-500">
                   {course}
@@ -79,7 +77,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-[#124B30] mt-6 pt-4 text-center text-[#A8B5A2]">
-          © RMHP - Education WordPress Theme. All Rights Reserved.
+          ©  - Education WordPress Theme. All Rights Reserved.
         </div>
       </div>
     </footer>

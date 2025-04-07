@@ -25,6 +25,10 @@ const HomePage = () => {
       <Header_Top />
       <Header />
       <div className='relative w-full h-screen'>
+        {/* Dark overlay */}
+        <div className='absolute inset-0 bg-black opacity-80 z-10'></div>
+
+        {/* Video background */}
         <video
           src={videodm}
           autoPlay
@@ -32,7 +36,9 @@ const HomePage = () => {
           loop
           className='w-full h-screen object-cover'
         />
-        <div className='absolute inset-0 flex items-center justify-center text-center'>
+
+        {/* Text content on top of video and overlay */}
+        <div className='absolute inset-0 flex items-center justify-center text-center z-20'>
           <div className='p-4'>
             <h1 className='text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-green-400 via-green-600 to-green-700 text-transparent bg-clip-text drop-shadow-2xl'>
               Empower Your Learning Journey
@@ -46,7 +52,7 @@ const HomePage = () => {
 
             <button
               onClick={() => {
-                navigate(routes.course)
+                navigate(routes.course);
               }}
               className='mt-6 px-6 py-3 bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:from-green-400 hover:to-green-500 text-white font-semibold text-lg rounded-lg shadow-lg transform hover:scale-110 transition duration-300'
             >

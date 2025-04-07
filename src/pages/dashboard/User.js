@@ -172,7 +172,15 @@ const User = () => {
                       index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
                     }`}
                   >
-                    <td className='py-3 px-6 text-left'>{user.name}</td>
+                    <td className='py-3 px-6 text-left flex items-center gap-3'>
+                      <img
+                        src={user.profilePhoto}
+                        alt={user.name}
+                        className='w-10 h-10 rounded-full object-cover'
+                      />
+                      <span>{user.name}</span>
+                    </td>
+
                     <td className='py-3 px-6 text-left'>{user.email}</td>
                     <td className='py-3 px-6 text-left '>
                       <span
@@ -310,7 +318,10 @@ const User = () => {
                       setEditUser({ ...editUser, userType: e.target.value })
                     }
                   >
-                    <option value='' disabled>
+                    <option
+                      value=''
+                      disabled
+                    >
                       Select a user type
                     </option>
                     <option value='Admin'>Admin</option>

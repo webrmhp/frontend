@@ -66,7 +66,7 @@ export default function CourseDetail() {
                       />
                       <div>
                         <h6 className='font-semibold'>Instructor</h6>
-                        <p className='text-gray-600'>{courseDetail?.instructor || 'PFTP | Instructor'}</p>
+                        <p className='text-gray-600'>{courseDetail?.instructor || 'Instructor'}</p>
                       </div>
                     </div>
                     <div>

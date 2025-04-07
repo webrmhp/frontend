@@ -29,7 +29,7 @@ const Course = () => {
     <div className='p-6 bg-gradient-to-r from-blue-600 via-teal-700 to-teal-600'>
       <div className='text-center mb-6'>
         <h1 className='text-3xl font-extrabold text-white'>
-          PFTP has collaborated with NIAIS for onsite Trainings
+          Our Course
         </h1>
       </div>
 
