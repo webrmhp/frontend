@@ -30,7 +30,6 @@ const GET_COMPANY_LIST = 'GET_COMPANY_LIST';
 const REACT_APP_API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
 
 export const addRequest = (data) => async (dispatch) => {
-  console.log(data, 'data');
   try {
     const token = localStorage.getItem('token'); // Replace with how you store/retrieve the token
 
@@ -252,7 +251,7 @@ export const getMyPaidCourse = (status) => async (dispatch) => {
     console.log(response.data, 'response.data');
     if (response.data) {
       dispatch({
-        type: "GET_MY_PAID_COURSE",
+        type: 'GET_MY_PAID_COURSE',
         payload: response.data?.data,
       });
     }
@@ -264,11 +263,9 @@ export const getMyPaidCourse = (status) => async (dispatch) => {
   }
 };
 
-
-
 export const uploadChallan = (id, data) => async (dispatch) => {
   try {
-    console.log(data, 'data')
+    console.log(data, 'data');
     const token = localStorage.getItem('token');
     let config = {
       method: 'patch',
@@ -366,7 +363,7 @@ export const getAllUserPaidCourse = (id) => async (dispatch) => {
     const response = await axios.request(config);
     if (response.data) {
       dispatch({
-        type: "GET_MY_PAID_COURSE",
+        type: 'GET_MY_PAID_COURSE',
         payload: response.data?.data,
       });
     }
@@ -892,7 +889,6 @@ export const varifyActivityPoint = (id) => async (dispatch) => {
   try {
     // Extract the token from localStorage
     const token = localStorage.getItem('token');
-
     // Axios configuration with the query parameter
     let config = {
       method: 'patch',
@@ -952,6 +948,313 @@ export const searchRequestList = (body) => async (dispatch) => {
   } catch (error) {
     // Handle and log errors
     console.error(error);
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const addSlider = (body) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'post',
+      url: `${REACT_APP_API_BASE_URL}/slider/add`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: body, // Use `data` for the request payload
+      maxBodyLength: Infinity,
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    toast.success(
+      response?.data?.message || 'New Slider content added successfully'
+    );
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const addGuest = (body) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'post',
+      url: `${REACT_APP_API_BASE_URL}/guest/add`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: body, // Use `data` for the request payload
+      maxBodyLength: Infinity,
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    toast.success(
+      response?.data?.message || 'New Guest added successfully'
+    );
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const addLogo = (body) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'post',
+      url: `${REACT_APP_API_BASE_URL}/logo/add`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: body, // Use `data` for the request payload
+      maxBodyLength: Infinity,
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    toast.success(
+      response?.data?.message || 'New Slider content added successfully'
+    );
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const getSlider = (body) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/slider/get-list`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    if (response.data) {
+      dispatch({
+        type: 'GET_SLIDER',
+        payload: response.data?.data,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const getLogo = (body) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/logo/get-list`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    console.log(response, "responseresponseresponse")
+    if (response.data) {
+      dispatch({
+        type: 'GET_LOGO',
+        payload: response.data?.data,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const getGuest = (body) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/guest/get-list`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    if (response.data) {
+      dispatch({
+        type: 'GET_GUEST',
+        payload: response.data?.data,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const editSlider = (body, id) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'patch',
+      url: `${REACT_APP_API_BASE_URL}/slider/update?id=${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: body,
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    if (response) {
+      toast.success('Slider updated successfully');
+    }
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const editGuest = (body, id) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'patch',
+      url: `${REACT_APP_API_BASE_URL}/guest/update?id=${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: body,
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    if (response) {
+      toast.success('Guest updated successfully');
+    }
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const editLogo = (body, id) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'patch',
+      url: `${REACT_APP_API_BASE_URL}/logo/update?id=${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: body,
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    if (response) {
+      toast.success('logo updated successfully');
+    }
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const deleteSlider = (id) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'delete',
+      url: `${REACT_APP_API_BASE_URL}/slider/remove?id=${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const deleteLogo = (id) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'delete',
+      url: `${REACT_APP_API_BASE_URL}/logo/remove?id=${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    return response.data;
+  } catch (error) {
     toast.error(error.response?.data?.message || error.message); // Show error message
     return error;
   }

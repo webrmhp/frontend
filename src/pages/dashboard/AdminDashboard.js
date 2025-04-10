@@ -4,6 +4,7 @@ import Sidebar from '../../components/dashboard/Sidebar';
 import AdminStates from './DashboardStates';
 import User from './User';
 import SerachPanel from './SerachPanel';
+import SliderPanel from './slider'
 import Course from './Course';
 
 const AdminDashboard = () => {
@@ -17,6 +18,8 @@ const AdminDashboard = () => {
         return <User />;
       case 'Serach Panel':
         return <SerachPanel />;
+      case 'Slider':
+        return <SliderPanel />;
       case 'Course':
         return <Course />;
       default:

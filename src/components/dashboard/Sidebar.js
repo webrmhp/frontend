@@ -1,11 +1,12 @@
-import React from 'react';
-import Logo from '../../assets/image/Logo.png';
+import React, { useEffect } from 'react';
+import { getLogo } from '../../redux/action/request';
 import { Link, useNavigate } from 'react-router-dom';
 import { routes } from '../../contant';
-
+import { useDispatch, useSelector } from 'react-redux';
 const Sidebar = ({ setActiveSection, activeSection }) => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const reduxData = useSelector((state) => state.auth || []);
   const handleNavigation = (section) => {
     setActiveSection(section);
   };
@@ -15,11 +16,28 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
     navigate(routes.signin);
   };
 
+  useEffect(() => {
+    dispatch(getLogo());
+  }, [1000]);
+
   return (
     <div className='w-64 bg-white shadow h-full'>
       <div className='px-6 py-2'>
-      <h3>Logo</h3> 
+        <h3 className='text-xl font-semibold'>
+          {reduxData.logo.length > 0 ? (
+            <img
+              src={reduxData.logo[0].image}
+              alt='Company Logo'
+              width={100}
+              height={100}
+              className='object-contain'
+            />
+          ) : (
+            'Logo'
+          )}
+        </h3>
       </div>
+
       <div>
         <li
           className={`flex items-center space-x-2 p-4 rounded cursor-pointer ${
@@ -31,6 +49,19 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
         >
           <i className='fas fa-tachometer-alt'></i>
           <span>Dashboard</span>
+        </li>
+
+        <li
+          className={`flex items-center space-x-2 p-4 rounded cursor-pointer ${
+            activeSection === 'Slider'
+              ? 'bg-blue-100 text-blue-500'
+              : 'hover:bg-gray-200'
+          }`}
+          onClick={() => handleNavigation('Slider')}
+        >
+          <i className='fas fas fa-images  '></i>
+
+          <span>Manage Gallery</span>
         </li>
         <li
           className={`flex items-center space-x-2 p-4 rounded cursor-pointer ${
@@ -51,7 +82,7 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
           }`}
           onClick={() => handleNavigation('Course')}
         >
-          <i className='fas fa-building'></i> 
+          <i className='fas fa-building'></i>
           <span>Course</span>
         </li>
         <li

@@ -14,7 +14,7 @@ const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false); // For mobile menu toggle
   const [openDropdown, setOpenDropdown] = useState(null); // Track which dropdown is open
-
+ const reduxData = useSelector((state) => state.auth || []);
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsAuthenticated(!!token);
@@ -93,7 +93,20 @@ const Header = () => {
       className="flex justify-between items-center py-2 px-4 lg:px-6"
     >
       {/* Logo */}
-      <h5 className="text-white text-lg font-bold">Logo</h5>
+      <h3 className="text-white text-lg font-bold" >
+          {reduxData.logo.length > 0 ? (
+            <img
+            onClick={()=> navigate('/')}
+              src={reduxData.logo[0].image}
+              alt='Company Logo'
+              width={50}
+              height={50}
+              className="object-contain cursor-pointer transition-all duration-300 hover:scale-105 hover:opacity-80"
+            />
+          ) : (
+            'Logo'
+          )}
+        </h3>
 
       {/* Desktop Navigation */}
       <div className="hidden lg:flex items-center space-x-6">
@@ -271,7 +284,7 @@ const Header = () => {
             onClick={() => handleDropdownToggle('ourEvents')}
             className="flex items-center text-white transition-colors duration-300 hover:text-amber-300 focus:outline-none"
           >
-            OUR EVENTS
+            Our Events
             <span className="ml-1">
               {openDropdown === 'ourEvents' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </span>
@@ -490,7 +503,7 @@ const Header = () => {
               onClick={() => handleDropdownToggle('ourEvents')}
               className="flex items-center text-gray-800 transition-colors duration-300 hover:text-green-500 focus:outline-none text-left w-full"
             >
-              OUR EVENTS
+              Our Events
               <span className="ml-1">
                 {openDropdown === 'ourEvents' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
               </span>

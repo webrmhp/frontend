@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getGuest } from '../redux/action/request';
+import { useDispatch, useSelector } from 'react-redux';
+
 const Card2 = () => {
   const [activeButton, setActiveButton] = useState(1);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getGuest());
+  }, [1000]);
+  const reduxData = useSelector((state) => state.auth || []);
   const cardData = {
     1: [
       {
@@ -36,7 +44,7 @@ const Card2 = () => {
       {/* Cards Section */}
       <div className='container mx-auto px-6'>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-          {cardData[activeButton]?.map((card, index) => (
+          {reduxData?.guest?.map((card, index) => (
             <div
               key={index}
               className='bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition duration-300'
@@ -51,7 +59,7 @@ const Card2 = () => {
                   <h2 className='text-xl font-bold text-gray-800'>
                     {card.name}
                   </h2>
-                  <p className='text-gray-500 text-sm'>{card.title}</p>
+                  <p className='text-gray-500 text-sm'>{card.status}</p>
                 </div>
               </a>
             </div>

@@ -26,7 +26,6 @@ const PaidCourse = () => {
                   key={course.id}
                   className='p-6 bg-white shadow-lg rounded-lg hover:shadow-xl transition-all'
                 >
-                  <small className='text-[blue] text-center'>{course?.courseDetails?.courseType}</small>
                   <span className='d-flex mb-2'>
                     <img
                       width={100}
@@ -35,52 +34,65 @@ const PaidCourse = () => {
                       src={course?.courseDetails?.courseImage}
                     />
 
-                    <h3 className='text-xl font-bold text-gray-800 m-1'>
-                      {course?.courseDetails?.title} <br />{' '}
+                    <span className='  text-gray-800 m-1'>
+                      {course?.courseDetails?.title} || 
+                      <small className='text-[#0000FF]  rounded-lg p-1 m-2 text-xs text-center'>
+                      {course?.courseDetails?.courseType}
+                      </small>{' '}
+                      <br />{' '}
+                    
                       <small
                         className={
                           course?.status == 'Pending'
-                            ? `p-1 bg-[red] text-white rounded m-1`
-                            : `p-1 bg-[green] text-white rounded m-1`
+                            ? `p-1 bg-[#FFB3B3] text-white rounded-lg m-1`
+                            : ``
                         }
                       >
-                        {course?.status == 'Pending'
-                          ? `Review ${course?.status}...`
-                          : `${course?.status}`}
+                        {course?.status == 'Pending' ? (
+                          <small>Under Review</small>
+                        ) : (
+                          <small>
+                            {course?.status === 'Verified' ? (
+                              new Date(course?.courseDetails?.launchedDate) <
+                              new Date() ? (
+                                <Link
+                                  to='/course-videos'
+                                  state={{
+                                    data: { id: course?.courseDetails?._id },
+                                  }}
+                                  className='text-blue-500 underline'
+                                >
+                                  {course?.courseDetails?.courseType == 'Online'
+                                    ? 'Explore Course Videos'
+                                    : ''}
+                                </Link>
+                              ) : (
+                                <span className='text-red-500'>
+                                  Note: As soon as this course starts, you will
+                                  be notified.
+                                </span>
+                              )
+                            ) : null}
+                          </small>
+                        )}
                       </small>
-                    </h3>
+                    </span>
                   </span>
 
                   <span className='mt-5'>
-                    {course?.courseDetails?.courseTag.map((data, index) => (
-                      <small
-                        className='p-1 bg-[#BFDBFE] text-white rounded m-1'
-                        key={index}
-                      >
-                        {data}
-                      </small>
-                    ))}
-                  </span>
-                  <p className='text-gray-600 mt-2'>{course.description}</p>
-                  <small>
-                    {course?.status === 'Verified' ? (
-                      new Date(course?.courseDetails?.launchedDate) <
-                      new Date() ? (
-                        <Link
-                          to='/course-videos'
-                          state={{ data: { id : course?.courseDetails?._id} }}
-                          className='text-blue-500 underline'
+                    <div className='flex flex-wrap'>
+                      {course?.courseDetails?.courseTag.map((data, index) => (
+                        <small
+                          className='p-1 bg-[#BFDBFE] text-[#0000FF] rounded m-1'
+                          key={index}
                         >
-                         {course?.courseDetails?.courseType == "Online" ? 'Explore Course Videos' : ''}
-                        </Link>
-                      ) : (
-                        <span className='text-red-500'>
-                          Note: As soon as this course starts, you will be
-                          notified.
-                        </span>
-                      )
-                    ) : null}
-                  </small>
+                          {data}
+                        </small>
+                      ))}
+                    </div>
+                  </span>
+
+                  <p className='text-gray-600 mt-2'>{course.discription}</p>
                 </div>
               ))}
             </>

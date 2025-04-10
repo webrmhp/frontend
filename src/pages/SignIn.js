@@ -142,14 +142,7 @@ const SignIn = () => {
           {/* Remember Me Checkbox */}
           <div className='flex justify-between items-center text-sm'>
             <label className='flex items-center space-x-2'>
-              <input
-                type='checkbox'
-                name='rememberMe'
-                checked={formData.rememberMe}
-                onChange={handleChange}
-                className='rounded border-gray-300 text-green-800 focus:ring-green-800'
-              />
-              <span className='text-gray-600'>Remember me</span>
+            
             </label>
             <a
               href={routes.recoverPassword}

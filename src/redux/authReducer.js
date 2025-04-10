@@ -30,7 +30,10 @@ const GET_ALL_REQUEST_LIST = 'GET_ALL_REQUEST_LIST';
 const GET_ADMIN_NOTIFICATION = 'GET_ADMIN_NOTIFICATION';
 const GET_USER_NOTIFICATION = 'GET_USER_NOTIFICATION';
 const GET_ADMIN_UNREAD_NOTIFICATION = 'GET_ADMIN_UNREAD_NOTIFICATION';
-const GET_MY_PAID_COURSE= 'GET_MY_PAID_COURSE'
+const GET_MY_PAID_COURSE = 'GET_MY_PAID_COURSE';
+const GET_SLIDER = 'GET_SLIDER';
+const GET_LOGO = 'GET_LOGO';
+const GET_GUEST = 'GET_GUEST';
 // Initial state
 const initialState = {
   course: [],
@@ -66,14 +69,23 @@ const initialState = {
   getUserNotify: [],
   courseData: [],
   courseVidosData: [],
-  paidCourse:[]
+  paidCourse: [],
+  slider: [],
+  logo: [],
+  guest: [],
 };
 
 // Reducer
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_GUEST:
+      return { ...state, loading: true, guest: action.payload };
+    case GET_LOGO:
+      return { ...state, loading: true, logo: action.payload };
+    case GET_SLIDER:
+      return { ...state, loading: true, slider: action.payload };
     case GET_MY_PAID_COURSE:
-    return { ...state, loading: true, paidCourse: action.payload };
+      return { ...state, loading: true, paidCourse: action.payload };
     case GET_COURSE_DATA:
       return { ...state, loading: true, courseData: action.payload };
     case GET_COURSE_VIDEO_LIST:

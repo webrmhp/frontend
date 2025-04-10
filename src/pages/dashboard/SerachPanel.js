@@ -171,6 +171,10 @@ const SerachPanel = () => {
       };
     }
   };
+  const [error, setError] = useState('');
+
+  // Regex to validate YouTube URLs and embed links
+  const youtubeUrlRegex = /^(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/(watch\?v=|embed\/)([a-zA-Z0-9_-]{11})$/;
 
   const handleChangeVideoForm = (e) => {
     setFormData({
@@ -675,11 +679,12 @@ const SerachPanel = () => {
                     <input
                       type='text'
                       name='link'
-                      placeholder='link'
+                      placeholder='Enter YouTube link or embedded URL'
                       onChange={handleChangeVideoForm}
-                      className='w-full p-2 border border-gray-300 rounded'
+                      className={`w-full p-2 border  rounded`}
                       value={formData?.link}
                     />
+                    {/* Show error message */}
                   </div>
 
                   <div className='cursor-pointer border-2 border-dashed border-gray-300 rounded-lg p-6 text-center'>
