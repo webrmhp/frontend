@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaUserCircle } from 'react-icons/fa'; // Example icon from react-icons
+import { Users, BookOpen, Video, Activity } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import TruckImage from '../../assets/image/Truck.png';
 import Car from '../../assets/image/Mini.png';
@@ -21,13 +21,12 @@ const SiteStatesSection = () => {
           />
         ); // Replace with car image
       case 'bike':
-        return (''
-          // <img
-          //   src={BicycleImage}
-          //   alt='Bicycle'
-          //   className='w-8 h-auto'
-          // />
-        );
+        return '';
+        // <img
+        //   src={BicycleImage}
+        //   alt='Bicycle'
+        //   className='w-8 h-auto'
+        // />
       case 'commercial vehicle':
         return (
           <img
@@ -44,20 +43,34 @@ const SiteStatesSection = () => {
   return (
     <div className='bg-white p-4'>
       <h2 className='text-lg font-semibold mb-4'>States Overview</h2>
-      <div className='flex gap-4'>
-        <div className='w-25 bg-[#0DC143] shadow-md rounded-2xl border border-gray-200 p-2 text-center'>
-          <h3 className='text-sm text-[white] font-semibold'>Active Users</h3>
-          <p className=' text-[white]  text-xl'>100</p>
+
+      <div className='grid grid-cols-4 gap-4'>
+        {/* Active Users */}
+        <div className='bg-[#0DC143] shadow-md rounded-2xl border border-gray-200 p-4 text-center text-white'>
+          <Users className='mx-auto mb-2' />
+          <h3 className='text-sm font-semibold'>Active Users</h3>
+          <p className='text-xl'>100</p>
         </div>
 
-        <div className='w-25 bg-[#6359E9] shadow-md rounded-2xl border border-gray-200 p-2 text-center'>
-          <h3 className='text-sm  text-[white] font-semibold'>Course</h3>
-          <p className='text-[white] text-xl'>8</p>
+        {/* Courses */}
+        <div className='bg-[#6359E9] shadow-md rounded-2xl border border-gray-200 p-4 text-center text-white'>
+          <BookOpen className='mx-auto mb-2' />
+          <h3 className='text-sm font-semibold'>Courses</h3>
+          <p className='text-xl'>8</p>
         </div>
 
-        <div className='w-25 bg-[#64CFF6] shadow-md rounded-2xl border border-gray-200 p-2 text-center'>
-          <h3 className='text-sm text-[white] font-semibold'>Videos</h3>
-          <p className=' text-[white] text-xl'>44</p>
+        {/* Videos */}
+        <div className='bg-[#64CFF6] shadow-md rounded-2xl border border-gray-200 p-4 text-center text-white'>
+          <Video className='mx-auto mb-2' />
+          <h3 className='text-sm font-semibold'>Videos</h3>
+          <p className='text-xl'>44</p>
+        </div>
+
+        {/* Activity */}
+        <div className='bg-[#0DC143] shadow-md rounded-2xl border border-gray-200 p-4 text-center text-white'>
+          <Activity className='mx-auto mb-2' />
+          <h3 className='text-sm font-semibold'>Activity</h3>
+          <p className='text-xl'>100</p>
         </div>
       </div>
     </div>

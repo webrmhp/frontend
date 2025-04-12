@@ -11,7 +11,9 @@ import {
   deleteLogo,
 } from '../../redux/action/request';
 import { Circles } from 'react-loader-spinner';
-import GallerySection from './AppGallery';
+import GuestGallerySection from './GuestGallerySection';
+import TestimonailGallerySection from './TestimonailGallerySection';
+import EventGallerySection from './EventGallerySection'
 import { toast, ToastContainer } from 'react-toastify';
 import Ediit from '.././../assets/icons/Ediit';
 import Del from '.././../assets/icons/Del';
@@ -443,7 +445,9 @@ const SliderPanel = () => {
         )}
       </div>
       <hr className='ml-5 mr-5' />
-      <GallerySection />
+      <GuestGallerySection />
+      <TestimonailGallerySection/>
+      <EventGallerySection/>
     </>
   );
 };

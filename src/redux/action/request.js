@@ -12,8 +12,8 @@ const GET_ALL_COURSE = 'GET_ALL_COURSE';
 const GET_COURSE_DETAIL = 'GET_COURSE_DETAIL';
 const GET_MY_ADD_TO_CART = 'GET_MY_ADD_TO_CART';
 
-// const API_BASE_URL = 'http://localhost:3000';
-const API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
+const API_BASE_URL = 'http://localhost:3000';
+// const API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
 
 const GET_LEAD_SUCCESS = 'GET_MY_LEAD_SUCCESS';
 const GET_REQUEST_VEHICLE_STATE = 'GET_REQUEST_VEHICLE_STATE';
@@ -26,8 +26,8 @@ const GET_ALL_REQUEST_LIST = 'GET_ALL_REQUEST_LIST';
 const GET_ALL_REQUEST_BYID = 'GET_ALL_REQUEST_BYID';
 const GET_COURSE_VIDEO_LIST = 'GET_COURSE_VIDEO_LIST';
 const GET_COMPANY_LIST = 'GET_COMPANY_LIST';
-// const REACT_APP_API_BASE_URL = 'http://localhost:3000';
-const REACT_APP_API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
+const REACT_APP_API_BASE_URL = 'http://localhost:3000';
+// const REACT_APP_API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
 
 export const addRequest = (data) => async (dispatch) => {
   try {
@@ -98,8 +98,6 @@ export const getMyActivityPoints = (userId) => async (dispatch) => {
 };
 
 export const getMyActivityHistory = (userId, obj) => async (dispatch) => {
-  console.log('response', 'hhh9999999999999999999999999');
-
   try {
     const token = localStorage.getItem('token'); // Replace with your token retrieval logic
 
@@ -585,41 +583,6 @@ export const getMyPolicyByStatus = (years) => async (dispatch) => {
   }
 };
 
-export const getMyPolicyByStageStatus = () => async (dispatch) => {
-  try {
-    // Extract the token from localStorage
-    const token = localStorage.getItem('token');
-    // Axios configuration
-    let config = {
-      method: 'get',
-      url: `${REACT_APP_API_BASE_URL}/request/get-stagewise-total-request`,
-      headers: {
-        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
-        'Content-Type': 'application/json', // Include content type (optional for GET requests)
-      },
-      maxBodyLength: Infinity, // Match the cURL option
-    };
-
-    // Execute Axios request
-    const response = await axios.request(config);
-
-    // Dispatch action on successful response
-    if (response.data) {
-      dispatch({
-        type: GET_POLICY_BY_STAGE_AND_STATUS,
-        payload: response.data?.data, // Ensure response format matches expectations
-      });
-    }
-
-    return response.data; // Return response for further use
-  } catch (error) {
-    // Handle and log errors
-    console.error(error);
-    toast.error(error.response?.data?.message || error.message); // Show error message
-    return error;
-  }
-};
-
 export const getAllRequestList = () => async (dispatch) => {
   try {
     // Extract the token from localStorage
@@ -1001,9 +964,7 @@ export const addGuest = (body) => async (dispatch) => {
     // Execute Axios request
     const response = await axios.request(config);
 
-    toast.success(
-      response?.data?.message || 'New Guest added successfully'
-    );
+    toast.success(response?.data?.message || 'New Guest added successfully');
     return response.data;
   } catch (error) {
     toast.error(error.response?.data?.message || error.message); // Show error message
@@ -1040,6 +1001,63 @@ export const addLogo = (body) => async (dispatch) => {
   }
 };
 
+export const addTestimonail = (body) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'post',
+      url: `${REACT_APP_API_BASE_URL}/testimonial/add`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: body, // Use `data` for the request payload
+      maxBodyLength: Infinity,
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    toast.success(
+      response?.data?.message || 'New Testimonial added successfully'
+    );
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const addEvent = (body) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'post',
+      url: `${REACT_APP_API_BASE_URL}/event/add`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: body, // Use `data` for the request payload
+      maxBodyLength: Infinity,
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+
+    toast.success(
+      response?.data?.message || 'New Event added successfully'
+    );
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
 export const getSlider = (body) => async (dispatch) => {
   try {
     // Extract the token from localStorage
@@ -1070,6 +1088,66 @@ export const getSlider = (body) => async (dispatch) => {
   }
 };
 
+export const getTestimonail = (body) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/testimonial/get-list`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    if (response.data) {
+      dispatch({
+        type: 'GET_TESTIMONIAL',
+        payload: response.data?.data,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const getEvent = (body) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'get',
+      url: `${REACT_APP_API_BASE_URL}/event/get-list`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    if (response.data) {
+      dispatch({
+        type: 'GET_EVENT',
+        payload: response.data?.data,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
 export const getLogo = (body) => async (dispatch) => {
   try {
     // Extract the token from localStorage
@@ -1086,8 +1164,6 @@ export const getLogo = (body) => async (dispatch) => {
 
     // Execute Axios request
     const response = await axios.request(config);
-
-    console.log(response, "responseresponseresponse")
     if (response.data) {
       dispatch({
         type: 'GET_LOGO',
@@ -1152,6 +1228,60 @@ export const editSlider = (body, id) => async (dispatch) => {
     const response = await axios.request(config);
     if (response) {
       toast.success('Slider updated successfully');
+    }
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const editTestimonail = (body, id) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'patch',
+      url: `${REACT_APP_API_BASE_URL}/testimonial/update?id=${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: body,
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    if (response) {
+      toast.success('Testimonial updated successfully');
+    }
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const editEvent = (body, id) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'patch',
+      url: `${REACT_APP_API_BASE_URL}/event/update?id=${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+      data: body,
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    if (response) {
+      toast.success('Event updated successfully');
     }
     return response.data;
   } catch (error) {
@@ -1230,6 +1360,31 @@ export const deleteSlider = (id) => async (dispatch) => {
 
     // Execute Axios request
     const response = await axios.request(config);
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message); // Show error message
+    return error;
+  }
+};
+
+export const deleteTestimonail = (id) => async (dispatch) => {
+  try {
+    // Extract the token from localStorage
+    const token = localStorage.getItem('token');
+    // Axios configuration
+    let config = {
+      method: 'delete',
+      url: `${REACT_APP_API_BASE_URL}/testimonial/remove?id=${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass the token as in the cURL
+        'Content-Type': 'application/json', // Include content type (optional for GET requests)
+      },
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    toast.success('Testimonail removed successfully');
+
     return response.data;
   } catch (error) {
     toast.error(error.response?.data?.message || error.message); // Show error message

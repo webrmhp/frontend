@@ -3,17 +3,12 @@ import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMyPolicyByStageStatus } from '../../redux/action/request';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 const RequestState = () => {
   const dispatch = useDispatch();
   const { requestByStatus } = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    dispatch(getMyPolicyByStageStatus());
-  }, [dispatch]);
 
   const data = {
     labels: ['Add To Cart', 'Chalan Paid (Unverified)', 'Chalan Paid (Verified)'],

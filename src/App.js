@@ -173,7 +173,7 @@ function App() {
         />
 
         <Route
-          path='/event-1'
+          path='/event'
           element={
             <PrivateRoute>
               <Event1 />

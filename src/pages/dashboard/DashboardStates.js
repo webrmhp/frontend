@@ -9,7 +9,7 @@ const AdminStates = () => {
  
 
   return (
-    <div className='flex h-screen bg-gray-100 justify-center items-center mt-[3rem]'>
+    <div className='flex h-screen bg-gray-100 justify-center items-center mt-[7rem]'>
       <div className='p-4 grid grid-cols-2 gap-4'>
         {/* Box 1 */}
         <div className='bg-white  shadow rounded'>

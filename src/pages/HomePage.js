@@ -82,7 +82,10 @@ const HomePage = () => {
 
                 <button
                   onClick={() => {
-                    navigate(routes.course);
+                    const section = document.getElementById('course-section');
+                    if (section) {
+                      section.scrollIntoView({ behavior: 'smooth' });
+                    }
                   }}
                   className='mt-6 px-6 py-3 bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:from-green-400 hover:to-green-500 text-white font-semibold text-lg rounded-lg shadow-lg transform hover:scale-110 transition duration-300'
                 >
@@ -94,7 +97,10 @@ const HomePage = () => {
         ))}
       </Slider>
 
-      <section className='relative  text-center mx-auto'>
+      <section
+        id='course-section'
+        className='relative  text-center mx-auto'
+      >
         <Course />
         <Testimonials />
         <Card2 />

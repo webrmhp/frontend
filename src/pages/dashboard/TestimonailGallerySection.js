@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  addGuest,
-  getSlider,
-  editGuest,
-  deleteSlider,
-  getGuest,
+  addTestimonail,
+  getTestimonail,
+  editTestimonail,
+  deleteTestimonail,
 } from '../../redux/action/request';
 import { toast, ToastContainer } from 'react-toastify';
-import Ediit from '.././../assets/icons/Ediit';
-import Del from '.././../assets/icons/Del';
-const GallerySection = () => {
+import Ediit from '../../assets/icons/Ediit';
+import Del from '../../assets/icons/Del';
+const TestimonailGallerySection = () => {
   const dispatch = useDispatch();
   const reduxData = useSelector((state) => state.auth || []);
   const [formData, setFormData] = useState({
     name: '',
     status: '',
     image: '',
-    link: '',
+    moreImage: '',
+    description: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [guest, setSelectedGuest] = useState();
 
   useEffect(() => {
-    dispatch(getGuest());
+    dispatch(getTestimonail());
   }, [1000]);
 
   const handleChange = async (e) => {
@@ -34,6 +34,13 @@ const GallerySection = () => {
       if (file) {
         const base64 = await toBase64(file);
         setFormData({ ...formData, image: base64 });
+      }
+    }
+    if (name === 'moreImage') {
+      const file = files[0];
+      if (file) {
+        const base64 = await toBase64(file);
+        setFormData({ ...formData, moreImage: base64 });
       }
     } else {
       setFormData({ ...formData, [name]: value });
@@ -49,28 +56,34 @@ const GallerySection = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { status, name, image } = formData;
-    if (!status || !name || !image) {
+    const { status, name, image, description } = formData;
+    if (!status || !name || !image || !description) {
       return toast.error('Please fill all fields');
     }
     try {
       if (editMode) {
-        // If editing, update the existing slider
-        await dispatch(editGuest({ ...formData, id: formData.id }));
+        // If editing, update the existing Testimonail
+        await dispatch(editTestimonail({ ...formData, id: formData.id }));
       } else {
-        // If adding new, add the slider
-        await dispatch(addGuest(formData));
+        // If adding new, add the Testimonail
+        await dispatch(addTestimonail(formData));
       }
 
-      setFormData({ name: '', status: '', image: '', link: '' });
+      setFormData({
+        name: '',
+        status: '',
+        image: '',
+        description: '',
+        moreImage: '',
+      });
       setIsModalOpen(false);
       setEditMode(false);
       setSelectedGuest(null);
       setTimeout(() => {
-        dispatch(getGuest());
+        dispatch(getTestimonail());
       }, [2000]);
     } catch (err) {
-      toast.error('Failed to save slider');
+      toast.error('Failed to save Testimonial');
     }
   };
 
@@ -79,7 +92,8 @@ const GallerySection = () => {
       name: data?.name,
       status: data?.status,
       image: data?.image,
-      link: data?.link,
+      image: data?.moreImage,
+      description: data?.description,
       _id: data?._id,
     });
     setSelectedGuest(data);
@@ -89,13 +103,12 @@ const GallerySection = () => {
 
   const handleDelete = async (id) => {
     try {
-      await dispatch(deleteSlider(id));
-      toast.success('Guest removed successfully');
+      await dispatch(deleteTestimonail(id));
       setTimeout(() => {
-        dispatch(getSlider());
+        dispatch(getTestimonail());
       }, [2000]);
     } catch (err) {
-      toast.error('Failed to delete guest');
+      toast.error('Failed to delete Testimonail');
     }
   };
   return (
@@ -103,13 +116,13 @@ const GallerySection = () => {
       <ToastContainer />
 
       <div className='flex items-center justify-between bg-[#FFFFFF] p-2 mt-2'>
-        <h1 className='text-2xl font-bold'>Guest List</h1>
+        <h1 className='text-2xl font-bold'>Testimonail List</h1>
         <div className='ml-auto flex items-center space-x-4'>
           <button
             onClick={() => setIsModalOpen(true)}
             className='px-4 py-2 bg-[#1E90FE] text-white font-semibold rounded-lg hover:text-black transition-colors duration-300 ease-in-out cursor-pointer'
           >
-            Add Guest
+            Add Testimonail
           </button>
         </div>
       </div>
@@ -119,46 +132,59 @@ const GallerySection = () => {
           <thead className='text-gray-600 uppercase text-sm leading-normal'>
             <tr>
               <th className='py-3 px-6 text-left'>Name</th>
-              <th className='py-3 px-6 text-left'>Blog Link</th>
+              <th className='py-3 px-6 text-left'>Description</th>
               <th className='py-3 px-6 text-left'>Added</th>
               <th className='py-3 px-6 text-left'>Actions</th>
             </tr>
           </thead>
           <tbody className='text-gray-700 text-sm'>
-            {reduxData?.guest?.map((Guest, index) => (
+            {reduxData?.testimonail?.map((Testimonail, index) => (
               <tr
                 key={index}
                 className={`border-b border-gray-200 ${
                   index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
                 }`}
               >
-                <td className='py-3 px-6 text-left d-flex'>
-                  <img
-                    src={Guest.image}
-                    alt='guest-img'
-                    className='w-12 h-12 rounded-full object-cover border border-gray-300 shadow-sm mr-2'
-                  />
-                  <span className='font-medium text-gray-800 mt-1'>
-                    {Guest.name}
+                <td className='py-3 px-6 text-left'>
+                  <div className='relative w-12 h-12 inline-block mr-3'>
+                    {/* Main Image */}
+                    <img
+                      src={Testimonail.image}
+                      alt='testimonial-img'
+                      className='w-12 h-12 rounded-full object-cover border-2 border-[#15833E] shadow-md'
+                    />
+
+                    {/* Overlay Image (on top right corner) */}
+                    <img
+                      src={Testimonail.moreImage}
+                      alt='more-img'
+                      className='w-5 h-5 rounded-full object-cover border-2 border-blue-500 shadow-md absolute -top-1 -right-1'
+                    />
+                  </div>
+
+                  <span className='font-medium text-gray-800 align-top inline-block'>
+                    {Testimonail.name}
                     <br />
-                    <span className='text-[blue]'>{Guest.status}</span>
+                    <span className='text-[blue]'>{Testimonail.status}</span>
                   </span>
                 </td>
-                <td className='py-3 px-6 text-left'>
-                  {Guest?.link ? <a href={Guest?.link}>More Detail</a> : ''}
+
+                <td className='py-3 px-8 max-w-xs overflow-hidden text-ellipsis whitespace-nowrap'>
+                  {Testimonail?.description}
                 </td>
+
                 <td className='py-3 px-6 text-left'>
-                  {new Date(Guest?.addedAt).toLocaleString()}
+                  {new Date(Testimonail?.createdAt).toLocaleString()}
                 </td>
                 <td className='py-3 px-2 text-left'>
                   <button
-                    onClick={() => handleEdit(Guest)}
+                    onClick={() => handleEdit(Testimonail)}
                     className=' py-2  text-white   '
                   >
                     <Ediit />
                   </button>
                   <button
-                    onClick={() => handleDelete(Guest._id)}
+                    onClick={() => handleDelete(Testimonail._id)}
                     className='px-4  text-white '
                   >
                     <Del />
@@ -174,7 +200,7 @@ const GallerySection = () => {
         <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50'>
           <div className='bg-white p-6 rounded-xl shadow-xl w-full max-w-md'>
             <h2 className='text-xl font-bold mb-4 text-center'>
-              {editMode ? 'Edit Guest' : 'Add Guest'}
+              {editMode ? 'Edit Testimonail' : 'Add Testimonail'}
             </h2>
             <form
               onSubmit={handleSubmit}
@@ -199,19 +225,18 @@ const GallerySection = () => {
                   rows='3'
                   className='w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400'
                   value={formData.status}
+                  placeholder='CEO, Government Officer etc'
                   onChange={handleChange}
                   required
                 />
               </div>
 
               <div>
-                <label className='block text-gray-600 mb-1'>
-                  Related Blog Link
-                </label>
+                <label className='block text-gray-600 mb-1'>Description</label>
                 <input
-                  name='link'
+                  name='description'
                   className='w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400'
-                  value={formData.link}
+                  value={formData.description}
                   onChange={handleChange}
                   required
                 />
@@ -222,6 +247,17 @@ const GallerySection = () => {
                 <input
                   type='file'
                   name='image'
+                  accept='image/*'
+                  className='w-full px-2 py-2 border rounded-xl bg-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200'
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div>
+                <label className='block text-gray-600 mb-1'>Extra Photo</label>
+                <input
+                  type='file'
+                  name='moreImage'
                   accept='image/*'
                   className='w-full px-2 py-2 border rounded-xl bg-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200'
                   onChange={handleChange}
@@ -251,4 +287,4 @@ const GallerySection = () => {
   );
 };
 
-export default GallerySection;
+export default TestimonailGallerySection;

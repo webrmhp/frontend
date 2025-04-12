@@ -34,6 +34,8 @@ const GET_MY_PAID_COURSE = 'GET_MY_PAID_COURSE';
 const GET_SLIDER = 'GET_SLIDER';
 const GET_LOGO = 'GET_LOGO';
 const GET_GUEST = 'GET_GUEST';
+const GET_TESTIMONIAL = 'GET_TESTIMONIAL';
+const GET_EVENT = 'GET_EVENT';
 // Initial state
 const initialState = {
   course: [],
@@ -73,11 +75,17 @@ const initialState = {
   slider: [],
   logo: [],
   guest: [],
+  testimonail: [],
+  event: [],
 };
 
 // Reducer
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_EVENT:
+      return { ...state, loading: true, event: action.payload };
+    case GET_TESTIMONIAL:
+      return { ...state, loading: true, testimonail: action.payload };
     case GET_GUEST:
       return { ...state, loading: true, guest: action.payload };
     case GET_LOGO:
