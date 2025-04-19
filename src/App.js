@@ -32,6 +32,7 @@ import NewsForYou from './pages/NewsForYou';
 import UserDashboard from './pages/UserDashboard';
 import CourseDetail from './pages/CoursesDetail';
 import { Layout } from 'lucide-react';
+import AddToCart from './pages/addToCart/AddToCart'
 import CourseCart from './pages/CourseeCart';
 import FAQs from './components/FAQs';
 import SOPsPage from './pages/SOPsPage';
@@ -174,11 +175,7 @@ function App() {
 
         <Route
           path='/event'
-          element={
-            <PrivateRoute>
-              <Event1 />
-            </PrivateRoute>
-          }
+          element={<Event1 />}
         />
 
         <Route
@@ -208,11 +205,7 @@ function App() {
         />
         <Route
           path={routes.course}
-          element={
-            <PrivateRoute>
-              <CoursePage />
-            </PrivateRoute>
-          }
+          element={<CoursePage />}
         />
         <Route
           path='/event-4'
@@ -232,15 +225,23 @@ function App() {
           }
         />
 
-        <Route
+        {/* <Route
           path={routes.lms}
           element={
             <PrivateRoute>
               <LMS />
             </PrivateRoute>
           }
+        /> */}
+        
+        <Route
+          path={routes.addToCart}
+          element={
+            <PrivateRoute>
+              <AddToCart />
+            </PrivateRoute>
+          }
         />
-
         <Route
           path={routes.profile}
           element={

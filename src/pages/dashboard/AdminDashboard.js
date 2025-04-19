@@ -4,9 +4,10 @@ import Sidebar from '../../components/dashboard/Sidebar';
 import AdminStates from './DashboardStates';
 import User from './User';
 import SerachPanel from './SerachPanel';
-import SliderPanel from './slider'
+import SliderPanel from './slider';
 import Course from './Course';
-
+import CourseRequest from './courseRequest';
+import ManageQuiz from './manageQuiz';
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState('Dashboard');
 
@@ -22,6 +23,11 @@ const AdminDashboard = () => {
         return <SliderPanel />;
       case 'Course':
         return <Course />;
+      case 'Request':
+        return <CourseRequest />;
+      case 'Quiz':
+        return <ManageQuiz />;
+
       default:
         return <AdminStates />;
     }

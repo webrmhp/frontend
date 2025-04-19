@@ -13,6 +13,7 @@ export const routes = {
   profile:"/profile",
   quotation: "/quotation",
   lms: "/student/lms",
+  addToCart: "/add-to-cart",
   verify: "/verify",
   requestList:"/request-list",
   internship:"/internship",

@@ -15,7 +15,6 @@ import { routes } from '../contant';
 export default function RegistrationForm() {
   const { quiz } = useSelector((state) => state.auth);
   const { quizResult } = useSelector((state) => state.auth);
-  console.log(quizResult, 'quizResult');
   const navigate = useNavigate();
   const [phase, setPhase] = useState(Number(localStorage.getItem('phase')) || 1);
   const [fileSelected, setFileSelected] = useState();

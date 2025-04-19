@@ -5,6 +5,8 @@ import Del from '../../assets/icons/Del';
 import { ToastContainer, toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
 import { Circles } from 'react-loader-spinner';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import {
   getCourseList,
   addCourse,
@@ -15,6 +17,11 @@ import {
 import { getAllUserPaidCourse } from '../../redux/action/request';
 import { useDispatch, useSelector } from 'react-redux';
 import { Eye } from 'lucide-react';
+const initialCourseDataItem = {
+  type: 'defination',
+  heading: '',
+  description: '',
+};
 const Course = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -78,19 +85,17 @@ const Course = () => {
 
   const [formData, setFormData] = useState({
     title: '',
-    courseImage: '',
-    courseTag: [],
-    courseType: '',
-    definition: '',
-    description: '',
-    duration: '',
-    language: '',
-    outLine: [],
     prize: '',
-    skill: '',
+    duration: '',
+    courseType: '',
     subject: '',
+    skill: '',
+    language: '',
+    courseTag: [''],
+    courseImage: '',
+    launchedDate: '',
     discription: '',
-    defination: '',
+    courseData: [initialCourseDataItem],
   });
 
   const handleChange = (e) => {
@@ -114,7 +119,6 @@ const Course = () => {
     }
   };
 
-
   const handleSubmit = (e) => {
     console.log(formData, 'formData');
     e.preventDefault();
@@ -129,19 +133,17 @@ const Course = () => {
       setTimeout(() => dispatch(getCourseList()), 2000);
       setFormData({
         title: '',
-        courseImage: '',
-        courseTag: [],
-        courseType: '',
-        definition: '',
-        description: '',
-        duration: '',
-        language: '',
-        outLine: [],
         prize: '',
-        skill: '',
+        duration: '',
+        courseType: '',
         subject: '',
+        skill: '',
+        language: '',
+        courseTag: [''],
+        courseImage: '',
+        launchedDate: '',
         discription: '',
-        defination: '',
+        courseData: [initialCourseDataItem],
       });
     } else {
       toast.error('Please fill both required fields');
@@ -163,11 +165,11 @@ const Course = () => {
     if (type == 'New') {
       if (file) {
         const reader = new FileReader();
-        reader.readAsDataURL(file); 
+        reader.readAsDataURL(file);
         reader.onloadend = () => {
           console.log(reader.result, 'reader.result');
           setPreview(reader.result);
-          setFormData({ ...formData, courseImage: reader.result }); 
+          setFormData({ ...formData, courseImage: reader.result });
         };
       }
     } else {
@@ -175,20 +177,24 @@ const Course = () => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
-          setPreview(reader.result); 
-          setEditcourse({ ...editcourse, courseImage: reader.result }); 
+          setPreview(reader.result);
+          setEditcourse({ ...editcourse, courseImage: reader.result });
         };
       }
     }
   };
 
-  const [previewForNew, setPreviewForNew] = useState(null);
   const handleTagInput = (e) => {
     if (e.key === ' ') {
       e.preventDefault();
-      const newTag = e.target.value.trim(); 
+      const newTag = e.target.value.trim();
+      console.log(newTag, 'newTag');
       if (newTag) {
         setEditcourse((prev) => ({
+          ...prev,
+          courseTag: [...prev.courseTag, newTag],
+        }));
+        setFormData((prev) => ({
           ...prev,
           courseTag: [...prev.courseTag, newTag],
         }));
@@ -206,6 +212,10 @@ const Course = () => {
       const newTag = e.target.value.trim();
       if (newTag && !formData2.courseTag.includes(newTag)) {
         setFormData2((prev) => ({
+          ...prev,
+          courseTag: [...prev.courseTag, newTag],
+        }));
+        setFormData((prev) => ({
           ...prev,
           courseTag: [...prev.courseTag, newTag],
         }));
@@ -231,6 +241,68 @@ const Course = () => {
   useEffect(() => {
     console.log(preview);
   }, [preview]);
+
+  const handleCourseDataChange = (index, key, value) => {
+    const updatedCourseData = [...formData.courseData]; // clone the array
+    updatedCourseData[index] = {
+      ...updatedCourseData[index], // clone the object
+      [key]: value, // update the specific key
+    };
+
+    setFormData({
+      ...formData,
+      courseData: updatedCourseData,
+    });
+  };
+
+  const addCourseDataItem = () => {
+    setFormData((prev) => ({
+      ...prev,
+      courseData: [...prev.courseData, initialCourseDataItem],
+    }));
+  };
+
+  const removeCourseDataItem = (index) => {
+    const updatedCourseData = formData.courseData.filter((_, i) => i !== index);
+    setFormData((prev) => ({
+      ...prev,
+      courseData: updatedCourseData,
+    }));
+  };
+  const courseTypes = ['defination', 'outLine', 'content', 'scope'];
+
+  const handleEditCourseDataChange = (index, key, value) => {
+    const updatedCourseData = [...editcourse.courseData];
+    updatedCourseData[index] = {
+      ...updatedCourseData[index],
+      [key]: value,
+    };
+
+    setEditcourse({
+      ...editcourse,
+      courseData: updatedCourseData,
+    });
+  };
+
+  const addEditCourseDataItem = () => {
+    setEditcourse({
+      ...editcourse,
+      courseData: [
+        ...editcourse.courseData,
+        { type: 'defination', heading: '', description: '' },
+      ],
+    });
+  };
+
+  const removeEditCourseDataItem = (index) => {
+    const updatedCourseData = editcourse.courseData.filter(
+      (_, i) => i !== index
+    );
+    setEditcourse({
+      ...editcourse,
+      courseData: updatedCourseData,
+    });
+  };
   return (
     <div className='p-6 bg-gray-100 min-h-screen'>
       <ToastContainer />
@@ -259,12 +331,11 @@ const Course = () => {
             <table className='min-w-full table-auto'>
               <thead className='text-gray-600 uppercase text-sm leading-normal'>
                 <tr>
-                  <th className='py-3 px-6 text-left'>Names</th>
-                  <th className='py-3 px-6 text-left'>Mode</th>
-                  <th className='py-3 px-6 text-left'>Added Date</th>
+                  <th className='py-3 px-6 text-left'>Title</th>
+                  <th className='py-3 px-6 text-left'>Register Date</th>
+                  <th className='py-3 px-6 text-left'>Launched Date</th>
                   <th className='py-3 px-6 text-left'>Thumbinal</th>
                   <th className='py-3 px-6 text-left'>Video Uploaded</th>
-                  <th className='py-3 px-6 text-left'>Enrollments</th>
                   <th className='py-3 px-6 '>Action</th>
                 </tr>
               </thead>
@@ -272,18 +343,24 @@ const Course = () => {
                 {courseData?.map((obj, index) => (
                   <tr
                     key={index}
-                    className={`border-b border-gray-200 ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
-                      }`}
+                    className={`border-b border-gray-200 ${
+                      index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+                    }`}
                   >
-                    <td className='py-3 px-6 text-left'>{obj.title}</td>
-                    <td className='py-3 px-6 text-left'>
-                      {' '}
-                      <small className='bg-[#1E90FE] rounded p-1 text-[white]'>
+                    <td className='px-6 text-left flex flex-col sm:flex-row items-start sm:items-center gap-2'>
+                      <span>{obj.title} </span>
+                      <small className='bg-[#1E90FE] rounded px-1 text-white'>
                         {obj.courseType}
                       </small>
                     </td>
+
+                   
                     <td className='py-3 px-6 text-left'>
-                      {new Date(obj.addedAt).toLocaleDateString('en-CA')}
+                      <small>{new Date(obj.addedAt).toLocaleDateString('en-CA')}</small>
+                    </td>
+                      
+                    <td className='py-3 px-6 text-left'>
+                      <small>{new Date(obj.launchedDate).toLocaleDateString('en-CA')}</small>
                     </td>
                     <td className=' justify-center items-center text-center'>
                       {obj?.courseImage ? (
@@ -306,19 +383,22 @@ const Course = () => {
                     <td className=' justify-center items-center text-center'>
                       {obj?.videos ? <span>{obj?.videos?.length}</span> : ''}
                     </td>
-                    <td className=' justify-center items-center text-center'>
+                    {/* <td className=' justify-center items-center text-center'>
                       <button
                         className='text-green-500 hover:text-green-700'
                         onClick={() => handleView(obj?._id)}
                       >
                         <Eye />
                       </button>
-                    </td>
+                    </td> */}
 
                     <td className='py-3 px-6 text-center flex justify-center space-x-4 relative'>
                       <button
                         className='text-green-500 hover:text-green-700'
-                        onClick={() => handleEdit(obj, index)}
+                        onClick={() => {
+                          handleEdit(obj, index);
+                          console.log(obj, 'objobjobjobj');
+                        }}
                       >
                         <Ediit />
                       </button>
@@ -378,12 +458,12 @@ const Course = () => {
           )}
           {isModalOpen && (
             <div
-              className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50'
+              className='fixed  inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50'
               onClick={() => setIsModalOpen(false)} // Close modal on outside click
             >
               <div
                 onClick={(e) => e.stopPropagation()} // Prevent click from propagating
-                className='bg-white rounded-lg shadow-lg p-6 w-[500px] max-h-[80vh] overflow-y-auto'
+                className='bg-white w-50 rounded-lg shadow-lg p-6 w-[500px] max-h-[80vh] overflow-y-auto'
               >
                 <h2 className='text-xl font-bold mb-4'>Add Course</h2>
                 <form
@@ -417,7 +497,10 @@ const Course = () => {
                       onChange={handleChange}
                     >
                       <option value='Online'>Online</option>
-                      <option value='Offline'>Offline</option>
+                      <option value='Physical'>Physical</option>
+                      <option value='Online & Physical'>
+                        Online & Physical
+                      </option>
                     </select>
                   </div>
 
@@ -492,7 +575,6 @@ const Course = () => {
                       />
                     </div>
                   </div>
-
 
                   {/* Duration */}
                   <div>
@@ -596,6 +678,108 @@ const Course = () => {
                     />
                   </div>
 
+                  <div className='col-span-2'>
+                    <label className='block text-sm font-medium text-gray-700 mb-2'>
+                      Course Data
+                    </label>
+
+                    {formData.courseData.map((item, index) => (
+                      <div
+                        key={index}
+                        className='border p-4 rounded-lg mb-4 bg-gray-50 relative'
+                      >
+                        {/* Type Selection */}
+                        <div
+                          className='mb-2'
+                          key={index}
+                        >
+                          <label className='block text-sm text-gray-700 mb-1'>
+                            Type
+                          </label>
+                          <select
+                            value={item.type}
+                            onChange={(e) =>
+                              handleCourseDataChange(
+                                index,
+                                'type',
+                                e.target.value
+                              )
+                            }
+                            className='w-full px-4 py-2 border rounded-lg'
+                          >
+                            {courseTypes.map((typeOption) => (
+                              <option
+                                key={typeOption}
+                                value={typeOption}
+                              >
+                                {typeOption.charAt(0).toUpperCase() +
+                                  typeOption.slice(1)}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {/* Heading Input */}
+                        <div className='mb-2'>
+                          <label className='block text-sm text-gray-700 mb-1'>
+                            Heading
+                          </label>
+                          <input
+                            type='text'
+                            value={item.heading}
+                            onChange={(e) =>
+                              handleCourseDataChange(
+                                index,
+                                'heading',
+                                e.target.value
+                              )
+                            }
+                            className='w-full px-4 py-2 border rounded-lg'
+                            placeholder='Enter heading'
+                          />
+                        </div>
+
+                        {/* Description Input */}
+                        <div className='mb-2'>
+                          <label className='block text-sm text-gray-700 mb-1'>
+                            Description
+                          </label>
+                          <ReactQuill
+                            theme='snow'
+                            value={item.description}
+                            onChange={(value) =>
+                              handleCourseDataChange(
+                                index,
+                                'description',
+                                value
+                              )
+                            }
+                          />
+                        </div>
+
+                        {/* Remove Button */}
+                        {formData.courseData.length > 1 && (
+                          <button
+                            type='button'
+                            onClick={() => removeCourseDataItem(index)}
+                            className='absolute top-2 right-2 text-red-500 text-sm'
+                          >
+                            ❌ Remove
+                          </button>
+                        )}
+                      </div>
+                    ))}
+
+                    {/* Add Button */}
+                    <button
+                      type='button'
+                      onClick={addCourseDataItem}
+                      className='px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600'
+                    >
+                      ➕ Add Section
+                    </button>
+                  </div>
+
                   <div>
                     <label className='block text-sm font-medium text-gray-700 mb-1'>
                       Launched Date
@@ -641,175 +825,186 @@ const Course = () => {
               >
                 <h2 className='text-xl font-bold mb-4'>Edit Course</h2>
 
-                <form onSubmit={handleSaveEdit}>
-                  <div className='grid grid-cols-2 gap-4'>
-                    {/* Course Name */}
-                    <div className='mb-4'>
-                      <label className='block text-gray-700 font-medium'>
-                        Course Name
-                      </label>
-                      <input
-                        type='text'
-                        className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
-                        value={editcourse.title}
-                        onChange={(e) =>
-                          setEditcourse({
-                            ...editcourse,
-                            title: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
+                <form
+                  onSubmit={handleSaveEdit}
+                  className='grid grid-cols-2 gap-4'
+                >
+                  {/* Course Name */}
+                  <div className='mb-4'>
+                    <label className='block text-gray-700 font-medium'>
+                      Course Name
+                    </label>
+                    <input
+                      type='text'
+                      className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
+                      value={editcourse.title}
+                      onChange={(e) =>
+                        setEditcourse({ ...editcourse, title: e.target.value })
+                      }
+                    />
+                  </div>
 
-                    {/* Course Type */}
-                    <div className='mb-4'>
-                      <label className='block text-gray-700 font-medium'>
-                        Course Type
-                      </label>
-                      <select
-                        className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
-                        value={editcourse.courseType}
-                        onChange={(e) =>
-                          setEditcourse({
-                            ...editcourse,
-                            courseType: e.target.value,
-                          })
-                        }
-                      >
-                        <option value='Online'>Online</option>
-                        <option value='Physical'>Physical</option>
-                      </select>
-                    </div>
+                  {/* Course Type */}
+                  <div className='mb-4'>
+                    <label className='block text-gray-700 font-medium'>
+                      Course Type
+                    </label>
+                    <select
+                      className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
+                      value={editcourse.courseType}
+                      onChange={(e) =>
+                        setEditcourse({
+                          ...editcourse,
+                          courseType: e.target.value,
+                        })
+                      }
+                    >
+                      <option value='Online'>Online</option>
+                      <option value='Physical'>Physical</option>
+                      <option value='Online & Physical'>
+                        Online & Physical
+                      </option>
+                    </select>
+                  </div>
 
-                    {/* Price */}
-                    <div className='mb-4'>
-                      <label className='block text-gray-700 font-medium'>
-                        Price (PKR)
-                      </label>
-                      <input
-                        type='number'
-                        className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
-                        value={editcourse.prize}
-                        onChange={(e) =>
-                          setEditcourse({
-                            ...editcourse,
-                            prize: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
+                  {/* Price */}
+                  <div className='mb-4'>
+                    <label className='block text-gray-700 font-medium'>
+                      Price (PKR)
+                    </label>
+                    <input
+                      type='number'
+                      className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
+                      value={editcourse.prize}
+                      onChange={(e) =>
+                        setEditcourse({ ...editcourse, prize: e.target.value })
+                      }
+                    />
+                  </div>
 
-                    {/* Duration */}
-                    <div className='mb-4'>
-                      <label className='block text-gray-700 font-medium'>
-                        Duration
-                      </label>
-                      <input
-                        type='text'
-                        name='duration'
-                        className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
-                        value={editcourse.duration}
-                        onChange={(e) =>
-                          setEditcourse({
-                            ...editcourse,
-                            duration: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
+                  {/* Duration */}
+                  <div className='mb-4'>
+                    <label className='block text-gray-700 font-medium'>
+                      Duration
+                    </label>
+                    <input
+                      type='text'
+                      className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
+                      value={editcourse.duration}
+                      onChange={(e) =>
+                        setEditcourse({
+                          ...editcourse,
+                          duration: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
 
-                    <div className='mb-4'>
-                      <label className='block text-gray-700 font-medium'>
-                        Launched Date
-                      </label>
-                      <input
-                        type='date'
-                        name='launchedDate'
-                        className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
-                        value={editcourse.launchedDate}
-                        onChange={(e) =>
-                          setEditcourse({
-                            ...editcourse,
-                            launchedDate: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className='col-span-2'>
-                      <label className='block text-sm font-medium text-gray-700 mb-1'>
-                        Course Tags
-                      </label>
-                      <div className='flex flex-wrap gap-2 border p-2 rounded-lg'>
-                        {/* Display existing tags */}
-                        {editcourse?.courseTag?.map((tag, index) => (
-                          <div
-                            key={index}
-                            className='flex items-center bg-blue-500 text-white px-2 py-1 rounded-lg space-x-2'
+                  {/* Launched Date */}
+                  <div className='mb-4'>
+                    <label className='block text-gray-700 font-medium'>
+                      Launched Date
+                    </label>
+                    <input
+                      type='date'
+                      className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
+                      value={editcourse.launchedDate}
+                      onChange={(e) =>
+                        setEditcourse({
+                          ...editcourse,
+                          launchedDate: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  {/* Course Tags */}
+                  <div className='col-span-2 mb-4'>
+                    <label className='block text-sm font-medium text-gray-700 mb-1'>
+                      Course Tags
+                    </label>
+                    <div className='flex flex-wrap gap-2 border p-2 rounded-lg'>
+                      {editcourse?.courseTag?.map((tag, index) => (
+                        <div
+                          key={index}
+                          className='flex items-center bg-blue-500 text-white px-2 py-1 rounded-lg space-x-2'
+                        >
+                          <span>{tag}</span>
+                          <button
+                            type='button'
+                            onClick={() => removeTag(tag)}
+                            className='text-white text-sm'
                           >
-                            <span>{tag}</span>
-                            <button
-                              type='button'
-                              onClick={() => removeTag(tag)}
-                              className='text-white text-sm'
-                            >
-                              ❌
-                            </button>
-                          </div>
-                        ))}
-
-                        {/* Input for adding new tags */}
-                        <input
-                          type='text'
-                          placeholder='Type and press Space to add a tag'
-                          onKeyDown={handleTagInput}
-                          className='flex-grow p-2 outline-none'
-                        />
-                      </div>
-                    </div>
-
-                    {/* Language */}
-                    <div className='mb-4'>
-                      <label className='block text-gray-700 font-medium'>
-                        Language
-                      </label>
+                            ❌
+                          </button>
+                        </div>
+                      ))}
                       <input
                         type='text'
-                        className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
-                        value={editcourse.language}
-                        onChange={(e) =>
-                          setEditcourse({
-                            ...editcourse,
-                            language: e.target.value,
-                          })
-                        }
+                        placeholder='Type and press Space to add a tag'
+                        onKeyDown={handleTagInput}
+                        className='flex-grow p-2 outline-none'
                       />
-                    </div>
-
-                    {/* Skill Level */}
-                    <div className='mb-4'>
-                      <label className='block text-gray-700 font-medium'>
-                        Skill Level
-                      </label>
-                      <select
-                        className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
-                        value={editcourse.skill}
-                        onChange={(e) =>
-                          setEditcourse({
-                            ...editcourse,
-                            skill: e.target.value,
-                          })
-                        }
-                      >
-                        <option value='Beginner'>Beginner</option>
-                        <option value='Intermediate'>Intermediate</option>
-                        <option value='Advanced'>Advanced</option>
-                      </select>
                     </div>
                   </div>
 
-                  {/* Logo Upload */}
+                  {/* Language */}
                   <div className='mb-4'>
-                    <label className='block text-sm font-medium text-gray-700 mb-2'>
+                    <label className='block text-gray-700 font-medium'>
+                      Language
+                    </label>
+                    <input
+                      type='text'
+                      className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
+                      value={editcourse.language}
+                      onChange={(e) =>
+                        setEditcourse({
+                          ...editcourse,
+                          language: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  {/* Subject */}
+                  <div className='mb-4'>
+                    <label className='block text-gray-700 font-medium'>
+                      Subject
+                    </label>
+                    <textarea
+                      className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
+                      rows='3'
+                      value={editcourse.subject}
+                      onChange={(e) =>
+                        setEditcourse({
+                          ...editcourse,
+                          subject: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  {/* Defination Field (if kept separate) */}
+                  <div className='mb-4'>
+                    <label className='block text-gray-700 font-medium'>
+                      Defination
+                    </label>
+                    <input
+                      type='text'
+                      className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
+                      value={editcourse.defination}
+                      onChange={(e) =>
+                        setEditcourse({
+                          ...editcourse,
+                          defination: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  {/* Course Image Upload (Full Width) */}
+                  <div className='col-span-2 mb-4'>
+                    <label className='block text-sm font-medium text-gray-700 mb-1'>
                       Course Thumbnail
                     </label>
                     <div className='cursor-pointer border-2 border-dashed border-gray-300 rounded-lg p-6 text-center'>
@@ -820,7 +1015,9 @@ const Course = () => {
                         <input
                           type='file'
                           accept='.png, .jpg, .jpeg'
-                          onChange={(e) => handleFileChange(e)}
+                          onChange={(e) => {
+                            // Implement file change and preview update as needed
+                          }}
                           className='hidden'
                           id='courseImage'
                         />
@@ -828,7 +1025,7 @@ const Course = () => {
                           <img
                             width={200}
                             height={200}
-                            src={preview || editcourse?.courseImage}
+                            src={preview || editcourse.courseImage}
                             alt='Course Thumbnail'
                           />
                         ) : (
@@ -846,59 +1043,127 @@ const Course = () => {
                   </div>
 
                   {/* Description */}
-                  <div className='mb-4'>
-                    <label className='block text-gray-700 font-medium'>
+                  <div className='col-span-2 mb-4'>
+                    <label className='block text-sm font-medium text-gray-700 mb-1'>
                       Description
                     </label>
                     <textarea
-                      className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
+                      name='discription'
                       rows='3'
-                      value={editcourse?.discription}
+                      placeholder='Enter course description'
+                      className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+                      value={editcourse.discription}
                       onChange={(e) =>
                         setEditcourse({
                           ...editcourse,
-                          description: e.target.value,
+                          discription: e.target.value,
                         })
                       }
                     />
                   </div>
 
-                  <div className='mb-4'>
-                    <label className='block text-gray-700 font-medium'>
-                      Subject
+                  {/* Course Data Section */}
+                  <div className='col-span-2 mb-4'>
+                    <label className='block text-sm font-medium text-gray-700 mb-2'>
+                      Course Data
                     </label>
-                    <textarea
-                      className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
-                      rows='3'
-                      value={editcourse?.subject}
-                      onChange={(e) =>
-                        setEditcourse({
-                          ...editcourse,
-                          subject: e.target.value,
-                        })
-                      }
-                    />
+
+                    {editcourse.courseData.map((item, index) => (
+                      <div
+                        key={index}
+                        className='border p-4 rounded-lg mb-4 bg-gray-50 relative'
+                      >
+                        {/* Type Selection */}
+                        <div className='mb-2'>
+                          <label className='block text-sm text-gray-700 mb-1'>
+                            Type
+                          </label>
+                          <select
+                            value={item.type}
+                            onChange={(e) =>
+                              handleEditCourseDataChange(
+                                index,
+                                'type',
+                                e.target.value
+                              )
+                            }
+                            className='w-full px-4 py-2 border rounded-lg'
+                          >
+                            {courseTypes.map((typeOption) => (
+                              <option
+                                key={typeOption}
+                                value={typeOption}
+                              >
+                                {typeOption.charAt(0).toUpperCase() +
+                                  typeOption.slice(1)}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {/* Heading Input */}
+                        <div className='mb-2'>
+                          <label className='block text-sm text-gray-700 mb-1'>
+                            Heading
+                          </label>
+                          <input
+                            type='text'
+                            value={item.heading}
+                            onChange={(e) =>
+                              handleEditCourseDataChange(
+                                index,
+                                'heading',
+                                e.target.value
+                              )
+                            }
+                            className='w-full px-4 py-2 border rounded-lg'
+                            placeholder='Enter heading'
+                          />
+                        </div>
+
+                        {/* Description Input (Rich Text Editor with ReactQuill) */}
+                        <div className='mb-2'>
+                          <label className='block text-sm text-gray-700 mb-1'>
+                            Description
+                          </label>
+                          <ReactQuill
+                            theme='snow'
+                            value={item.description}
+                            onChange={(value) =>
+                              handleEditCourseDataChange(
+                                index,
+                                'description',
+                                value
+                              )
+                            }
+                          />
+                        </div>
+
+                        {/* Remove Button for Course Data */}
+                        {editcourse.courseData.length > 1 && (
+                          <button
+                            type='button'
+                            onClick={() => removeEditCourseDataItem(index)}
+                            className='absolute top-2 right-2 text-red-500 text-sm'
+                          >
+                            ❌ Remove
+                          </button>
+                        )}
+                      </div>
+                    ))}
+
+                    {/* Add Course Data Section Button */}
+                    <button
+                      type='button'
+                      onClick={addEditCourseDataItem}
+                      className='px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600'
+                    >
+                      ➕ Add Section
+                    </button>
                   </div>
 
-                  <div className='mb-4'>
-                    <label className='block text-gray-700 font-medium'>
-                      Defination
-                    </label>
-                    <textarea
-                      className='w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'
-                      rows='3'
-                      value={editcourse?.defination}
-                      onChange={(e) =>
-                        setEditcourse({
-                          ...editcourse,
-                          defination: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-
-                  {/* Buttons */}
-                  <div className='flex justify-end space-x-2'>
+                  {/* Buttons (Full Width, Centered) */}
+                  <div className='col-span-2 flex justify-end space-x-2'>
                     <button
                       type='button'
                       onClick={() => setEditcourse(null)}

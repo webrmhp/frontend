@@ -6,6 +6,9 @@ import { useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCourse } from '../redux/action/request';
+import { useNavigate } from 'react-router-dom';
+import { routes } from '../contant';
+import { Link } from 'react-router-dom';
 import {
   Star,
   Clock,
@@ -13,6 +16,7 @@ import {
   MoveUpIcon,
   GraduationCap,
   BadgeIcon,
+  CheckCircle2,
 } from 'lucide-react';
 
 export default function CourseDetail() {
@@ -20,7 +24,7 @@ export default function CourseDetail() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const { courseDetail } = useSelector((state) => state.auth);
-
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(getCourseById(id));
   }, [id]);
@@ -44,8 +48,13 @@ export default function CourseDetail() {
     if (course.length > 0) {
       setRandomCourses(course.sort(() => Math.random() - 0.5).slice(0, 3));
     }
-  }, [course]); 
+  }, [course]);
+  console.log(courseDetail, 'courseDetailcourseDetailcourseDetail');
+  const orderedTypes = ['defination', 'content', 'outLine', 'scope'];
 
+  const orderedCourseData = orderedTypes
+    .map((type) => courseDetail?.courseData?.find((item) => item.type === type))
+    .filter(Boolean); // remove undefined if any type is missing
   return (
     <div>
       <ToastContainer />
@@ -60,121 +69,76 @@ export default function CourseDetail() {
                   <div className='flex flex-wrap items-center gap-6 text-sm mt-4'>
                     <div className='flex items-center'>
                       <img
-                        src={courseDetail?.instructorImage || 'https://via.placeholder.com/150'}
+                        src={
+                          courseDetail?.courseImage ||
+                          'https://via.placeholder.com/150'
+                        }
                         alt='Instructor'
-                        className='w-12 h-12 rounded-full mr-3'
+                        className='w-12 h-12 border-2 border-[#166534] rounded-full mr-3'
                       />
                       <div>
                         <h6 className='font-semibold'>Instructor</h6>
-                        <p className='text-gray-600'>{courseDetail?.instructor || 'Instructor'}</p>
+                        <p className='text-gray-600'>
+                          {courseDetail?.instructor || 'Instructor'}
+                        </p>
                       </div>
                     </div>
                     <div>
-                      <h6 className='font-semibold'>Category</h6>
-                      <p className='text-gray-600'>{courseDetail?.category || 'Web Development'}</p>
+                      <h6 className='font-semibold'>Type</h6>
+                      <p className='text-gray-600'>
+                        {courseDetail?.courseType || 'Web Development'}
+                      </p>
                     </div>
                     <div>
-                      <h6 className='font-semibold'>Rating</h6>
-                      <div className='flex items-center'>
-                        {[1, 2, 3, 4].map((_, index) => (
+                      <h6 className='font-semibold'>Registration Fee</h6>
+                      <p className='text-gray-600'>{courseDetail?.prize}Rs</p>
+                    </div>
+                    {/* <span className='flex '>
+                    
+
+                        {[1, 2, 3, 4,5].map((_, index) => (
                           <Star
                             key={index}
                             className='w-4 h-4 text-yellow-400 fill-current'
                           />
                         ))}
-                        <Star
-                          className='w-4 h-4 text-yellow-400 fill-current'
-                          strokeWidth={0.5}
-                        />
-                        <span className='ml-1'>({courseDetail?.rating || '4.5'})</span>
-                      </div>
-                    </div>
-                    <div>
-                      <h6 className='font-semibold'>Registration Fee</h6>
-                      <p className='text-gray-600'>{courseDetail?.fee || '2900 Rs'}</p>
-                    </div>
+                        <br/>
+                                            <h6 className='font-semibold'>Rating</h6>
+
+                       
+                       
+                      </span> */}
                   </div>
                 </div>
                 <div className='mb-6'>
                   <img
-                    src={courseDetail?.courseImage || 'https://via.placeholder.com/800x400'}
+                    src={
+                      courseDetail?.courseImage ||
+                      'https://via.placeholder.com/800x400'
+                    }
                     alt='Course Banner'
                     className='w-full rounded-lg'
                   />
                 </div>
                 <div className='prose max-w-none'>
-                  <h2 className='text-3xl font-bold text-center mb-6'>
-                    {courseDetail?.title}
-                  </h2>
-                  <h3 className='text-2xl font-semibold mb-4'>
-                    Welcome to {courseDetail?.title}, where the world connects.
-                  </h3>
-                  <p className='mb-4'>
-                    If you are looking forward to {courseDetail?.title} and want
-                    to do it within no time, then you are at the right place
-                    where you should be.
-                  </p>
-                  <p className='mb-4'>
-                    {courseDetail?.description ||
-                      'This course enables efficient learning by combining modern technologies and practical examples.'}
-                  </p>
-                  <h4 className='text-xl font-semibold text-teal-600 mb-4'>
-                    What is {courseDetail?.title}?
-                  </h4>
-                  <p className='mb-4'>
-                    {courseDetail?.overview ||
-                      'This course provides a comprehensive understanding of the subject, combining theory and practical applications.'}
-                  </p>
-                  <h4 className='text-xl font-semibold text-teal-600 mb-4'>
-                    Learning Outcome:
-                  </h4>
-                  <p className='font-semibold mb-2'>You will be able to….</p>
-                  <ul className='list-disc pl-6 mb-4'>
-                    {courseDetail?.learningOutcomes?.map((outcome, index) => (
-                      <li key={index}>{outcome}</li>
-                    )) || (
-                      <>
-                        <li>Understanding the fundamentals of each component</li>
-                        <li>Building practical applications</li>
-                        <li>Working with real-world examples</li>
-                      </>
-                    )}
-                  </ul>
-                  <h4 className='text-xl font-semibold text-teal-600 mb-4'>
-                    Scope of {courseDetail?.title}:
-                  </h4>
-                  <p className='font-semibold mb-2'>
-                    {courseDetail?.title} developers can look forward to a promising future as….
-                  </p>
-                  <ul className='list-disc pl-6 mb-4'>
-                    {courseDetail?.scope?.map((point, index) => (
-                      <li key={index}>{point}</li>
-                    )) || (
-                      <>
-                        <li>High demand in the job market</li>
-                        <li>Excellent earning potential</li>
-                        <li>Opportunities for freelancing and entrepreneurship</li>
-                      </>
-                    )}
-                  </ul>
-                  <h4 className='text-xl font-semibold text-teal-600 mb-4'>
-                    Course Content:
-                  </h4>
-                  <ol className='list-decimal pl-6 mb-4'>
-                    {courseDetail?.courseContent?.map((content, index) => (
-                      <li key={index}>{content}</li>
-                    )) || (
-                      <>
-                        <li>Introduction</li>
-                        <li>Core Concepts</li>
-                        <li>Advanced Topics</li>
-                        <li>Practical Projects</li>
-                      </>
-                    )}
-                  </ol>
-                  <h2 className='text-xl text-center mb-4'>
-                    For the whole course content outlines
-                  </h2>
+                  {orderedCourseData.map((section) => (
+                    <div
+                      key={section._id}
+                      className='mb-6'
+                    >
+                      <h3 className='text-lg font-bold mb-2'>
+                        {section.heading}
+                      </h3>
+                      <div className='prose max-w-none'>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: section.description,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+
                   <p className='text-center mb-4'>
                     Just WhatsApp the given below number to get the entire
                     course content details in a PDF file.
@@ -183,87 +147,114 @@ export default function CourseDetail() {
                 </div>
               </div>
             </div>
-            <div className='w-full lg:w-1/4 px-4'>
-              <div className='bg-white rounded-lg shadow-md p-6 mb-6'>
-                <h5 className='text-xl font-bold mb-4'>Course Details</h5>
-                <ul className=''>
-                  <li className='flex items-center'>
-                    <Clock className='h-5 mr-2' />
-                    <span className='font-semibold'>Duration:</span>
-                    <span className='ml-2'>{courseDetail?.duration || '3-Months'}</span>
+            <div className='w-full lg:w-1/4 px-4 mt-6 lg:mt-0'>
+              {/* Course Details */}
+              <div className='bg-white rounded-lg shadow-md p-2 mb-6'>
+                <h5 className='text-xl font-bold mb-4 text-center'>
+                  Course Details
+                </h5>
+                <ul className='space-y-2 text-sm'>
+                  <li>
+                    <div className='inline-flex items-center px-3 py-1 bg-gray-100 rounded-full shadow-sm'>
+                      <Clock className='h-4 w-4 text-gray-600 mr-2' />
+                      <span className='ml-2 text-gray-800'>
+                        {courseDetail?.duration || '3-Months'}
+                      </span>
+                    </div>
                   </li>
-                  <li className='flex items-center'>
-                    <Globe className='w-5 h-5 mr-2' />
-                    <span className='font-semibold'>Language:</span>
-                    <span className='ml-2'>{courseDetail?.language || 'English/Urdu'}</span>
+                  <li>
+                    <div className='inline-flex items-center px-3 py-1 bg-gray-100 rounded-full shadow-sm'>
+                      <Globe className='h-4 w-4 text-gray-600 mr-2' />
+                      <span className='ml-2 text-gray-800 line-clamp-2'>
+                        {courseDetail?.language}
+                      </span>
+                    </div>
                   </li>
-                  <li className='flex items-center'>
-                    <MoveUpIcon className='w-5 h-5 mr-2' />
-                    <span className='font-semibold'>Skill Level:</span>
-                    <span className='ml-2'>{courseDetail?.skillLevel || 'Beginner'}</span>
+                  <li>
+                    <div className='inline-flex items-center px-3 py-1 bg-gray-100 rounded-full shadow-sm'>
+                      <MoveUpIcon className='h-4 w-4 text-gray-600 mr-2' />
+                      <span className='ml-2 text-gray-800'>
+                        {courseDetail?.skill}
+                      </span>
+                    </div>
                   </li>
-                  <li className='flex items-center'>
-                    <GraduationCap className='w-5 h-5 mr-2' />
-                    <span className='font-semibold'>Subject:</span>
-                    <span className='ml-2'>{courseDetail?.subject || 'Website Development'}</span>
+                  <li>
+                    <div className='inline-flex items-center px-3 py-1 bg-gray-100 rounded-full shadow-sm'>
+                      <GraduationCap className='h-4 w-4 text-gray-600 mr-2' />
+                      <span className='ml-2 text-gray-800'>
+                        {courseDetail?.subject || 'Website Development'}
+                      </span>
+                    </div>
                   </li>
-                  <li className='flex items-center'>
-                    <BadgeIcon className='w-5 h-5 mr-2' />
-                    <span className='font-semibold'>Certification:</span>
-                    <span className='ml-2'>{courseDetail?.certification ? 'Yes' : 'No'}</span>
+                  <li>
+                    <div className='inline-flex items-center px-3 py-1 bg-gray-100 rounded-full shadow-sm'>
+                      <BadgeIcon className='h-4 w-4 text-gray-600 mr-2' />
+                      <span className='font-semibold'>Certification:</span>
+                      <span className='ml-2 text-gray-800 flex items-center'>
+                        Yes{' '}
+                        <CheckCircle2 className='ml-1 h-4 w-4 text-green-600' />
+                      </span>
+                    </div>
                   </li>
                 </ul>
 
                 <button
-                  onClick={() => enrollCourse(courseDetail?._id)}
+                  onClick={() => {
+                    if (localStorage.getItem('token')) {
+                      enrollCourse(courseDetail?._id);
+                    } else {
+                      navigate(routes.signin);
+                    }
+                  }}
                   className='w-full bg-[#166534] text-white font-semibold py-2 px-4 rounded-lg mt-6 transition duration-300'
                 >
                   Enroll Course
                 </button>
               </div>
+
+              {/* Related Course */}
               <div className='bg-white rounded-lg shadow-md p-6 mb-6'>
-                <h5 className='text-xl font-bold mb-4'>Related Course</h5>
+                <h5 className='text-xl font-bold mb-4 text-center'>
+                  Related Course
+                </h5>
                 <div className='space-y-4'>
                   {randomCourses.map((obj, index) => (
                     <RelatedCourse
                       key={index}
+                      id={obj?._id}
                       title={obj?.title}
+                      subject={obj?.subject}
                       image={obj?.courseImage}
                     />
                   ))}
                 </div>
               </div>
+
+              {/* Course Tags */}
               <div className='bg-white rounded-lg shadow-md p-6'>
                 <h5 className='text-xl font-bold mb-4'>Course Tag</h5>
                 <div className='flex flex-wrap gap-2'>
-                  {courseDetail?.tags?.map((tag) => (
-                    <a
-                      key={tag}
-                      href='/'
-                      className='bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-300 transition duration-300'
-                    >
-                      {tag}
-                    </a>
-                  )) || (
+                  {courseDetail?.courseTag?.length > 0 ? (
+                    courseDetail?.courseTag?.map((tag) => (
+                      <a
+                        key={tag}
+                        href='/'
+                        className='bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-300 transition duration-300'
+                      >
+                        {tag}
+                      </a>
+                    ))
+                  ) : (
                     <>
-                      <a
-                        href='/'
-                        className='bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-300 transition duration-300'
-                      >
-                        HTML
-                      </a>
-                      <a
-                        href='/'
-                        className='bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-300 transition duration-300'
-                      >
-                        CSS
-                      </a>
-                      <a
-                        href='/'
-                        className='bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-300 transition duration-300'
-                      >
-                        JavaScript
-                      </a>
+                      {['HTML', 'CSS', 'JavaScript'].map((tag) => (
+                        <a
+                          key={tag}
+                          href='/'
+                          className='bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-300 transition duration-300'
+                        >
+                          {tag}
+                        </a>
+                      ))}
                     </>
                   )}
                 </div>
@@ -278,16 +269,30 @@ export default function CourseDetail() {
   );
 }
 
-const RelatedCourse = ({ title, image }) => {
+const RelatedCourse = ({ id, subject, title, image }) => {
   return (
     <div className='flex items-center'>
-      <img
-        src={image || 'https://via.placeholder.com/150'}
-        alt={title}
-        className='w-20 h-20 object-cover rounded-lg mr-4'
-      />
+      {image ? (
+        <img
+          src={image}
+          alt={title}
+          className='w-20 h-20 object-cover rounded-lg mr-4'
+          onError={(e) => (e.target.style.display = 'none')}
+        />
+      ) : (
+        <div className='w-20 h-20 flex items-center justify-center bg-gray-300 text-white text-xl font-bold rounded-lg mr-4'>
+          {title?.slice(0, 2).toUpperCase()}
+        </div>
+      )}
+
       <div>
-        <h6 className='font-semibold mb-1'>{title || 'Course Title'}</h6>
+        <Link
+          to={routes.courseDetail.replace(':id', id)}
+          className='font-semibold mb-1 text-black hover:underline'
+        >
+          {title || 'Course Title'}
+        </Link>
+
         <div className='flex'>
           {[1, 2, 3, 4, 5].map((_, index) => (
             <Star
@@ -296,7 +301,8 @@ const RelatedCourse = ({ title, image }) => {
             />
           ))}
         </div>
+        <small>{subject}</small>
       </div>
     </div>
   );
-}; 
+};

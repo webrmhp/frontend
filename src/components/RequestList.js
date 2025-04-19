@@ -41,7 +41,7 @@ const RequestList = () => {
             <div className="absolute top-20 right-16 flex items-start justify-end gap-16">
               <div className="text-center">
                 <div className="w-10 h-10 bg-green-500 rounded-full mx-auto"></div>
-                <p className="text-xs mt-2">Request Sent</p>
+                <p className="text-xs mt-2">Delivered</p>
               </div>
               <div className="h-1 bg-green-500 flex-1"></div>
               <div className="text-center">

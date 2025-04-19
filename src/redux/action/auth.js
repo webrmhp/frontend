@@ -14,7 +14,7 @@ const GET_PROFILE_SUCCESS = 'GET_PROFILE_SUCCESS';
 const GET_PROFILE_FAILURE = 'GET_PROFILE_FAILURE';
 const GET_REDY_QUIZ = 'GET_REDY_QUIZ';
 const GET_REDY_QUIZ_RESULT = 'GET_REDY_QUIZ_RESULT';
-
+const GET_COURSE_REQUEST = 'GET_COURSE_REQUEST';
 // const API_BASE_URL = 'http://localhost:3000';
 const API_BASE_URL = 'https://backend-bay-six-18.vercel.app';
 const GET_EMPLOYEE_DATA = 'GET_EMPLOYEE_DATA';
@@ -163,7 +163,7 @@ export const addAccount = (formData, navigate) => async (dispatch) => {
 export const getReadyQuiz = () => async (dispatch) => {
   try {
     const response = await axios.get(
-      `${API_BASE_URL}/quiz/get-list?type=Entry Test`
+      `${API_BASE_URL}/quiz/get-list?type=Entry Test&page=signup`
     );
     dispatch({ type: GET_REDY_QUIZ, payload: response?.data?.data });
     return response;
@@ -403,6 +403,29 @@ export const getUserList = () => async (dispatch) => {
   }
 };
 
+export const setupLMS = (data) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+
+    const response = await axios.post(
+      `${REACT_APP_API_BASE_URL}/users/create-lms`,
+      data, // this is correct (not `{ data }`)
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response?.data) {
+      toast.success(response.data.message || 'Student LMS setup successfully');
+    }
+  } catch (error) {
+    toast.error(error.response?.data?.message || 'Something went wrong');
+    console.error(error);
+  }
+};
+
 export const getCourseList = () => async (dispatch) => {
   try {
     const token = localStorage.getItem('token');
@@ -417,13 +440,89 @@ export const getCourseList = () => async (dispatch) => {
   }
 };
 
-export const getRequestVerified = (id) => async (dispatch) => {
+export const getWholeCourseList = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.get(
+      `${REACT_APP_API_BASE_URL}/add-to-card/get-whole-list`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Set the token here
+        },
+      }
+    );
+    dispatch({ type: GET_COURSE_REQUEST, payload: response?.data?.data });
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getWholeQuestion = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.get(
+      `${REACT_APP_API_BASE_URL}/quiz/get-list?type=Entry Test`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Set the token here
+        },
+      }
+    );
+    dispatch({ type: GET_REDY_QUIZ, payload: response?.data?.data });
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getQuestionRemoved = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.delete(
+      `${REACT_APP_API_BASE_URL}/quiz/remove?id=${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    toast.success(response?.data?.message || 'Question removed successfully!');
+
+    if (response?.data?.success) {
+      toast.success(response?.data?.message || 'Question removed successfully!');
+      // Optionally, refresh the quiz list here
+      // dispatch(getWholeCourseList());
+    }
+  } catch (error) {
+    toast.error(error?.response?.data?.message || 'Failed to remove question.');
+    console.error(error);
+  }
+};
+
+
+export const addQuizQuestion = (data) => async (dispatch) => {
+  try {
+    const response = await axios.post(
+      `${REACT_APP_API_BASE_URL}/quiz/add-question`,
+      data
+    );
+    if (response) {
+      toast.success(
+        response?.data?.message || 'Quiz question add successfully!'
+      );
+    }
+  } catch (error) {
+    toast.error(error.message);
+    return error;
+  }
+};
+
+export const getRequestVerified = (id, status) => async (dispatch) => {
   try {
     const token = localStorage.getItem('token');
 
     const response = await axios.patch(
       `${REACT_APP_API_BASE_URL}/add-to-card/verify-request?id=${id}`,
-      {}, // Empty object for PATCH request body
+      { status: status }, // Empty object for PATCH request body
       {
         headers: {
           Authorization: `Bearer ${token}`, // Correctly passing token in headers

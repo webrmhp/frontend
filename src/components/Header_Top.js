@@ -54,14 +54,36 @@ const Header_Top = () => {
           ) : (
             <div className='flex space-x-4'>
               <div className='border-l-2 border-green-700 max-h-full'></div>
-              <div className='flex gap-1' onClick={() => navigate(routes.signin)}>
-                <Icons.User className='w-4' />
-                <button className='text-sm hover:text-green-500'>Log In</button>
+
+              <div className='flex gap-1 items-center'>
+                <Icons.User onClick={() => {
+                    console.log('Log In clicked');
+                    navigate(routes.signin);
+                  }} className='w-4' />
+                <button
+                  className='text-sm hover:text-green-500'
+                  onClick={() => {
+                    console.log('Log In clicked');
+                    navigate(routes.signin);
+                  }}
+                >
+                  Log In
+                </button>
               </div>
+
               <div className='border-l-2 border-green-700 max-h-full'></div>
-              <div className='flex gap-1' onClick={() => navigate(routes.signup)}>
+
+              <div className='flex gap-1 items-center'>
                 <Icons.UserRoundPen className='w-4' />
-                <button className='text-sm hover:text-green-500'>Register</button>
+                <button
+                  className='text-sm hover:text-green-500'
+                  onClick={() => {
+                    console.log('Register clicked');
+                    navigate('/signup');
+                  }}
+                >
+                  Register
+                </button>
               </div>
             </div>
           )}

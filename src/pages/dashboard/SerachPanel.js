@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import * as XLSX from 'xlsx';
-import DatePicker from 'react-datepicker';
+import { Video } from 'lucide-react';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
   getAllRequestList,
@@ -91,40 +91,6 @@ const SerachPanel = () => {
     const exportData = courseData.map((vehicle) => ({
       _id: vehicle._id,
       userId: vehicle.userId,
-      vehicleType: vehicle.vehicleType,
-      policyType: vehicle.policyType,
-      previousPolicyType: vehicle.previousPolicytype,
-      previousYearClaim: vehicle.previousYearclame,
-      policyExpiryDate: vehicle.policyExpirydate,
-      make: vehicle.make,
-      vehicleModel: vehicle.vehicleModel,
-      GVC: vehicle.GVC,
-      registerNumber: vehicle.registerNumber,
-      manufactureDate: vehicle.manufactureDate,
-      fuelType: vehicle.fuelType,
-      paymentVerified: vehicle.paymentVarified,
-      requestSent: vehicle.requestSent,
-      quotationMade: vehicle.quotationMade,
-      paymentDone: vehicle.paymentDone,
-      policyUploaded: vehicle.policyUploaded,
-      ownerName: vehicle.ownerDetail?.ownerName,
-      ownerPhone: vehicle.ownerDetail?.ownerPhone,
-      ownerAddress: vehicle.ownerDetail?.ownerAddress,
-      ownerEmail: vehicle.ownerDetail?.ownerEmail,
-      vehicleDetailURL: vehicle.vehicleDetailURL,
-      previousPolicyURL: vehicle.previousPolicyURL,
-      ncbOfPreviousPolicy: vehicle.ncbOfPreviousPolicy,
-      ODInsurer: vehicle.ODInsurer,
-      paymentStatus: vehicle.paymentDetail?.status,
-      activityPointsReceived: vehicle.paymentDetail?.activityPointsReceived,
-      registerDate: vehicle.registerDate,
-      userName: vehicle.userDetails?.name,
-      userPhone: vehicle.userDetails?.phone,
-      userEmail: vehicle.userDetails?.email,
-      userCNIC: vehicle.userDetails?.CNIC,
-      userAddress: vehicle.userDetails?.address,
-      userProfession: vehicle.userDetails?.profession,
-      userType: vehicle.userDetails?.userType,
     }));
 
     // Create a new workbook
@@ -137,7 +103,7 @@ const SerachPanel = () => {
     XLSX.utils.book_append_sheet(wb, ws, 'Requests Data');
 
     // Generate and download the Excel file
-    XLSX.writeFile(wb, `requests_list.xlsx`);
+    XLSX.writeFile(wb, `course_list.xlsx`);
   };
 
   const handleDelete = (id) => {
@@ -174,7 +140,8 @@ const SerachPanel = () => {
   const [error, setError] = useState('');
 
   // Regex to validate YouTube URLs and embed links
-  const youtubeUrlRegex = /^(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/(watch\?v=|embed\/)([a-zA-Z0-9_-]{11})$/;
+  const youtubeUrlRegex =
+    /^(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/(watch\?v=|embed\/)([a-zA-Z0-9_-]{11})$/;
 
   const handleChangeVideoForm = (e) => {
     setFormData({
@@ -443,9 +410,12 @@ const SerachPanel = () => {
                         getSpecificRequest(item._id);
                         dispatch(getVideosById(item._id));
                       }}
-                      className=' w-full bg-[#1D90FE] text-white py-1 rounded-lg relative'
+                      className='w-full sm:w-auto flex items-center justify-center gap-2 bg-[#1D90FE] text-white px-4 py-2 rounded-lg text-sm sm:text-base hover:bg-blue-600 transition-all'
                     >
-                      View
+
+                      {item.courseType == 'Online' || item.courseType == 'online' ? <> <Video size={18} />
+                      Add Videos</> : "View Deatil"}
+                     
                     </button>
                   </div>
                 ))}

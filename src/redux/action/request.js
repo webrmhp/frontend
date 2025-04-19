@@ -120,7 +120,6 @@ export const getMyActivityHistory = (userId, obj) => async (dispatch) => {
     // Execute Axios request
     const response = await axios.request(config);
 
-    console.log(JSON.stringify(response.data), 'hhh9999999999999999999999999');
 
     // Dispatch action if data is present
     if (response.data) {
@@ -144,6 +143,67 @@ export const getCourse = () => async (dispatch) => {
     let config = {
       method: 'get',
       url: `${API_BASE_URL}/course/list`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    // Dispatch action if data is present
+    if (response.data) {
+      dispatch({
+        type: GET_ALL_COURSE,
+        payload: response.data?.data,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message);
+    return error;
+  }
+};
+
+export const getState = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    let config = {
+      method: 'get',
+      url: `${API_BASE_URL}/users/state`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    // Execute Axios request
+    const response = await axios.request(config);
+    if (response.data) {
+      dispatch({
+        type: 'GET_ALL_STATE',
+        payload: response.data?.data,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message);
+    return error;
+  }
+};
+
+export const getCourseByMode = (type) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    let config = {
+      method: 'get',
+      url: `${API_BASE_URL}/course/get-by-mode?type=${type}`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -1049,9 +1109,7 @@ export const addEvent = (body) => async (dispatch) => {
     // Execute Axios request
     const response = await axios.request(config);
 
-    toast.success(
-      response?.data?.message || 'New Event added successfully'
-    );
+    toast.success(response?.data?.message || 'New Event added successfully');
     return response.data;
   } catch (error) {
     toast.error(error.response?.data?.message || error.message); // Show error message

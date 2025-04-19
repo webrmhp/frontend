@@ -38,9 +38,9 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
         </h3>
       </div>
 
-      <div>
+      <div className='mt-2'>
         <li
-          className={`flex items-center space-x-2 p-4 rounded cursor-pointer ${
+          className={`flex items-center space-x-2 p-3 rounded cursor-pointer ${
             activeSection === 'Dashboard'
               ? 'bg-blue-100 text-blue-500'
               : 'hover:bg-gray-200'
@@ -52,7 +52,7 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
         </li>
 
         <li
-          className={`flex items-center space-x-2 p-4 rounded cursor-pointer ${
+          className={`flex items-center space-x-2 p-3 rounded cursor-pointer ${
             activeSection === 'Slider'
               ? 'bg-blue-100 text-blue-500'
               : 'hover:bg-gray-200'
@@ -64,7 +64,7 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
           <span>Manage Gallery</span>
         </li>
         <li
-          className={`flex items-center space-x-2 p-4 rounded cursor-pointer ${
+          className={`flex items-center space-x-2 p-3 rounded cursor-pointer ${
             activeSection === 'Users'
               ? 'bg-blue-100 text-blue-500'
               : 'hover:bg-gray-200'
@@ -75,7 +75,7 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
           <span>Users</span>
         </li>
         <li
-          className={`flex items-center space-x-2 p-4 rounded cursor-pointer ${
+          className={`flex items-center space-x-2 p-3 rounded cursor-pointer ${
             activeSection === 'Course'
               ? 'bg-blue-100 text-blue-500'
               : 'hover:bg-gray-200'
@@ -86,15 +86,39 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
           <span>Course</span>
         </li>
         <li
-          className={`flex items-center space-x-2 p-4 rounded cursor-pointer ${
+          className={`flex items-center space-x-2 p-3 rounded cursor-pointer ${
             activeSection === 'Serach Panel'
               ? 'bg-blue-100 text-blue-500'
               : 'hover:bg-gray-200'
           }`}
           onClick={() => handleNavigation('Serach Panel')}
+          title="View and manage all your course activities"
         >
-          <i className='fas fa-file-alt'></i>
+          <i className='fas fa-chalkboard-teacher'></i>
           <span>Course Activities</span>
+        </li>
+
+        <li
+          className={`flex items-center space-x-2 p-3 rounded cursor-pointer ${
+            activeSection === 'Request'
+              ? 'bg-blue-100 text-blue-500'
+              : 'hover:bg-gray-200'
+          }`}
+          onClick={() => handleNavigation('Request')}
+        >
+          <i className='fas fa-clipboard-list'></i>
+          <span>Request</span>
+        </li>
+        <li
+          className={`flex items-center space-x-2 p-3 rounded cursor-pointer ${
+            activeSection === 'Quiz'
+              ? 'bg-blue-100 text-blue-500'
+              : 'hover:bg-gray-200'
+          }`}
+          onClick={() => handleNavigation('Quiz')}
+        >
+          <i className='fas fa-tachometer-alt'></i>
+          <span>Manage Quiz</span>
         </li>
       </div>
       <div className='absolute bottom-4 left-6'>

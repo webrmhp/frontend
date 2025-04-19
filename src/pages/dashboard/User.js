@@ -7,6 +7,7 @@ import { routes } from '../../contant';
 import { useNavigate } from 'react-router-dom';
 import { Circles } from 'react-loader-spinner';
 import {
+  setupLMS,
   getUserList,
   createEmployee,
   updateUser,
@@ -22,7 +23,7 @@ const User = () => {
   const [QRCode, setQRCode] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { userslist } = useSelector((state) => state.auth);
-
+  const [lmsStatus, setLmsStatus] = useState(true);
   useEffect(() => {
     dispatch(getUserList());
   }, [1000]);
@@ -128,6 +129,10 @@ const User = () => {
     closeToolTip();
   };
 
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [password, setPassword] = useState('');
+
   return (
     <div className='p-6 bg-gray-100 min-h-screen'>
       <ToastContainer />
@@ -160,6 +165,7 @@ const User = () => {
                   <th className='py-3 px-6 text-left'>Emails</th>
                   <th className='py-3 px-6 text-left'>Type</th>
                   <th className='py-3 px-6 text-left'>Registration</th>
+                  <th className='py-3 px-6 text-left'>LMS</th>
                   <th className='py-3 px-6 text-center'>Actions</th>
                 </tr>
               </thead>
@@ -173,11 +179,17 @@ const User = () => {
                     }`}
                   >
                     <td className='py-3 px-6 text-left flex items-center gap-3'>
-                      <img
-                        src={user.profilePhoto}
-                        alt={user.name}
-                        className='w-10 h-10 rounded-full object-cover'
-                      />
+                      {user.profilePhoto ? (
+                        <img
+                          src={user.profilePhoto}
+                          alt={user.name}
+                          className='w-10 h-10 rounded-full object-cover'
+                        />
+                      ) : (
+                        <div className='w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm font-semibold text-gray-700'>
+                          {user.name?.slice(0, 2).toUpperCase()}
+                        </div>
+                      )}
                       <span>{user.name}</span>
                     </td>
 
@@ -206,6 +218,40 @@ const User = () => {
                         day: 'numeric',
                       })}
                     </td>
+                    <td className='py-3 px-6 text-center'>
+                      <div className='flex justify-center space-x-4 relative'>
+                        {user?.lmsPassword ? (
+                          // LMS Already Setup Icon
+                          <button
+                            onClick={() => {
+                              setSelectedUser(user);
+                              setPassword(user?.lmsPassword);
+                              setShowModal(true);
+                              setLmsStatus(user?.LMSStatus);
+                            }}
+                            className={user?.LMSStatus ? 'text-green-600 hover:text-green-800': 'text-[#FF0133] hover:text-[#FF0133]'}
+                            title={user?.LMSStatus ? 'LMS is active':'LMS is blocked'}
+                          >
+                            <i className='fas fa-book-open text-xl'></i>
+                          </button>
+                        ) : (
+                          // Create LMS Icon
+                          <button
+                            onClick={() => {
+                              setSelectedUser(user);
+                              setPassword('');
+                              setShowModal(true);
+                              setLmsStatus(true);
+                            }}
+                            className='text-blue-600 hover:text-blue-800'
+                            title='Create LMS'
+                          >
+                            <i className='fas fa-plus-circle text-xl'></i>
+                          </button>
+                        )}
+                      </div>
+                    </td>
+
                     <td className='py-3 px-6 text-center'>
                       <div className='flex justify-center space-x-4 relative'>
                         <button
@@ -270,6 +316,92 @@ const User = () => {
             </div>
           )}
 
+          {showModal && (
+            <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
+              <div className='bg-white p-6 rounded-lg shadow-lg w-full max-w-md'>
+                <h2 className='text-xl font-semibold mb-4'>Set LMS Password</h2>
+                <input
+                  type='text'
+                  className='w-full border border-gray-300 p-2 rounded mb-4'
+                  placeholder='Enter new LMS password'
+                  disabled
+                  value={selectedUser?.email}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <input
+                  type='text'
+                  className='w-full border border-gray-300 p-2 rounded mb-4'
+                  placeholder='Enter LMS password'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <div className='flex items-center mb-4'>
+                  <div className='flex gap-6 items-center mb-4'>
+                    Status
+                    {/* Active */}
+                    <label className='inline-flex items-center cursor-pointer'>
+                      <input
+                        type='radio'
+                        name='lmsStatus'
+                        className='form-radio text-green-500'
+                        checked={lmsStatus === true}
+                        onChange={() => setLmsStatus(true)}
+                      />
+                      <span className='ml-2 text-sm text-gray-700'>Active</span>
+                    </label>
+                    {/* Blocked */}
+                    <label className='inline-flex items-center cursor-pointer'>
+                      <input
+                        type='radio'
+                        name='lmsStatus'
+                        className='form-radio text-red-500'
+                        checked={lmsStatus === false}
+                        onChange={() => setLmsStatus(false)}
+                      />
+                      <span className='ml-2 text-sm text-gray-700'>
+                        Blocked
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div className='flex justify-end gap-2'>
+                  <div className='flex justify-end gap-2'>
+                    <button
+                      onClick={() => {
+                        dispatch(
+                          setupLMS({
+                            email: selectedUser.email,
+                            password,
+                            status: lmsStatus,
+                          })
+                        );
+                        setShowModal(false); // Close modal
+                        setPassword(''); // Clear password field
+                        setSelectedUser(null); // Reset selected user
+                        setTimeout(()=>{
+                          dispatch(getUserList())
+                        },2000)
+                      }}
+                      className='bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+                    >
+                      Save
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setShowModal(false);
+                      setPassword('');
+                      setSelectedUser(null);
+                    }}
+                    className='bg-gray-300 px-4 py-2 rounded hover:bg-gray-400'
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           {editUser && (
             <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
               <div className='bg-white p-6 rounded-lg shadow-lg w-1/3'>

@@ -14,13 +14,12 @@ import { getSlider, getLogo } from '../redux/action/request';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../contant/index.js';
 import { useDispatch, useSelector } from 'react-redux';
+import 'swiper/css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-const sliderImages = [
-  '/images/slide1.jpg',
-  '/images/slide2.jpg',
-  '/images/slide3.jpg',
-];
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import 'swiper/css';
 const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -37,49 +36,36 @@ const HomePage = () => {
   };
 
   const data = useSelector((state) => state.auth); // Access Redux state
-  const authenticate = localStorage.getItem('token');
-  console.log(data?.slider, 'datadatadatadatadata');
   useEffect(() => {
     dispatch(getSlider());
     dispatch(getLogo());
   }, [1000]);
   return (
     <div className='font-sans leading-normal text-gray-800 '>
-      <Header_Top />
       <Header />
-      <div className='absolute inset-0 z-10'></div>
-
-      {/* Image Slider */}
-      <Slider
-        {...settings}
-        className='z-0'
-      >
-        {data?.slider.map((data, idx) => (
-          <div
-            key={idx}
-            className='relative w-full h-screen'
-          >
-            {/* Background Image */}
+      <Swiper
+      modules={[Autoplay]}
+      autoplay={{ delay: 3000, disableOnInteraction: false }}
+      loop={true}
+      className='w-full h-[350px] sm:h-[350px] md:h-[400px] lg:h-[550px]'
+    >
+      {data?.slider?.map((item, idx) => (
+        <SwiperSlide key={idx}>
+          <div className='relative w-full h-screen'>
             <img
-              src={data?.image}
+              src={item?.image}
               alt={`slide-${idx}`}
               className='w-full h-screen object-cover'
             />
-
-            {/* Dark Overlay */}
             <div className='absolute inset-0 bg-black opacity-80 z-10'></div>
-
-            {/* Text Content */}
             <div className='absolute inset-0 z-20 flex items-center justify-center text-center'>
               <div className='p-4 max-w-4xl mx-auto'>
                 <h1 className='text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-green-400 via-green-600 to-green-700 text-transparent bg-clip-text drop-shadow-2xl'>
-                  {data?.title}
+                  {item?.title}
                 </h1>
-
                 <p className='text-lg sm:text-xl md:text-2xl font-medium leading-relaxed bg-gradient-to-r from-green-400 via-green-600 to-green-700 text-transparent bg-clip-text'>
-                  {data?.description}.
+                  {item?.description}.
                 </p>
-
                 <button
                   onClick={() => {
                     const section = document.getElementById('course-section');
@@ -94,8 +80,11 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-        ))}
-      </Slider>
+        </SwiperSlide>
+      ))}
+    </Swiper>
+     
+      {/* Image Slider */}
 
       <section
         id='course-section'
